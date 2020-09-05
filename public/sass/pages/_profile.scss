@@ -1,0 +1,51 @@
+.profile-header {
+    max-width: 70rem;
+    margin: 4.5rem auto 2rem;
+}
+
+.user-banner {
+    &__name {
+        font-size: 2.25rem;
+        margin: 0;
+        line-height: 10rem;
+    }
+}
+
+.books {
+    margin: 0 auto 4.5rem;
+    max-width: 70rem;
+
+    &__container {
+        margin: 0 auto;
+    }
+
+    &__message {
+        margin: 5rem 0 5rem;
+        font-size: 1.5rem;
+        text-align: center;
+        color: #555555;
+    }
+
+    .column {
+        padding: 5px;
+    }
+}
+
+.profile-book-card {
+    height: 13rem;
+
+    &__link {
+        box-sizing: border-box;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        border: 2px solid transparent;
+        height: 100%;
+
+        &:hover {
+            border-color: lighten($secondary-color, 30%);
+        }
+    }
+}

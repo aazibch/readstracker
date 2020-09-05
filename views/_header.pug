@@ -1,0 +1,20 @@
+header.header
+    .header__container
+        .header__site-title
+            a(href='/')
+                img(src='/images/readstracker-logo.png', alt='ReadsTracker Logo')
+        nav.main-nav
+            if user
+                a#logout-button.main-nav__button(role='button') Logout
+                #main-nav__dropdown.main-nav__dropdown
+                    a#main-nav__user-button.main-nav__button.main-nav__user-button(role='button')
+                        img.main-nav__user-photo(src=`/images/users/${user.profilePhoto}`)
+                        | #{user.name.split(' ')[0]}
+                    ul.dropdown-menu.main-nav__dropdown-menu
+                        li
+                            a(href='/user') Profile
+                        li
+                            a(href='/user/settings') Settings
+            else
+                a.main-nav__button(href='/login') Login
+                a.main-nav__button.main-nav__button--imp(href='/signup') Signup

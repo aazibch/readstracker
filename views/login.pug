@@ -1,0 +1,15 @@
+extends base
+
+block content
+    .page-container
+        .form-container.login-form-container
+            form#login-form.form
+                h1.heading-1.form__heading Log into your account
+                label.form__label Email
+                input#email-field.form__input-field(type='email')
+                label.form__label Password
+                input#password-field.form__input-field(type='password')
+                input.button-primary(type='submit' value='Login')
+                #login-form__loading-spinner.loading-spinner
+    p.forgot-password-option
+            a(href='/forgot-password') Forgot your password?

@@ -1,0 +1,17 @@
+.login-form-container {
+    margin-bottom: 0;
+}
+
+.forgot-password-option {
+    text-align: center;
+    margin: 1rem 0 4rem;
+
+    a:link, a:visited {
+        color: $secondary-color;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+}

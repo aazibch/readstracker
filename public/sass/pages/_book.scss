@@ -1,0 +1,85 @@
+.full-book {
+    margin: 4.5rem auto 4.5rem;
+    max-width: 32.5rem;
+    box-shadow: $shadow-dark;
+
+    &__dropdown {
+        position: relative;
+        
+        &-button {
+            float: right;
+            color: $secondary-color;
+        }
+    
+        &-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 1.8rem;
+            list-style: none;
+
+            li a {
+                color: $secondary-color;
+
+                &:link, &:visited, &:active {
+                    color: $secondary-color;
+                }
+            }
+        }
+    }
+    
+    &__comment-input {
+        background: #f7f7f7;
+    }
+
+    &__comment-form {
+        padding: 1rem;
+        display: flex;
+    }
+
+    &__new-comment-body {
+        flex: 1 1 0;
+        margin-right: 0.5rem;
+        height: 1rem;
+        resize: none;
+        padding: 0.5rem;
+        border: 1px solid $generic-border-color;
+    }
+
+    &__comment-submit-button {
+        color: $secondary-color;
+    }
+
+    &__comments {
+        border-top: 1px solid $generic-border-color;
+        clear: both;
+        background: #f7f7f7;
+    }
+
+    &__comment {
+        border-bottom: 1px solid $generic-border-color;
+        padding: 1rem;
+        overflow: auto;
+    }
+
+    &__comment-content-1 {
+        display: flex;
+        margin-bottom: 1rem;
+    }
+
+    &__comment-body {
+        font-size: 0.95rem;
+    }
+
+    &__comment-delete-button {
+        color: $secondary-color;
+        margin-left: auto;
+        height: 1.8rem;
+    }
+
+    &__comment-date {
+        float: right;
+        font-size: 0.75rem;
+        color: lighten(#6e6e6e, 10%);
+    }
+}

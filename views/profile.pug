@@ -1,0 +1,22 @@
+extends base
+include mixins/_bookCard
+
+block content
+    .page-container
+        .profile-header
+            h1.heading-1= user.name
+        
+        .books
+            if user.books.length === 0
+                .books__message
+                    p No books to show.
+                    p
+                        | Click 
+                        a.link(href='/') here
+                        |  to submit a book.
+            else
+                .books__container
+                    .row
+                        each book in user.books
+                            .column
+                                +bookCard(book)

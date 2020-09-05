@@ -1,0 +1,34 @@
+extends base
+
+block content
+    .page-container
+        .form-container
+            h1.heading-1.form__heading Settings
+            form#settings-details-form.form.settings-details-form
+                h2.heading-3.form__heading Update details
+                label.form__label Name
+                input#settings-details-form__name-field.form__input-field(type='text' value=user.name)
+                label.form__label Email
+                input#settings-details-form__email-field.form__input-field(type='email' value=user.email)
+                label.form__label Profile Photo
+                input#settings-details-form__photo-upload.form__file-upload(type='file' accept='image/*')
+                
+                input.button-primary(type='submit' value='Submit')
+                #settings-details-form__loading-spinner.loading-spinner
+
+            form#settings-password-form.form.settings-password-form
+                h2.heading-3.form__heading Update password
+                label.form__label Current Password
+                input#settings-password-form__current-password-field.form__input-field(type='password')
+                label.form__label New Password
+                input#settings-password-form__password-field.form__input-field(type='password')
+                label.form__label Confirm New Password
+                input#settings-password-form__confirm-password-field.form__input-field(type='password')
+                
+                input.button-primary(type='submit' value='Submit')
+                #settings-password-form__loading-spinner.loading-spinner
+
+            .settings-delete-button-container
+                h2.heading-3.form__heading Delete account
+                button#settings-delete-button.button-danger Delete
+                #settings-delete__loading-spinner.loading-spinner

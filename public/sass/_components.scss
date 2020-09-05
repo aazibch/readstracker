@@ -1,0 +1,407 @@
+.link {
+    &:link {
+        color:#F012BE;
+        text-decoration: none;
+    }
+
+    &:visited {
+        color: darken(#F012BE, 10%);
+    }
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.alert {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+
+    &__content {
+        padding: 1.5rem 2rem;
+        text-align: center;
+        margin: 0.5rem 0 0;
+        border-radius: 5px;
+        color: $light-text-color;
+        text-transform: uppercase;
+
+        &--success {
+            background: $success-color;
+        }
+    
+        &--error {
+            background: $danger-color;
+        }
+    }
+}
+
+%button {
+    font-size: 1rem;
+    font-weight: 300;
+    border-style: none;
+    border-radius: 2px;
+    padding: .375rem .75rem;
+}
+
+.button-primary {
+    @extend %button;
+    background: $secondary-color;
+    color: $light-text-color;
+
+    &:hover {
+        background: darken($secondary-color, 10%);
+    }
+}
+
+a.button-primary {
+    text-decoration: none;
+    &:link, &:visited, &:active {
+        color: $light-text-color;
+    }
+}
+
+.button-danger {
+    @extend %button;
+    background: $danger-color;
+    color: $light-text-color;
+
+    &:hover {
+        background: darken($danger-color, 10%);
+    }
+}
+
+.heading-1 {
+    font-size: 1.75rem;
+}
+
+.heading-2 {
+    font-size: 1.5rem;
+}
+
+.heading-3 {
+    font-size: 1.2rem;
+}
+
+.form-container {
+    max-width: 32rem;
+    margin: 5rem auto 5rem;
+    padding: 3rem 2.5rem;
+    box-sizing: border-box;
+    background: #fff;
+    box-shadow: $shadow-dark;
+    border-radius: 5px;
+
+    .heading-1 {
+        margin: 0 0 1.5rem;
+    }
+
+    .heading-3 {
+        margin: 1.5rem 0 1rem;
+    }
+}
+
+.form {
+    &__message {
+        margin-bottom: 1rem;
+        color: $secondary-color;
+    }
+
+    &__stars {
+        font-size: 1.2rem;
+        text-align: center;
+        cursor: pointer;
+        max-width: 7rem;
+        margin: 0 auto;
+    }
+
+    &__input-field {
+        border-radius: 2px;
+        width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 1.5rem;
+        border-style: none;
+        height: 2.5rem;
+        padding: 0 0.5rem;
+        background: #f2f2f2;
+        color: $secondary-color;
+
+        &:focus {
+            border: 1px solid #c9c7c7;
+        }
+    }
+
+    &__file-upload {
+        display: block;
+        margin-bottom: 1.5rem;
+    }
+
+    &__label {
+        display: inline-block;
+        margin-bottom: 0.7rem;
+        color: $secondary-color;
+    }
+}
+
+.star-highlighted {
+    color: #ffa500;
+}
+
+.book-card {
+    color: #6e6e6e;
+    box-shadow: $shadow-light;
+    background: #fff;
+    box-sizing: border-box;
+
+    &__button {
+        border: 1px solid $generic-border-color;
+        padding: 0.3rem 0.5rem;
+        background: #fff;
+    
+        &:hover {
+            background: darken(#fff, 5%);
+        }
+    }
+
+    &__info {
+        padding: 1rem 1.5rem;
+        overflow: auto;
+    }
+
+    &__title, &__author {
+        font-weight: 700;
+    }
+
+    &__title {
+        margin-top: 0;
+        margin-bottom: 0.2rem;
+        font-size: 1.1rem;
+    }
+
+    &__author-line {
+        margin: 0 0 0.4rem;
+    }
+
+    &__date-added {
+        margin-bottom: 0;
+    }
+
+    &__bottom-content {
+        display: flex;
+        align-items: bottom;
+    }
+
+    &__secondary-data {
+        font-size: 0.8rem;
+        display: flex;
+        margin-top: 1rem;
+        display: flex;
+        align-items: flex-end;
+        p {
+            margin: 0.2rem;
+        }
+    }
+
+    &__secondary-data-content-2 {
+        margin-left: auto
+
+    }
+    
+    &__secondary-data,
+    &__comment-date {
+        color: $secondary-color;
+    }
+}
+
+.confirmation-modal {
+    position: fixed;
+    z-index: 100;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0,0,0,0.4);
+    display: none;
+
+    &__content {
+        max-width: 32rem;
+        background: #fff;
+        margin: 10rem auto;
+        padding: 1rem;
+        border: 1px solid $generic-border-color;
+        overflow: auto;
+        border-radius: 5px;
+    }
+
+    &__query {
+        margin: 1rem;
+        clear: right;
+    }
+
+    &__close-button {
+        border-style: none;
+        background: #fff;
+        padding: 0.3rem 0.5rem;
+        color: $danger-color;
+        float: right;
+    }
+
+    &__options {
+        float: right;
+
+        & button {
+            padding: 0.4rem 1rem;
+            border-radius: 5px;
+            border-width: 1px;
+            border-style: solid;
+        }
+    }
+
+    &__yes-button {
+        border-color: $danger-color;
+        background: $danger-color;
+        color: $light-text-color;
+
+        &:hover {
+            background: darken($danger-color, 5%);
+            border-color: darken($danger-color, 5%);
+        }
+    }
+
+    &__no-button {
+        background: $neutral-color;
+        border-color: $neutral-color;
+
+        &:hover {
+            background: darken($neutral-color, 5%);
+            border-color: darken($neutral-color, 5%);
+        }
+    }
+}
+
+.dropdown-menu {
+    list-style: none;
+    border: 1px solid $generic-border-color;
+
+    li {
+        border-bottom: 1px solid $generic-border-color;
+        background: #fff;
+
+        &:last-child {
+            border-bottom-style: none;
+        }
+
+        &:hover {
+            background: darken(#fff, 5%);
+        }
+
+        a {
+            text-decoration: none;
+            display: block;
+            height: 100%;
+            padding: 0.5rem;
+
+            &:link, &:visited, &:active {
+                color: #6e6e6e;
+            }
+        }
+    }
+}
+
+// Grid system
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.column {
+    box-sizing: border-box;
+    flex-basis: 33.33333333%;
+}
+
+// End of Grid system
+
+@media (max-width: 767.98px) {
+    .column {
+        flex-basis: 50%;
+    }
+}
+
+@media (max-width: 899.98px) {
+    .books__container {
+        .column {
+            flex-basis: 50%;
+        }
+    }
+}
+
+@media (max-width: 575.98px) {
+    .column,
+    .books__container .column {
+        flex-basis: 100%;
+    }
+}
+
+@media (max-width: 994.98px) {
+    .book-card {
+        &__secondary-data {
+            flex-direction: column;
+            align-items: initial;
+        }
+    
+        &__secondary-data-content-2 {
+            margin-left: initial
+        }
+    }
+}
+
+// Styles for loading spinner are from:
+// https://projects.lukehaas.me/css-loaders/
+
+.loading-spinner,
+.loading-spinner:after {
+    border-radius: 50%;
+    width: 1.5em;
+    height: 1.5em;
+}
+
+.loading-spinner {
+    display: none;
+    margin-left: 1em;
+    font-size: 10px;
+    position: relative;
+    top: 0.3em;
+    text-indent: -9999em;
+    border-top: 0.3em solid rgba(255, 255, 255, 0.2);
+    border-right: 0.3em solid rgba(255, 255, 255, 0.2);
+    border-bottom: 0.3em solid rgba(255, 255, 255, 0.2);
+    border-left: 0.3em solid $secondary-color;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-animation: load8 1.1s infinite linear;
+    animation: load8 1.1s infinite linear;
+}
+
+@-webkit-keyframes load8 {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes load8 {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}

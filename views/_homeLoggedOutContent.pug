@@ -1,0 +1,20 @@
+mixin servicesBox(icon, text)
+    .services__box
+        i(class=`services__icon fas fa-${icon}`)
+        h2= text
+
+section.jumbotron
+    .jumbotron__container
+        .jumbotron__content
+            h1.jumbotron__text Tired of keeping track of your books? No need to worry anymore, we're here to help you tidy up!
+            a.button-primary(href='/signup') Signup
+
+section.services
+    .services__container
+        .row
+            .column
+                +servicesBox('book', 'Keep Track of All Your Reads')
+            .column
+                +servicesBox('eye', 'Show Off How Well-Read You Are')
+            .column
+                +servicesBox('star', 'Rate the Works You\'ve Reads')
