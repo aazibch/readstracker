@@ -13,14 +13,17 @@ const signToken = id => {
     });
 }
 
-// Define the options.
-const cookieOptions = {
-    expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRATION * 24 * 60 * 60 * 1000),
-    httpOnly: true
-}
+const createSendToken = (user, req, res) => {
+    const token = signToken(user._id);
 
-// Set secure option for production environement only.
-if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+    res.cookie('jwt', token, {
+        expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRATION * 24 * 60 * 60 * 1000),
+        httpOnly: true,
+        secure: req.secure || req.header['x-forwarded-proto'] === 'https'
+    });
+
+    return token;
+}
 
 const sendLogoutCookie = (res) => {
     res.cookie('jwt', '', {
@@ -42,10 +45,9 @@ exports.signup = catchAsync(async (req, res, next) => {
         return next(new AppError('Unable to send email. Try again later.', 500));
     }
     
-    const token = signToken(newUser._id);
     // Send the cookie.
-    res.cookie('jwt', token, cookieOptions);
-    
+    const token = createSendToken(newUser, req, res);
+
     // Remove the password property.
     newUser.password = undefined;
 
@@ -69,10 +71,7 @@ exports.login = catchAsync(async (req, res, next) => {
         return next(new AppError('Incorrect email or password.', 401));
     }
 
-    const token = signToken(user._id);
-
-    // Send the cookie.
-    res.cookie('jwt', token, cookieOptions);
+    const token = createSendToken(user, req, res);
 
     res.status(200).json({
         status: 'success',
@@ -197,7 +196,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
     res.status(200).json({
         status: 'success',
-        message: 'Password reset link has been send to your email.'
+        message: 'Password reset link has been sent to your email.'
     })
 });
 
@@ -223,8 +222,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     await user.save();
 
     // 3) Sign the JWT token, log the user in
-    const token = signToken(user._id);
-    res.cookie('jwt', token, cookieOptions);
+    const token = createSendToken(user, req, res);
 
     res.status(200).json({
         status: 'success',
@@ -245,7 +243,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
     user.confirmPassword = req.body.confirmPassword;
     await user.save();
 
-    const token = signToken(user._id);
+    const token = createSendToken(user, req, res);
     
     res.status(200).json({
         status: 'success',

@@ -7,6 +7,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
+const compression = require('compression');
 
 const AppError = require('./utils/appError');
 const booksRoutes = require('./routes/booksRoutes');
@@ -15,6 +16,8 @@ const viewsRoutes = require('./routes/viewsRoutes');
 const error = require('./middleware/error');
 
 const app = express();
+
+app.enable('trust proxy');
 
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
@@ -42,6 +45,7 @@ app.use(hpp({
         'dateCreated'
     ]
 }));
+app.use(compression());
 
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
