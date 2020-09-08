@@ -1,7 +1,7 @@
 {
-  "name": "personal-library",
+  "name": "readstracker",
   "version": "1.0.0",
-  "description": "",
+  "description": "A web application to keep track of the books you've read.",
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
