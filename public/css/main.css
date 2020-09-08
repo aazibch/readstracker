@@ -637,11 +637,11 @@ main {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border: 2px solid transparent;
+  border: 1px solid transparent;
   height: 100%;
 }
 .profile-book-card__link:hover {
-  border-color: #e1d4d3;
+  border-color: #ebe3e2;
 }
 
 .full-book {
