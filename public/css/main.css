@@ -714,7 +714,23 @@ main {
   font-size: 0.75rem;
   color: #888888;
 }
+.full-book .book-card__secondary-data {
+  flex-direction: row;
+  align-items: flex-end;
+}
+.full-book .book-card__secondary-data-content-2 {
+  margin-left: auto;
+}
 
+@media (max-width: 575.98px) {
+  .full-book .book-card__secondary-data {
+    flex-direction: column;
+    align-items: initial;
+  }
+  .full-book .book-card__secondary-data-content-2 {
+    margin-left: initial;
+  }
+}
 .settings-details-form {
   border-top: 1px solid #e0e0e0;
 }

@@ -82,4 +82,30 @@
         font-size: 0.75rem;
         color: lighten(#6e6e6e, 10%);
     }
+
+    .book-card {
+        &__secondary-data {
+            flex-direction: row;
+            align-items: flex-end;
+        }
+
+        &__secondary-data-content-2 {
+            margin-left: auto;
+        }
+    }
+}
+
+@media (max-width: 575.98px) {
+    .full-book {
+        .book-card {
+            &__secondary-data {
+                flex-direction: column;
+                align-items: initial;
+            }
+        
+            &__secondary-data-content-2 {
+                margin-left: initial
+            }
+        }
+    }
 }

@@ -1,40 +1,41 @@
 extends base
 
 block content
-    #full-book.book-card.full-book(data-id=book._id)
-        section.book-card__info
-            .full-book__dropdown
-                button#full-book__dropdown-button.book-card__button.full-book__dropdown-button ...
-                ul#full-book__dropdown-menu.dropdown-menu.full-book__dropdown-menu
-                    li
-                        a(href=`/books/${book._id}/edit`) Edit
-                    li
-                        a#full-book__book-delete-button(role='button') Delete
-            p.book-card__title=book.title
-            p.book-card__author-line
-                | by 
-                span.book__author= book.author
-            .book-card__rating
-                each star in [1, 2, 3, 4, 5]
-                    i(class=`far fa-star ${star <= book.rating ? 'star-highlighted' : '' }`)
-            .book-card__secondary-data
-                .book-card__secondary-data-content-1
-                    p.book-card__genre= book.genre
-                    p.book-card__date-added= book.dateCreated.toLocaleString('en-us', {day: '2-digit', weekday: 'short', month: 'long', year: 'numeric'})
-                .book-card__secondary-data-content-2
-                    - const commentQuantity = book.comments.length;
-                    p.book-card__comments-quantity= `${commentQuantity} Comment${commentQuantity > 1 || commentQuantity === 0 ? 's' : ''}`
-        
-        section#full-book__comments.full-book__comments
-            each comment in book.comments
-                .full-book__comment(id=`comment-${comment._id}`)
-                    .full-book__comment-content-1
-                        p.full-book__comment-body= comment.comment
-                        button.book-card__button.full-book__comment-delete-button(data-id=comment._id) &#10005;
-                    .full-book__comment-content-2
-                    p.full-book__comment-date= comment.dateCreated.toLocaleString('en-us', { dateStyle: 'medium', timeStyle: 'short' })
+    .page-container
+        #full-book.book-card.full-book(data-id=book._id)
+            section.book-card__info
+                .full-book__dropdown
+                    button#full-book__dropdown-button.book-card__button.full-book__dropdown-button ...
+                    ul#full-book__dropdown-menu.dropdown-menu.full-book__dropdown-menu
+                        li
+                            a(href=`/books/${book._id}/edit`) Edit
+                        li
+                            a#full-book__book-delete-button(role='button') Delete
+                p.book-card__title=book.title
+                p.book-card__author-line
+                    | by 
+                    span.book__author= book.author
+                .book-card__rating
+                    each star in [1, 2, 3, 4, 5]
+                        i(class=`far fa-star ${star <= book.rating ? 'star-highlighted' : '' }`)
+                .book-card__secondary-data
+                    .book-card__secondary-data-content-1
+                        p.book-card__genre= book.genre
+                        p.book-card__date-added= book.dateCreated.toLocaleString('en-us', {day: '2-digit', weekday: 'short', month: 'long', year: 'numeric'})
+                    .book-card__secondary-data-content-2
+                        - const commentQuantity = book.comments.length;
+                        p.book-card__comments-quantity= `${commentQuantity} Comment${commentQuantity > 1 || commentQuantity === 0 ? 's' : ''}`
+            
+            section#full-book__comments.full-book__comments
+                each comment in book.comments
+                    .full-book__comment(id=`comment-${comment._id}`)
+                        .full-book__comment-content-1
+                            p.full-book__comment-body= comment.comment
+                            button.book-card__button.full-book__comment-delete-button(data-id=comment._id) &#10005;
+                        .full-book__comment-content-2
+                        p.full-book__comment-date= comment.dateCreated.toLocaleString('en-us', { dateStyle: 'medium', timeStyle: 'short' })
 
-        section.full-book__comment-input
-            form#full-book__comment-form.full-book__comment-form
-                input#full-book__new-comment-body.full-book__new-comment-body
-                input#full-book__comment-submit-button.book-card__button.full-book__comment-submit-button(type='submit' value='Submit')
+            section.full-book__comment-input
+                form#full-book__comment-form.full-book__comment-form
+                    input#full-book__new-comment-body.full-book__new-comment-body
+                    input#full-book__comment-submit-button.book-card__button.full-book__comment-submit-button(type='submit' value='Submit')
