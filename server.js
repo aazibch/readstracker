@@ -16,6 +16,8 @@ const server = app.listen(port, () => {
     console.log(`Listening on port ${port}...`);
 });
 
+const exitProcess = () => server.close(() => process.exit(1));
+
 mongoose.connect(conString, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -34,4 +36,10 @@ process.on('unhandledRejection', err => {
     exitProcess();
 });
 
-const exitProcess = () => server.close(() => process.exit(1));
+process.on('SIGTERM', () => {
+    console.log('SIGTERM! Shutting down...')
+
+    server.close(() => {
+        console.log('Server closed.');
+    });
+})
