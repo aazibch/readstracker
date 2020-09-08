@@ -4,7 +4,7 @@ import { catchAsync } from './catchAsync';
 
 export const managePasswordRecovery = catchAsync(async (routeType, reqType, data) => {
     const axiosOptions = {
-        url: `http://localhost:3000/api/v1/users/${routeType}Password/`
+        url: `/api/v1/users/${routeType}Password/`
     }
 
     if (routeType === 'reset') {

@@ -37,12 +37,12 @@ export const addCommentEl = (comment) => {
 
 export const manageCommentsData = catchAsync(async (reqType, data) => {
     let axiosOptions = {
-        url: `http://localhost:3000/api/v1/books/${data.bookId}/comments/${data.commentId}`
+        url: `/api/v1/books/${data.bookId}/comments/${data.commentId}`
     }
 
     if (reqType === 'POST') {
         axiosOptions = {
-            url: `http://localhost:3000/api/v1/books/${data.bookId}/comments`
+            url: `/api/v1/books/${data.bookId}/comments`
         }
         
         delete data.bookId;

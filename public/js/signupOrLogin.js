@@ -7,7 +7,7 @@ export const signupOrLogin = catchAsync(async (routeType, data) => {
 
     const response = await axios({
         method: 'POST',
-        url: `http://localhost:3000/api/v1/users/${routeType}`,
+        url: `/api/v1/users/${routeType}`,
         data
     });
 
@@ -34,7 +34,7 @@ export const logout = async () => {
     try {
         const response = await axios({
             method: 'GET',
-            url: 'http://localhost:3000/api/v1/users/logout'
+            url: '/api/v1/users/logout'
         });
     
         if (response.data.status === 'success') location.assign('/');

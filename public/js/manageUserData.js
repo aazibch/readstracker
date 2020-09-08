@@ -10,13 +10,13 @@ const clearPasswordInputFields = () => {
 
 export const manageUserData = catchAsync(async (routeType, reqType, data) => {
     let axiosOptions = {
-        url: 'http://localhost:3000/api/v1/users/userDelete',
+        url: '/api/v1/users/userDelete',
         method: 'DELETE'
     };
 
     if (routeType !== 'Delete') {
         axiosOptions = {
-            url: `http://localhost:3000/api/v1/users/userUpdate${routeType}`,
+            url: `/api/v1/users/userUpdate${routeType}`,
             method: reqType,
             data
         }

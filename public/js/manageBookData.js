@@ -4,7 +4,7 @@ import { catchAsync } from './catchAsync';
 
 export const manageBookData = catchAsync(async (reqType, data) => {
     let axiosOptions = {
-        url: reqType === 'POST' ? 'http://localhost:3000/api/v1/books/' :  `http://localhost:3000/api/v1/books/${data.id}`
+        url: reqType === 'POST' ? '/api/v1/books/' :  `/api/v1/books/${data.id}`
     }
     
     if (reqType === 'PATCH' || reqType === 'POST') {
