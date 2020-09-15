@@ -423,6 +423,7 @@ main {
   font-weight: 300;
   transition: opacity 0.2s;
   color: inherit;
+  margin-left: 1rem;
 }
 .main-nav__button:hover {
   opacity: 0.65;
@@ -432,7 +433,6 @@ main {
   border-radius: 5px;
   padding: 0.4rem 1rem;
   transition: background-color 0.2s, color 0.2s;
-  margin-left: 1rem;
 }
 .main-nav__button--imp:hover {
   background: #A27C79;
