@@ -84,9 +84,9 @@ main {
         color: inherit;
         margin-left: 1rem;
 
-        &:hover {
-            opacity: 0.65;
-        }
+        // &:hover {
+        //     opacity: 0.65;
+        // }
 
         &--imp {
             border: 1px solid $secondary-color;
@@ -144,6 +144,12 @@ main {
         width: 35px;
         border-radius: 50%;
         margin-right: 0.5rem;
+    }
+}
+
+@media (hover: hover) {
+    .main-nav__button:hover {
+        opacity: 0.65;
     }
 }
 

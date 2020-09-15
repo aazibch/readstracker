@@ -199,9 +199,3 @@ if (fullBook) {
 }
 
 // End of book page
-
-const userButton = document.querySelector('#main-nav__user-button');
-
-userButton.addEventListener('click', e => {
-    userButton.blur();
-});
