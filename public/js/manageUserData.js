@@ -22,7 +22,7 @@ export const manageUserData = catchAsync(async (routeType, reqType, data) => {
         }
     }
 
-    let spinnerEl = `#settings-${routeType === 'Password' ? 'password' : 'details'}-form_loading-spinner`;
+    let spinnerEl = `#settings-${routeType === 'Password' ? 'password' : 'details'}-form__loading-spinner`;
 
     if (routeType === 'Delete') {
         spinnerEl = '#settings-delete__loading-spinner';
