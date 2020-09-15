@@ -1,7 +1,7 @@
 footer.footer
     .footer__container
         .footer__nav
-            a(href='#') Create an Account
-            a(href='#') About this Project
-            a(href='#') About the Developer
+            if (!user)
+                a(href='/signup') Create an Account
+            a(href='https://github.com/aazibch' target='_blank') The Developer
         p.copyright Copyright &copy; ReadsTracker. All rights reserved.
