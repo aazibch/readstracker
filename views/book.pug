@@ -1,16 +1,27 @@
 extends base
 
 block content
+    -
+        let loggedInUsersBook = false;
+
+        if (user) {
+            loggedInUsersBook = user.username === book.user.username;
+        }
     .page-container
         #full-book.book-card.full-book(data-id=book._id)
+            section.full-book__header
+                a(href=`/users/${book.user.username}`).full-book__user
+                    img.user-photo.full-book__user-photo(src=`/images/users/${book.user.profilePhoto}`)
+                    | #{book.user.username}
+                if (loggedInUsersBook)
+                    .full-book__dropdown
+                        button#full-book__dropdown-button.book-card__button.full-book__dropdown-button <i class="fas fa-ellipsis-h"></i>
+                        ul#full-book__dropdown-menu.dropdown-menu.full-book__dropdown-menu
+                            li
+                                a(href=`/books/${book._id}/edit`) Edit
+                            li
+                                a#full-book__book-delete-button(role='button') Delete
             section.book-card__info
-                .full-book__dropdown
-                    button#full-book__dropdown-button.book-card__button.full-book__dropdown-button ...
-                    ul#full-book__dropdown-menu.dropdown-menu.full-book__dropdown-menu
-                        li
-                            a(href=`/books/${book._id}/edit`) Edit
-                        li
-                            a#full-book__book-delete-button(role='button') Delete
                 p.book-card__title=book.title
                 p.book-card__author-line
                     | by 
@@ -23,19 +34,20 @@ block content
                         p.book-card__genre= book.genre
                         p.book-card__date-added= book.dateCreated.toLocaleString('en-us', {day: '2-digit', weekday: 'short', month: 'long', year: 'numeric'})
                     .book-card__secondary-data-content-2
-                        - const commentQuantity = book.comments.length;
-                        p.book-card__comments-quantity= `${commentQuantity} Comment${commentQuantity > 1 || commentQuantity === 0 ? 's' : ''}`
+                        - const noteQuantity = book.notes.length;
+                        p.book-card__notes-quantity= `${noteQuantity} Note${noteQuantity > 1 || noteQuantity === 0 ? 's' : ''}`
             
-            section#full-book__comments.full-book__comments
-                each comment in book.comments
-                    .full-book__comment(id=`comment-${comment._id}`)
-                        .full-book__comment-content-1
-                            p.full-book__comment-body= comment.comment
-                            button.book-card__button.full-book__comment-delete-button(data-id=comment._id) &#10005;
-                        .full-book__comment-content-2
-                        p.full-book__comment-date= comment.dateCreated.toLocaleString('en-us', { dateStyle: 'medium', timeStyle: 'short' })
-
-            section.full-book__comment-input
-                form#full-book__comment-form.full-book__comment-form
-                    input#full-book__new-comment-body.full-book__new-comment-body
-                    input#full-book__comment-submit-button.book-card__button.full-book__comment-submit-button(type='submit' value='Submit')
+            section#full-book__notes.full-book__notes
+                each note in book.notes
+                    .full-book__note(id=`note-${note._id}`)
+                        .full-book__note-content-1
+                            p.full-book__note-body= note.note
+                            if (loggedInUsersBook)
+                                button.book-card__button.full-book__note-delete-button(data-id=note._id) <i class="fas fa-times"></i>
+                        .full-book__note-content-2
+                        p.full-book__note-date= note.dateCreated.toLocaleString('en-us', { dateStyle: 'medium', timeStyle: 'short' })
+            if (loggedInUsersBook)
+                section.full-book__note-input
+                    form#full-book__note-form.full-book__note-form
+                        input#full-book__new-note-body.full-book__new-note-body
+                        input#full-book__note-submit-button.book-card__button.full-book__note-submit-button(type='submit' value='Submit')

@@ -4,13 +4,22 @@ const bookSchema = new mongoose.Schema({
     title: {
         type: String,
         minlength: [2, 'The title should at least have two characters.'],
-        maxlength: [255, 'The title should have fewer than two hundred and fifty five characters.'],
+        maxlength: [
+            255,
+            'The title should have fewer than two hundred and fifty five characters.'
+        ],
         required: [true, 'Please provide a title.']
     },
     author: {
         type: String,
-        minlength: [3, 'The name should at least have two characters.'],
-        maxlength: [20, 'The title should have fewer than two hundred and fifty five characters.'],
+        minlength: [
+            3,
+            "The author's name should at least have two characters."
+        ],
+        maxlength: [
+            20,
+            "The author's name can be the maximum length of twenty characters."
+        ],
         required: [true, 'Please provide an author.']
     },
     rating: {
@@ -25,7 +34,26 @@ const bookSchema = new mongoose.Schema({
         maxlength: 40,
         required: [true, 'Please provide a genre.'],
         enum: {
-            values: ['Action and Adventure', 'Biography or Autobiography', 'Coming-of-age', 'Crime', 'Drama', 'Dystopian Fiction', 'Fantasy', 'History', 'Mystery', 'Pop-sci', 'Poetry', 'Romance', 'Self help', 'Sci-fi', 'Satire', 'Spirituality', 'Thriller', 'Philosophical Fiction'],
+            values: [
+                'Action and Adventure',
+                'Biography or Autobiography',
+                'Coming-of-age',
+                'Crime',
+                'Drama',
+                'Dystopian Fiction',
+                'Fantasy',
+                'History',
+                'Mystery',
+                'Pop-sci',
+                'Poetry',
+                'Romance',
+                'Self help',
+                'Sci-fi',
+                'Satire',
+                'Spirituality',
+                'Thriller',
+                'Philosophical Fiction'
+            ],
             message: 'Please provide a valid genre.'
         }
     },
@@ -38,11 +66,11 @@ const bookSchema = new mongoose.Schema({
         ref: 'User',
         required: [true, 'Please provide a user.']
     },
-    comments: [
+    notes: [
         {
-            comment: {
+            note: {
                 type: String,
-                required: [true, 'Please provide the content for the comment.']
+                required: [true, 'Please provide the content for the note.']
             },
             dateCreated: {
                 type: Date,

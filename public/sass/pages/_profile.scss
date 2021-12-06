@@ -1,6 +1,17 @@
 .profile-header {
-    max-width: 70rem;
-    margin: 4.5rem auto 2rem;
+    text-align: center;
+    padding: 3rem 1rem;
+    margin-bottom: 3rem;
+
+    border-bottom: 1px solid $generic-border-color;
+
+    .user-photo {
+        width: 180px;
+        height: auto;
+        margin-bottom: 1rem;
+    }
+
+    background-color: #fff;
 }
 
 .user-banner {
@@ -14,38 +25,66 @@
 .books {
     margin: 0 auto 4.5rem;
     max-width: 70rem;
+    padding: 1rem;
 
     &__container {
-        margin: 0 auto;
+        margin-left: -0.25rem;
+        margin-right: -0.25rem;
     }
 
-    &__message {
-        margin: 5rem 0 5rem;
-        font-size: 1.5rem;
-        text-align: center;
-        color: #555555;
+    &__buttons-container {
+        display: flex;
+        margin-bottom: 1rem;
     }
 
-    .column {
-        padding: 5px;
+    &__add-book-button {
+        margin-left: auto;
     }
 }
 
-.profile-book-card {
-    height: 13rem;
+.books-grid-sizer,
+.books-grid-item {
+    box-sizing: border-box;
+    width: 25%;
 
+}
+
+.books-grid-item {
+    padding: 0.25rem;
+}
+
+.profile-book-card {
     &__link {
-        box-sizing: border-box;
         text-decoration: none;
         color: inherit;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        border: 1px solid transparent;
-        height: 100%;
+    }
+}
 
-        &:hover {
-            border-color: lighten($secondary-color, 35%);
-        }
+.no-books-message {
+    margin-top: 9rem;
+    margin-bottom: 9rem;
+}
+
+// Medium devices (tablets, less than 992px)
+@media (max-width: 991.98px) {
+    .books-grid-sizer,
+    .books-grid-item {
+        width: 33.33%;
+    }
+}
+
+// Small devices (landscape phones, less than 768px)
+@media (max-width: 767.98px) {
+    .books-grid-sizer,
+    .books-grid-item {
+        width: 50%;    
+    }
+}
+
+// `sm` applies to x-small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) {
+    .books-grid-sizer,
+    .books-grid-item {
+        width: 100%;    
     }
 }

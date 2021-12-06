@@ -4,8 +4,11 @@ const AppError = require('../utils/appError');
 const ApiFeatures = require('../utils/apiFeatures');
 const filterObject = require('../utils/filterObject');
 
-exports.getAllBooks = catchAsync(async (req, res, next) => {
-    const features = new ApiFeatures(Book.find({ user: req.user._id }), req.query)
+exports.getAllMyBooks = catchAsync(async (req, res, next) => {
+    const features = new ApiFeatures(
+        Book.find({ user: req.user._id }),
+        req.query
+    )
         .filter()
         .sort()
         .limitFields()
@@ -20,12 +23,11 @@ exports.getAllBooks = catchAsync(async (req, res, next) => {
     });
 });
 
-exports.getBook = catchAsync(async (req, res, next) => {
-    let book = await Book
-        .findOne({
-            _id: req.params.id,
-            user: req.user._id
-        });
+exports.getMyBook = catchAsync(async (req, res, next) => {
+    let book = await Book.findOne({
+        _id: req.params.id,
+        user: req.user._id
+    });
 
     if (!book) return next(new AppError('No book found.', 404));
 
@@ -35,8 +37,14 @@ exports.getBook = catchAsync(async (req, res, next) => {
     });
 });
 
-exports.createBook = catchAsync(async (req, res, next) => {
-    const filteredBody = filterObject(req.body, 'title', 'author', 'rating', 'genre');
+exports.createMyBook = catchAsync(async (req, res, next) => {
+    const filteredBody = filterObject(
+        req.body,
+        'title',
+        'author',
+        'rating',
+        'genre'
+    );
     req.body.user = req.user._id;
 
     const book = new Book(req.body);
@@ -48,13 +56,23 @@ exports.createBook = catchAsync(async (req, res, next) => {
     });
 });
 
-exports.updateBook = catchAsync(async (req, res, next) => {
-    const filteredBody = filterObject(req.body, 'title', 'author', 'rating', 'genre');
+exports.updateMyBook = catchAsync(async (req, res, next) => {
+    const filteredBody = filterObject(
+        req.body,
+        'title',
+        'author',
+        'rating',
+        'genre'
+    );
 
-    const doc = await Book.findOneAndUpdate({
-        _id: req.params.id,
-        user: req.user._id
-    }, filteredBody, { new: true, runValidators: true });
+    const doc = await Book.findOneAndUpdate(
+        {
+            _id: req.params.id,
+            user: req.user._id
+        },
+        filteredBody,
+        { new: true, runValidators: true }
+    );
 
     if (!doc) return next(new AppError('No book found.', 404));
 
@@ -64,7 +82,7 @@ exports.updateBook = catchAsync(async (req, res, next) => {
     });
 });
 
-exports.deleteBook = catchAsync(async (req, res, next) => {
+exports.deleteMyBook = catchAsync(async (req, res, next) => {
     const doc = await Book.findOneAndDelete({
         _id: req.params.id,
         user: req.user._id
@@ -76,4 +94,4 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
         status: 'success',
         data: doc
     });
-});;
+});

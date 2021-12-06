@@ -14,7 +14,7 @@ block content
                 input#settings-details-form__photo-upload.form__file-upload(type='file' accept='image/*')
                 
                 input.button-primary(type='submit' value='Submit')
-                #settings-details-form__loading-spinner.loading-spinner
+                #settings-details-form__loading-spinner.loading-spinner.settings-loading-spinner
 
             form#settings-password-form.form.settings-password-form
                 h2.heading-3.form__heading Update password
@@ -26,9 +26,9 @@ block content
                 input#settings-password-form__confirm-password-field.form__input-field(type='password')
                 
                 input.button-primary(type='submit' value='Submit')
-                #settings-password-form__loading-spinner.loading-spinner
+                #settings-password-form__loading-spinner.loading-spinner.settings-loading-spinner
 
             .settings-delete-button-container
                 h2.heading-3.form__heading Delete account
                 button#settings-delete-button.button-danger Delete
-                #settings-delete__loading-spinner.loading-spinner
+                #settings-delete__loading-spinner.loading-spinner.settings-loading-spinner

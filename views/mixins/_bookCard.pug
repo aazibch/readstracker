@@ -1,26 +1,19 @@
-mixin bookCard(book)
-    -
-        let bookTitle;
-        if (book.title.length > 45) {
-            bookTitle = book.title.substring(0, 42) + '....';
-        } else {
-            bookTitle = book.title
-        }
-
-    .book-card.profile-book-card
-        a.profile-book-card__link(href=`/books/${book._id}`)
-            .book-card__info
-                p.book-card__title= bookTitle
-                p.book-card__author-line
-                    | by 
-                    span.book__author= book.author
-                .book-card__rating
-                    each star in [1, 2, 3, 4, 5]
-                        i(class=`far fa-star ${star <= book.rating ? 'star-highlighted' : '' }`)
-                .book-card__secondary-data
-                    .book-card__secondary-data-content-1
-                        p.book-card__genre= book.genre
-                        p.book-card__date-added= book.dateCreated.toLocaleString('en-us', {day: '2-digit', weekday: 'short', month: 'long', year: 'numeric'})
-                    .book-card__secondary-data-content-2
-                        - const commentQuantity = book.comments.length;
-                        p.book-card__comments-quantity= `${commentQuantity} Comment${commentQuantity > 1 || commentQuantity === 0 ? 's' : ''}`
+mixin bookCard(book, username)
+    .books-grid-item
+        .book-card.profile-book-card
+            a.profile-book-card__link(href=`/users/${username}/books/${book._id}`)
+                .book-card__info
+                    p.book-card__title= book.title
+                    p.book-card__author-line
+                        | by 
+                        span.book__author= book.author
+                    .book-card__rating
+                        each star in [1, 2, 3, 4, 5]
+                            i(class=`far fa-star ${star <= book.rating ? 'star-highlighted' : '' }`)
+                    .book-card__secondary-data
+                        .book-card__secondary-data-content-1
+                            p.book-card__genre= book.genre
+                            p.book-card__date-added= book.dateCreated.toLocaleString('en-us', {day: '2-digit', weekday: 'short', month: 'long', year: 'numeric'})
+                        .book-card__secondary-data-content-2
+                            - const noteQuantity = book.notes.length;
+                            p.book-card__notes-quantity= `${noteQuantity} Note${noteQuantity > 1 || noteQuantity === 0 ? 's' : ''}`

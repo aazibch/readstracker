@@ -3,7 +3,11 @@ import { displayAlert } from './alerts';
 import { catchAsync } from './catchAsync';
 
 export const signupOrLogin = catchAsync(async (routeType, data) => {
-    document.querySelector(`${routeType === 'login' ? '#login-form' : '#signup-form'}__loading-spinner`).style.display = 'inline-block';
+    document.querySelector(
+        `${
+            routeType === 'login' ? '#login-form' : '#signup-form'
+        }__loading-spinner`
+    ).style.display = 'inline-block';
 
     const response = await axios({
         method: 'POST',
@@ -19,7 +23,7 @@ export const signupOrLogin = catchAsync(async (routeType, data) => {
                 location.assign('/');
             }, 1500);
         }
-    } else {        
+    } else {
         if (response.data.status === 'success') {
             displayAlert('success', 'Logged in successfully!');
 
@@ -36,9 +40,9 @@ export const logout = async () => {
             method: 'GET',
             url: '/api/v1/users/logout'
         });
-    
+
         if (response.data.status === 'success') location.assign('/');
     } catch (err) {
-        displayAlert('error', 'Something went wrong. Try again.')
+        displayAlert('error', 'Something went wrong. Try again.');
     }
-}
+};

@@ -4,31 +4,19 @@ const router = express.Router();
 const booksController = require('../controllers/booksController');
 const authController = require('../controllers/authController');
 
-const commentsRouter = require('./commentsRoutes');
+const notesRouter = require('./notesRoutes');
 
-router.use('/:bookId/comments', commentsRouter);
+router.use('/:bookId/notes', notesRouter);
 
 router
     .route('/')
-    .get(
-        authController.protect,
-        booksController.getAllBooks
-    ).post(
-        authController.protect,
-        booksController.createBook
-    );
+    .get(authController.protect, booksController.getAllMyBooks)
+    .post(authController.protect, booksController.createMyBook);
 
 router
     .route('/:id')
-    .get(
-        authController.protect,
-        booksController.getBook
-    ).delete(
-        authController.protect,
-        booksController.deleteBook
-    ).patch(
-        authController.protect,
-        booksController.updateBook
-    );
+    .get(authController.protect, booksController.getMyBook)
+    .delete(authController.protect, booksController.deleteMyBook)
+    .patch(authController.protect, booksController.updateMyBook);
 
 module.exports = router;

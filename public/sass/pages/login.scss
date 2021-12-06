@@ -2,9 +2,14 @@
     margin-bottom: 0;
 }
 
-.forgot-password-option {
+.form-links {
     text-align: center;
     margin: 1rem 0 4rem;
+
+    a {
+        display: block;
+        margin-bottom: 0.75rem;
+    }
 
     a:link, a:visited {
         color: $secondary-color;
@@ -13,5 +18,11 @@
 
     a:hover {
         text-decoration: underline;
+    }
+}
+
+.login-form {
+    &__loading-spinner {
+        display: none;
     }
 }

@@ -1,0 +1,6 @@
+mixin searchResult(result)
+    a(href=`/users/${result.username}`).search-result
+        img(src=`/images/users/${result.profilePhoto}`).user-photo.search-result__user-photo
+        div
+            p= result.username
+            p.search-result__books #{result.books.length} Books

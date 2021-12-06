@@ -1,29 +1,31 @@
 .jumbotron {
-    background: url('../images/jumbotron-bg.jpg');
-    background-size: cover;
-    background-position: center 30%;
+    background-color: $primary-color;
+    color: $light-color;
+    font-size: 1rem;
+    height: 25rem;
+
     
     &__container {        
+        @extend %container;
         display: flex;
         align-items: center;
-        @extend %container;
-    }
-
-    &__content {
-        background: rgba(255, 255, 255, 0.9);
-        border: 1px solid #e0e0e0;
-        border-radius: 5px;
-        width: 26rem;
-        padding: 2.5rem;
-        margin: 7rem 2rem;
-        box-sizing: border-box;
+        justify-content: center;
+        height: 100%;
+        padding: 0 2rem;
     }
 
     &__text {
-        font-size: 1.3rem;
-        color: $primary-color;
-        margin-bottom: 2rem;
-        font-weight: 400;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    &__icon {
+        width: 13rem;
+        margin-left: 2rem;
+
+        img {
+            width: 100%;
+        }
     }
 }
 
@@ -31,31 +33,20 @@
     text-transform: uppercase;
     margin: 2rem auto;
 
-    &__container {
-        padding: 0 2rem;
-        max-width: 70rem;
-        margin: 0 auto;
-    }
-
     &__box {
-        box-sizing: border-box;
-        height: 13rem;
         text-align: center;
         padding: 2rem;
-        box-shadow: $shadow-light;
-        border-radius: 2px;
-        margin: 5px;
-        background-color: #ffffff;
+        margin: 0.5rem;
     }
     
     &__icon {
         font-size: 4rem;
         margin-bottom: 1.5rem;
-        color: #acaaaa;
+        color: $primary-color;
     }
 
     & h2 {
-        font-size: 1rem;
+        font-size: 0.9rem;
         font-weight: 400;
         max-width: 11rem;
         margin: 0 auto;
@@ -63,10 +54,23 @@
 }
 
 @media (max-width: 767.98px) {
+    .jumbotron {
+        &__icon {
+            display: none;
+        }
+    }
+
+
     .services__container {
         .column:last-child {
             flex-grow: 0;
             margin: 0 auto;
         }
+    }
+}
+
+.book-form {
+    &__loading-spinner {
+        display: none;
     }
 }

@@ -2,19 +2,32 @@ header.header
     .header__container
         .header__site-title
             a(href='/')
-                img(src='/images/readstracker-logo.png', alt='ReadsTracker Logo')
+                img.header__logo-standard(src='/images/logo.png', alt='ReadsTracker Logo')
+                img.header__logo-icon(src='/images/logo-icon.png', alt='ReadsTracker Icon')
+        #search-users.search-users
+            form(action="/search-results")#search-users__form.search-users__form
+                input(type="search" name="search-query" placeholder="Search users" autocomplete="off")#search-users__input-field.search-users__input-field
+                button(type="submit").search-users__button <i class="fas fa-search"></i>
+            .search-users__dropdown
+                .search-users__quick-results
+                .loading-spinner.search-users__spinner
+
         nav.main-nav
             if user
-                a#logout-button.main-nav__button(role='button') Logout
                 #main-nav__dropdown.main-nav__dropdown
                     a#main-nav__user-button.main-nav__button.main-nav__user-button(role='button')
-                        img.main-nav__user-photo(src=`/images/users/${user.profilePhoto}`)
-                        | #{user.name.split(' ')[0]}
-                    ul.dropdown-menu.main-nav__dropdown-menu
-                        li
-                            a(href='/user') Profile
-                        li
-                            a(href='/user/settings') Settings
+                        img.user-photo.main-nav__user-photo(src=`/images/users/${user.profilePhoto}`)
+                        span.main-nav__username #{user.username}
+                    #main-nav__dropdown-menu-container.main-nav__dropdown-menu-container
+                        i.dropdown-menu__arrow.main-nav__dropdown-menu-arrow
+                        ul.dropdown-menu.main-nav__dropdown-menu
+                            li
+                                a(href=`/users/${user.username}`) <i class="fas fa-user"></i> <p>Profile</p>
+                            li
+                                a(href='/') <i class="fas fa-plus"></i> <p>Add Book</p>
+                            li
+                                a(href='/user/settings') <i class="fas fa-cog"></i> <p>Settings</p>
+                            li
+                                a(href='#')#logout-list-item <i class="fas fa-sign-out-alt"></i> <p>Logout</p>
             else
-                a.main-nav__button(href='/login') Login
-                a.main-nav__button.main-nav__button--imp(href='/signup') Signup
+                a.button-outline-primary.main-nav__button(href='/login' role='button') Login

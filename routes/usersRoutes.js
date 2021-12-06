@@ -11,19 +11,28 @@ router.get('/logout', authController.logout);
 router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword/:token', authController.resetPassword);
 
-router.use(authController.protect);
-router.patch('/userUpdatePassword', authController.updatePassword);
+router.get('/search/:query', usersController.getSearchResults);
 
-router.get('/user',
+router.use(authController.protect);
+router.patch('/updateMyPassword', authController.updateMyPassword);
+
+router.get(
+    '/me',
     usersController.setIdPropertyOnReqParams,
     usersController.getUser
 );
 
 router.patch(
-    '/userUpdateData',
+    '/updateMe',
     usersController.uploadProfilePhoto,
-    usersController.updateUser
+    usersController.resizeProfilePhoto,
+    usersController.updateMe
 );
-router.delete('/userDelete', usersController.deleteUser);
+
+router.delete('/deleteMe', usersController.deleteMe);
+
+// Routes pertaining to other users.
+
+router.get('/:id', usersController.getUser);
 
 module.exports = router;

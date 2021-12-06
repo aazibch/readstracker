@@ -10,6 +10,8 @@ block content
                 label.form__label Password
                 input#password-field.form__input-field(type='password')
                 input.button-primary(type='submit' value='Login')
-                #login-form__loading-spinner.loading-spinner
-    p.forgot-password-option
-            a(href='/forgot-password') Forgot your password?
+                #login-form__loading-spinner.loading-spinner.login-form__loading-spinner
+        .form-links
+                a(href='/forgot-password') Forgot your password?
+                a(href='/signup') Don't have an account? Signup.
+    

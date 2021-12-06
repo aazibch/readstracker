@@ -1,20 +1,20 @@
-mixin servicesBox(icon, text)
-    .services__box
-        i(class=`services__icon fas fa-${icon}`)
-        h2= text
+include mixins/_servicesBox
 
 section.jumbotron
     .jumbotron__container
-        .jumbotron__content
-            h1.jumbotron__text Are you tired of keeping track of your books? Worry no more for we're here to help!
-            a.button-primary(href='/signup') Signup
+        .jumbotron__call-to-action
+            p.jumbotron__text Tired of keeping track of your books?
+                <br> We'll help you sort out!
+            a.button-light.button-large(href='/signup') Signup
+        .jumbotron__icon
+            img(src='/images/logo-icon-light.png')
 
 section.services
     .services__container
         .row
             .column
-                +servicesBox('book', 'Keep Track of All Your Reads')
+                +servicesBox('book', 'Keep track of all your reads')
             .column
-                +servicesBox('eye', 'Show Off How Well-Read You Are')
+                +servicesBox('eye', 'Show off how well-read you are')
             .column
-                +servicesBox('star', 'Rate the Works You\'ve Reads')
+                +servicesBox('users', 'See what your friends are reading')

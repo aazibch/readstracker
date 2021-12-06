@@ -2,21 +2,18 @@ extends base
 include mixins/_bookCard
 
 block content
-    .page-container
-        .profile-header
-            h1.heading-1= user.name
-        
-        .books
-            if user.books.length === 0
-                .books__message
-                    p No books to show.
-                    p
-                        | Click 
-                        a.link(href='/') here
-                        |  to submit a book.
-            else
-                .books__container
-                    .row
-                        each book in user.books
-                            .column
-                                +bookCard(book)
+    .profile-header
+        img.user-photo(src=`/images/users/${profile.profilePhoto}`)
+        h1.heading-1= profile.username
+    
+    .books
+        .books__buttons-container
+            a(href='/').button-primary.books__add-book-button Add Book
+        if profile.books.length === 0
+            .message.no-books-message
+                p No books to show.
+        else
+            .books__container.books-grid
+                .books-grid-sizer
+                each book in profile.books
+                    +bookCard(book, profile.username)

@@ -1,0 +1,11 @@
+extends base
+include mixins/_searchResult
+
+block content
+    .search-results-container
+        if (results.length === 0)
+            .message
+                p No results found.
+        else
+            each result in results
+                +searchResult(result)

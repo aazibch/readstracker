@@ -4,9 +4,9 @@ import { catchAsync } from './catchAsync';
 
 export const manageBookData = catchAsync(async (reqType, data) => {
     let axiosOptions = {
-        url: reqType === 'POST' ? '/api/v1/books/' :  `/api/v1/books/${data.id}`
-    }
-    
+        url: reqType === 'POST' ? '/api/v1/books/' : `/api/v1/books/${data.id}`
+    };
+
     if (reqType === 'PATCH' || reqType === 'POST') {
         axiosOptions.data = data;
     }
@@ -15,8 +15,12 @@ export const manageBookData = catchAsync(async (reqType, data) => {
         delete data.id;
     }
 
-    document.querySelector(`#${reqType === 'POST' ? 'book-form' : 'edit-book-form'}__loading-spinner`).style.display = 'inline-block';
-    
+    document.querySelector(
+        `#${
+            reqType === 'POST' ? 'book-form' : 'edit-book-form'
+        }__loading-spinner`
+    ).style.display = 'inline-block';
+
     axiosOptions.method = reqType;
     const response = await axios(axiosOptions);
 
@@ -31,7 +35,7 @@ export const manageBookData = catchAsync(async (reqType, data) => {
     } else if (reqType === 'PATCH') {
         if (response.status === 200) {
             displayAlert('success', 'Book successfully updated!');
-            
+
             setTimeout(() => {
                 location.assign(`/books/${response.data.data._id}`);
             }, 1500);
@@ -39,9 +43,9 @@ export const manageBookData = catchAsync(async (reqType, data) => {
     } else if (reqType === 'POST') {
         if (response.status === 201) {
             displayAlert('success', 'Book successfully posted!');
-            
+
             setTimeout(() => {
-                location.assign('/user');
+                location.assign('/profile');
             }, 1500);
         }
     }

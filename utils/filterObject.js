@@ -1,7 +1,7 @@
-const filterObj = (obj, ...allowedProps ) => {
+const filterObj = (obj, ...allowedProps) => {
     const updatedObj = { ...obj };
 
-    Object.keys(updatedObj).forEach(e => {
+    Object.keys(updatedObj).forEach((e) => {
         if (!allowedProps.includes(e)) {
             delete updatedObj[e];
         }
