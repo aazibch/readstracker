@@ -1,0 +1,19 @@
+extends base
+
+block content
+    .page-container.messages-page
+        .messages__sidebar
+            h2.page-title Messages
+            .messages__users
+                a(href="").messages__user
+                    img(src=`/images/users/user-5f11bbd15e71cf433293029b-1636391247477.jpeg`).user-photo
+                    div
+                        p.messages__username aazibch
+                        p Hi Aazib, I hope you're doing well.
+        .messages__users-list 
+            
+        .messages__main
+            form.messages__form
+                textarea.messages__message-input
+                div
+                    input(type="submit" value="Send").button-primary

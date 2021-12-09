@@ -1019,4 +1019,69 @@ main {
   color: #4d5156;
 }
 
+.page-title {
+  padding: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.messages-page {
+  height: 5rem;
+  display: flex;
+  background-color: #fff;
+  min-height: 35rem;
+}
+
+.messages__sidebar {
+  flex: 0 1 30rem;
+  border: 1px solid #e0e0e0;
+}
+
+.messages__main {
+  flex: 1 0 auto;
+  border: 1px solid #e0e0e0;
+  border-left-style: none;
+  position: relative;
+}
+
+.messages__form {
+  border-top: 1px solid #e0e0e0;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  padding: 1rem;
+}
+
+.messages__message-input {
+  resize: none;
+  flex: 1 1 auto;
+  margin-right: 1rem;
+  height: 1rem;
+  size: 1rem;
+  padding: 0.5rem;
+}
+
+.messages__user {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+}
+.messages__user:link, .messages__user:visited, .messages__user:hover {
+  color: inherit;
+  text-decoration: none;
+}
+.messages__user:hover {
+  background: #f2f2f2;
+}
+.messages__user .user-photo {
+  width: 55px;
+  height: auto;
+  margin-right: 1rem;
+}
+
+.messages__username {
+  font-weight: bold;
+}
+
 /*# sourceMappingURL=main.css.map */

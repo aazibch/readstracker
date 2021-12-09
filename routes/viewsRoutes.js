@@ -58,4 +58,6 @@ router.get(
     viewsController.getProfile
 );
 
+router.get('/messages', viewsController.getMessages);
+
 module.exports = router;

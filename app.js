@@ -41,15 +41,11 @@ app.use(express.json('10kb'));
 app.use(cookieParser());
 app.use(mongoSanitize());
 app.use(xss());
-app.use(hpp({
-    whitelist: [
-        'title',
-        'author',
-        'rating',
-        'genre',
-        'dateCreated'
-    ]
-}));
+app.use(
+    hpp({
+        whitelist: ['title', 'author', 'rating', 'genre', 'dateCreated']
+    })
+);
 app.use(compression());
 
 if (process.env.NODE_ENV === 'development') {

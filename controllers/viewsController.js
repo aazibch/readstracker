@@ -97,3 +97,7 @@ exports.getSearchResults = catchAsync(async (req, res) => {
         results
     });
 });
+
+exports.getMessages = (req, res) => {
+    res.status(200).render('messages', { title: 'Messages' });
+};
