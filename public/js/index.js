@@ -230,6 +230,7 @@ if (editBookForm) {
 
 window.addEventListener('click', function (e) {
     if (
+        document.querySelector('#main-nav__dropdown-menu-container') &&
         !document
             .querySelector('#main-nav__dropdown-menu-container')
             .contains(e.target) &&
@@ -327,11 +328,15 @@ if (fullBook) {
 
 // Masonry.js config
 const initializeMasonry = () => {
-    var masonry = new Masonry('.books-grid', {
-        itemSelector: '.books-grid-item',
-        columnWidth: '.books-grid-sizer',
-        percentPosition: true
-    });
+    const booksGrid = document.querySelector('.books-grid');
+
+    if (booksGrid) {
+        const masonry = new Masonry(booksGrid, {
+            itemSelector: '.books-grid-item',
+            columnWidth: '.books-grid-sizer',
+            percentPosition: true
+        });
+    }
 };
 
 initializeMasonry();

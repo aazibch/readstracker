@@ -146,7 +146,6 @@ exports.protect = catchAsync(async (req, res, next) => {
 
     req.user = user;
     res.locals.user = user;
-    console.log('[protect] res.locals.user', res.locals.user);
     next();
 });
 
@@ -171,8 +170,6 @@ exports.isLoggedIn = async (req, res, next) => {
             }
 
             res.locals.user = user;
-
-            console.log('req.originalUrl', req.originalUrl);
 
             if (
                 req.originalUrl !== '/' &&

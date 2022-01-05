@@ -3,17 +3,26 @@ extends base
 block content
     .page-container.messages-page
         .messages__sidebar
-            h2.page-title Messages
-            .messages__users
-                a(href="").messages__user
+            h2.messages__page-title Messages
+            .recipients
+                a(href="").recipient
                     img(src=`/images/users/user-5f11bbd15e71cf433293029b-1636391247477.jpeg`).user-photo
                     div
-                        p.messages__username aazibch
-                        p Hi Aazib, I hope you're doing well.
-        .messages__users-list 
+                        p.recipient__username aazibch
+                        p.recipient__excerpt Hi Aazib, I hope you're doing well.
             
         .messages__main
-            form.messages__form
-                textarea.messages__message-input
+            .conversation
+                .message
+                    p.message__meta User
+                        span 4:41 pm
+                    p.message__text Hi Aazib, I hope you're doing well.
+
+
+            form.new-message__form
+                textarea.new-message__input
                 div
                     input(type="submit" value="Send").button-primary
+    
+    script(src='/socket.io/socket.io.js')
+    script(src='/js/sockets.js')

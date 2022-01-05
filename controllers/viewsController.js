@@ -34,7 +34,6 @@ exports.getPasswordRecoveryPage = catchAsync(async (req, res, next) => {
 
 exports.getProfile = catchAsync(async (req, res) => {
     if (req.user && req.user.username === req.params.username) {
-        console.log('logged in user');
         return res
             .status(200)
             .render('profile', { title: 'Profile', profile: req.user });

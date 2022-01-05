@@ -34,6 +34,7 @@ mongoose
 process.on('unhandledRejection', (err) => {
     console.log('UNHANDLED REJECTION');
     console.log(err.name, err.message);
+    console.log(err);
     exitProcess();
 });
 

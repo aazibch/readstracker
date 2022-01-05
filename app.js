@@ -1,5 +1,7 @@
+const http = require('http');
 const path = require('path');
 const express = require('express');
+const socketio = require('socket.io');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
@@ -14,9 +16,12 @@ const AppError = require('./utils/appError');
 const booksRoutes = require('./routes/booksRoutes');
 const usersRoutes = require('./routes/usersRoutes');
 const viewsRoutes = require('./routes/viewsRoutes');
+const conversationsRoutes = require('./routes/conversationsRoutes');
 const error = require('./middleware/error');
 
 const app = express();
+const server = http.createServer(app);
+const io = socketio(server);
 
 app.enable('trust proxy');
 
@@ -38,6 +43,8 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 app.use(express.static(path.join(__dirname, 'views')));
 app.use(express.json('10kb'));
+app.use(express.json());
+
 app.use(cookieParser());
 app.use(mongoSanitize());
 app.use(xss());
@@ -55,9 +62,18 @@ if (process.env.NODE_ENV === 'development') {
 app.use('/', viewsRoutes);
 app.use('/api/v1/books', booksRoutes);
 app.use('/api/v1/users', usersRoutes);
+app.use('/api/v1/conversations', conversationsRoutes);
 app.all('*', (req, res, next) => {
     next(new AppError('Route not found.', 404));
 });
 app.use(error);
 
-module.exports = app;
+io.on('connection', (socket) => {
+    socket.emit('message', 'Welcome to ReadsTracker Messages!');
+
+    socket.on('chatMessage', (message) => {
+        socket.emit('message', message);
+    });
+});
+
+module.exports = server;

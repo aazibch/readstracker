@@ -17451,7 +17451,7 @@ if (editBookForm) {
 }
 
 window.addEventListener('click', function (e) {
-  if (!document.querySelector('#main-nav__dropdown-menu-container').contains(e.target) && !userDropdownButton.contains(e.target)) {
+  if (document.querySelector('#main-nav__dropdown-menu-container') && !document.querySelector('#main-nav__dropdown-menu-container').contains(e.target) && !userDropdownButton.contains(e.target)) {
     modifyClassOnElement(document.querySelector('#main-nav__dropdown'), 'main-nav__dropdown--active', 'remove');
   }
 
@@ -17506,11 +17506,15 @@ if (fullBook) {
 
 
 var initializeMasonry = function initializeMasonry() {
-  var masonry = new _masonryLayout.default('.books-grid', {
-    itemSelector: '.books-grid-item',
-    columnWidth: '.books-grid-sizer',
-    percentPosition: true
-  });
+  var booksGrid = document.querySelector('.books-grid');
+
+  if (booksGrid) {
+    var masonry = new _masonryLayout.default(booksGrid, {
+      itemSelector: '.books-grid-item',
+      columnWidth: '.books-grid-sizer',
+      percentPosition: true
+    });
+  }
 };
 
 initializeMasonry(); // Reinitializing because the delay in loading font awesome messes up the layout.
@@ -17558,7 +17562,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42089" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42327" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
