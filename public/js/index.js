@@ -16,6 +16,7 @@ import { manageNotesData, noteDeleteClickHandler } from './manageNotesData';
 import { manageUserData } from './manageUserData';
 import { managePasswordRecovery } from './managePasswordRecovery';
 import { manageQuickSearch, showSearchDropdown } from './manageQuickSearch';
+import { manageMessages, renderMessage } from './manageMessages';
 
 const loginForm = document.querySelector('#login-form');
 const signupForm = document.querySelector('#signup-form');
@@ -31,6 +32,45 @@ const settingsDeleteButton = document.querySelector('#settings-delete-button');
 const forgotPasswordForm = document.querySelector('#forgot-password-form');
 const passwordRecoveryForm = document.querySelector('#password-recovery-form');
 const searchUsersField = document.querySelector('#search-users__input-field');
+const newMessageForm = document.querySelector('.new-message__form');
+const conversationContentEl = document.querySelector('.conversation-content');
+
+if (window.location.pathname.startsWith('/messages/')) {
+    const socket = io();
+
+    const convoId = newMessageForm.getAttribute('data-convo-id');
+
+    socket.emit('saveUser', convoId);
+
+    socket.on('onlineUsers', (users) => {
+        console.log('onlineUsers', users);
+    });
+
+    socket.on('chatMessage', (message) => {
+        renderMessage(message, false);
+    });
+
+    if (newMessageForm) {
+        conversationContentEl.scrollTop = conversationContentEl.scrollHeight;
+
+        newMessageForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const data = {
+                content: e.target.children[0].value
+            };
+
+            e.target.children[0].value = '';
+
+            manageMessages(
+                'POST',
+                e.target.getAttribute('data-convo-id'),
+                data,
+                socket
+            );
+        });
+    }
+}
 
 const modifyClassOnElement = (el, className, action) => {
     if (action === 'remove') {
@@ -163,6 +203,8 @@ if (userDropdownButton) {
 if (loginForm) {
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
+
+        console.log('login data submitted');
 
         const email = document.querySelector('#email-field').value;
         const password = document.querySelector('#password-field').value;

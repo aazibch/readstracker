@@ -1,0 +1,9 @@
+mixin message(message, correspondantData, loggedInUserData)
+    - const isLoggedInUsers = message.sender.toString() === loggedInUserData._id.toString();
+    div(class= isLoggedInUsers ? 'message message--logged-in-users' : 'message')
+        .message__main
+            if (!isLoggedInUsers)
+                img.message__user-photo.user-photo(src=`/images/users/${correspondantData.profilePhoto}`)
+            p.message__content= message.content
+        .message__meta
+            p.message__time= timeago.format(message.dateSent)

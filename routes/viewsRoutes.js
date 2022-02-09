@@ -46,10 +46,6 @@ router.get(
     viewsController.getSearchResults
 );
 
-// router.get('/masonry-test', (req, res) => {
-//     res.status(200).render('masonry');
-// });
-
 // Routes pertaining to other users.
 
 router.get(
@@ -58,6 +54,16 @@ router.get(
     viewsController.getProfile
 );
 
-router.get('/messages', viewsController.getMessages);
+router.get(
+    '/messages',
+    authController.protect,
+    viewsController.getConversations
+);
+
+router.get(
+    '/messages/:convoId',
+    authController.protect,
+    viewsController.getMessages
+);
 
 module.exports = router;

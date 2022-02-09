@@ -1,7 +1,5 @@
-const http = require('http');
 const path = require('path');
 const express = require('express');
-const socketio = require('socket.io');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
@@ -20,8 +18,6 @@ const conversationsRoutes = require('./routes/conversationsRoutes');
 const error = require('./middleware/error');
 
 const app = express();
-const server = http.createServer(app);
-const io = socketio(server);
 
 app.enable('trust proxy');
 
@@ -68,12 +64,4 @@ app.all('*', (req, res, next) => {
 });
 app.use(error);
 
-io.on('connection', (socket) => {
-    socket.emit('message', 'Welcome to ReadsTracker Messages!');
-
-    socket.on('chatMessage', (message) => {
-        socket.emit('message', message);
-    });
-});
-
-module.exports = server;
+module.exports = app;

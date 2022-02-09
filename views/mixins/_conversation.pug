@@ -1,0 +1,7 @@
+mixin conversation(convo, selected)
+    - const user = convo.participants[0];
+    a(href=`/messages/${convo._id}` class=`${!selected ? 'conversation' : 'conversation conversation--selected'}`)
+        img(src=`/images/users/${user.profilePhoto}` data-image= user.profilePhoto).user-photo
+        div
+            p.conversation__username= user.username
+            p.conversation__excerpt Lorem ipsum dolor, sit amet consectetur adipisicing elit.

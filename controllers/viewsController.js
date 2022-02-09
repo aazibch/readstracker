@@ -1,9 +1,9 @@
 const Book = require('../models/bookModel');
 const User = require('../models/userModel');
+const Conversation = require('../models/conversationModel');
 const catchAsync = require('../middleware/catchAsync');
 const AppError = require('../utils/appError');
-const crypto = require('crypto');
-const { profile } = require('console');
+const timeago = require('timeago.js');
 
 exports.getHome = (req, res) => {
     res.status(200).render('home', { title: 'Home' });
@@ -80,7 +80,7 @@ exports.getSettingsPage = catchAsync(async (req, res) => {
     });
 });
 
-exports.getSearchResults = catchAsync(async (req, res) => {
+exports.getSearchResults = catchAsync(async (req, res, next) => {
     const results = await User.find({
         username: {
             $regex: req.query['search-query'],
@@ -97,6 +97,56 @@ exports.getSearchResults = catchAsync(async (req, res) => {
     });
 });
 
-exports.getMessages = (req, res) => {
-    res.status(200).render('messages', { title: 'Messages' });
+const getConversations = async (user) => {
+    let conversations = await Conversation.find({
+        participants: { $in: [user._id] }
+    });
+
+    // Remove the user id for the logged in user.
+    for (let convo of conversations) {
+        const myIndex = convo.participants.indexOf(user._id);
+        convo.participants.splice(myIndex, 1);
+    }
+
+    // Populate existing participant
+    await Conversation.populate(conversations, {
+        path: 'participants',
+        select: ['-email']
+    });
+
+    // Remove converstions with accounts that are inactive
+    conversations = conversations.filter((convo) => {
+        return convo.participants.length > 0;
+    });
+
+    return conversations;
 };
+
+exports.getConversations = catchAsync(async (req, res, next) => {
+    const conversations = await getConversations(req.user);
+
+    res.status(200).render('messages', { title: 'Messages', conversations });
+});
+
+exports.getMessages = catchAsync(async (req, res, next) => {
+    const conversations = await getConversations(req.user);
+
+    const selectedConvo = conversations.find(
+        (convo) => convo._id.toString() === req.params.convoId
+    );
+
+    // console.log('selectedConvo', selectedConvo);
+
+    if (!selectedConvo)
+        return next(new AppError('No conversation found.', 404));
+
+    res.status(200).render('messages', {
+        title: 'Messages',
+        conversations,
+        selectedConvo,
+        timeago
+    });
+});
+
+// @todo
+// Check if you can "select" a user in a conversation if his account is inactive.

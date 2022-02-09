@@ -16476,6 +16476,8 @@ var catchAsync = function catchAsync(method) {
         _iterator.f();
       }
 
+      console.log('err', err);
+
       if (err.response.data.message) {
         (0, _alerts.displayAlert)('error', err.response.data.message);
       } else {
@@ -17252,7 +17254,460 @@ var addResultElements = function addResultElements(results) {
   showLoadingSpinner(false);
   document.querySelector('.search-users__quick-results').innerHTML = html;
 };
-},{"axios":"../../node_modules/axios/index.js"}],"index.js":[function(require,module,exports) {
+},{"axios":"../../node_modules/axios/index.js"}],"../../node_modules/timeago.js/esm/lang/en_US.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _default;
+var EN_US = ['second', 'minute', 'hour', 'day', 'week', 'month', 'year'];
+
+function _default(diff, idx) {
+  if (idx === 0) return ['just now', 'right now'];
+  var unit = EN_US[Math.floor(idx / 2)];
+  if (diff > 1) unit += 's';
+  return [diff + " " + unit + " ago", "in " + diff + " " + unit];
+}
+},{}],"../../node_modules/timeago.js/esm/lang/zh_CN.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _default;
+var ZH_CN = ['秒', '分钟', '小时', '天', '周', '个月', '年'];
+
+function _default(diff, idx) {
+  if (idx === 0) return ['刚刚', '片刻后'];
+  var unit = ZH_CN[~~(idx / 2)];
+  return [diff + " " + unit + "\u524D", diff + " " + unit + "\u540E"];
+}
+},{}],"../../node_modules/timeago.js/esm/register.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getLocale = exports.register = void 0;
+
+/**
+ * Created by hustcc on 18/5/20.
+ * Contract: i@hust.cc
+ */
+
+/**
+ * All supported locales
+ */
+var Locales = {};
+/**
+ * register a locale
+ * @param locale
+ * @param func
+ */
+
+var register = function (locale, func) {
+  Locales[locale] = func;
+};
+/**
+ * get a locale, default is en_US
+ * @param locale
+ * @returns {*}
+ */
+
+
+exports.register = register;
+
+var getLocale = function (locale) {
+  return Locales[locale] || Locales['en_US'];
+};
+
+exports.getLocale = getLocale;
+},{}],"../../node_modules/timeago.js/esm/utils/date.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.toDate = toDate;
+exports.formatDiff = formatDiff;
+exports.diffSec = diffSec;
+exports.nextInterval = nextInterval;
+
+/**
+ * Created by hustcc on 18/5/20.
+ * Contract: i@hust.cc
+ */
+var SEC_ARRAY = [60, 60, 24, 7, 365 / 7 / 12, 12];
+/**
+ * format Date / string / timestamp to timestamp
+ * @param input
+ * @returns {*}
+ */
+
+function toDate(input) {
+  if (input instanceof Date) return input; // @ts-ignore
+
+  if (!isNaN(input) || /^\d+$/.test(input)) return new Date(parseInt(input));
+  input = (input || ''). // @ts-ignore
+  trim().replace(/\.\d+/, '') // remove milliseconds
+  .replace(/-/, '/').replace(/-/, '/').replace(/(\d)T(\d)/, '$1 $2').replace(/Z/, ' UTC') // 2017-2-5T3:57:52Z -> 2017-2-5 3:57:52UTC
+  .replace(/([+-]\d\d):?(\d\d)/, ' $1$2'); // -04:00 -> -0400
+
+  return new Date(input);
+}
+/**
+ * format the diff second to *** time ago, with setting locale
+ * @param diff
+ * @param localeFunc
+ * @returns
+ */
+
+
+function formatDiff(diff, localeFunc) {
+  /**
+   * if locale is not exist, use defaultLocale.
+   * if defaultLocale is not exist, use build-in `en`.
+   * be sure of no error when locale is not exist.
+   *
+   * If `time in`, then 1
+   * If `time ago`, then 0
+   */
+  var agoIn = diff < 0 ? 1 : 0;
+  /**
+   * Get absolute value of number (|diff| is non-negative) value of x
+   * |diff| = diff if diff is positive
+   * |diff| = -diff if diff is negative
+   * |0| = 0
+   */
+
+  diff = Math.abs(diff);
+  /**
+   * Time in seconds
+   */
+
+  var totalSec = diff;
+  /**
+   * Unit of time
+   */
+
+  var idx = 0;
+
+  for (; diff >= SEC_ARRAY[idx] && idx < SEC_ARRAY.length; idx++) {
+    diff /= SEC_ARRAY[idx];
+  }
+  /**
+   * Math.floor() is alternative of ~~
+   *
+   * The differences and bugs:
+   * Math.floor(3.7) -> 4 but ~~3.7 -> 3
+   * Math.floor(1559125440000.6) -> 1559125440000 but ~~1559125440000.6 -> 52311552
+   *
+   * More information about the performance of algebraic:
+   * https://www.youtube.com/watch?v=65-RbBwZQdU
+   */
+
+
+  diff = Math.floor(diff);
+  idx *= 2;
+  if (diff > (idx === 0 ? 9 : 1)) idx += 1;
+  return localeFunc(diff, idx, totalSec)[agoIn].replace('%s', diff.toString());
+}
+/**
+ * calculate the diff second between date to be formatted an now date.
+ * @param date
+ * @param relativeDate
+ * @returns {number}
+ */
+
+
+function diffSec(date, relativeDate) {
+  var relDate = relativeDate ? toDate(relativeDate) : new Date();
+  return (+relDate - +toDate(date)) / 1000;
+}
+/**
+ * nextInterval: calculate the next interval time.
+ * - diff: the diff sec between now and date to be formatted.
+ *
+ * What's the meaning?
+ * diff = 61 then return 59
+ * diff = 3601 (an hour + 1 second), then return 3599
+ * make the interval with high performance.
+ **/
+
+
+function nextInterval(diff) {
+  var rst = 1,
+      i = 0,
+      d = Math.abs(diff);
+
+  for (; diff >= SEC_ARRAY[i] && i < SEC_ARRAY.length; i++) {
+    diff /= SEC_ARRAY[i];
+    rst *= SEC_ARRAY[i];
+  }
+
+  d = d % rst;
+  d = d ? rst - d : rst;
+  return Math.ceil(d);
+}
+},{}],"../../node_modules/timeago.js/esm/format.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.format = void 0;
+
+var _date = require("./utils/date");
+
+var _register = require("./register");
+
+/**
+ * format a TDate into string
+ * @param date
+ * @param locale
+ * @param opts
+ */
+var format = function (date, locale, opts) {
+  // diff seconds
+  var sec = (0, _date.diffSec)(date, opts && opts.relativeDate); // format it with locale
+
+  return (0, _date.formatDiff)(sec, (0, _register.getLocale)(locale));
+};
+
+exports.format = format;
+},{"./utils/date":"../../node_modules/timeago.js/esm/utils/date.js","./register":"../../node_modules/timeago.js/esm/register.js"}],"../../node_modules/timeago.js/esm/utils/dom.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getDateAttribute = getDateAttribute;
+exports.setTimerId = setTimerId;
+exports.getTimerId = getTimerId;
+var ATTR_TIMEAGO_TID = 'timeago-id';
+/**
+ * get the datetime attribute, `datetime` are supported.
+ * @param node
+ * @returns {*}
+ */
+
+function getDateAttribute(node) {
+  return node.getAttribute('datetime');
+}
+/**
+ * set the node attribute, native DOM
+ * @param node
+ * @param timerId
+ * @returns {*}
+ */
+
+
+function setTimerId(node, timerId) {
+  // @ts-ignore
+  node.setAttribute(ATTR_TIMEAGO_TID, timerId);
+}
+/**
+ * get the timer id
+ * @param node
+ */
+
+
+function getTimerId(node) {
+  return parseInt(node.getAttribute(ATTR_TIMEAGO_TID));
+}
+},{}],"../../node_modules/timeago.js/esm/realtime.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.cancel = cancel;
+exports.render = render;
+
+var _dom = require("./utils/dom");
+
+var _date = require("./utils/date");
+
+var _register = require("./register");
+
+// all realtime timer
+var TIMER_POOL = {};
+/**
+ * clear a timer from pool
+ * @param tid
+ */
+
+var clear = function (tid) {
+  clearTimeout(tid);
+  delete TIMER_POOL[tid];
+}; // run with timer(setTimeout)
+
+
+function run(node, date, localeFunc, opts) {
+  // clear the node's exist timer
+  clear((0, _dom.getTimerId)(node));
+  var relativeDate = opts.relativeDate,
+      minInterval = opts.minInterval; // get diff seconds
+
+  var diff = (0, _date.diffSec)(date, relativeDate); // render
+
+  node.innerText = (0, _date.formatDiff)(diff, localeFunc);
+  var tid = setTimeout(function () {
+    run(node, date, localeFunc, opts);
+  }, Math.min(Math.max((0, _date.nextInterval)(diff), minInterval || 1) * 1000, 0x7fffffff)); // there is no need to save node in object. Just save the key
+
+  TIMER_POOL[tid] = 0;
+  (0, _dom.setTimerId)(node, tid);
+}
+/**
+ * cancel a timer or all timers
+ * @param node - node hosting the time string
+ */
+
+
+function cancel(node) {
+  // cancel one
+  if (node) clear((0, _dom.getTimerId)(node)); // cancel all
+  // @ts-ignore
+  else Object.keys(TIMER_POOL).forEach(clear);
+}
+/**
+ * render a dom realtime
+ * @param nodes
+ * @param locale
+ * @param opts
+ */
+
+
+function render(nodes, locale, opts) {
+  // by .length
+  // @ts-ignore
+  var nodeList = nodes.length ? nodes : [nodes];
+  nodeList.forEach(function (node) {
+    run(node, (0, _dom.getDateAttribute)(node), (0, _register.getLocale)(locale), opts || {});
+  });
+  return nodeList;
+}
+},{"./utils/dom":"../../node_modules/timeago.js/esm/utils/dom.js","./utils/date":"../../node_modules/timeago.js/esm/utils/date.js","./register":"../../node_modules/timeago.js/esm/register.js"}],"../../node_modules/timeago.js/esm/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+Object.defineProperty(exports, "register", {
+  enumerable: true,
+  get: function () {
+    return _register.register;
+  }
+});
+Object.defineProperty(exports, "format", {
+  enumerable: true,
+  get: function () {
+    return _format.format;
+  }
+});
+Object.defineProperty(exports, "render", {
+  enumerable: true,
+  get: function () {
+    return _realtime.render;
+  }
+});
+Object.defineProperty(exports, "cancel", {
+  enumerable: true,
+  get: function () {
+    return _realtime.cancel;
+  }
+});
+
+var _en_US = _interopRequireDefault(require("./lang/en_US"));
+
+var _zh_CN = _interopRequireDefault(require("./lang/zh_CN"));
+
+var _register = require("./register");
+
+var _format = require("./format");
+
+var _realtime = require("./realtime");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Created by hustcc on 18/5/20.
+ * Contract: i@hust.cc
+ */
+(0, _register.register)('en_US', _en_US.default);
+(0, _register.register)('zh_CN', _zh_CN.default);
+},{"./lang/en_US":"../../node_modules/timeago.js/esm/lang/en_US.js","./lang/zh_CN":"../../node_modules/timeago.js/esm/lang/zh_CN.js","./register":"../../node_modules/timeago.js/esm/register.js","./format":"../../node_modules/timeago.js/esm/format.js","./realtime":"../../node_modules/timeago.js/esm/realtime.js"}],"manageMessages.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.renderMessage = exports.manageMessages = void 0;
+
+var _axios = _interopRequireDefault(require("axios"));
+
+var _timeago = require("timeago.js");
+
+var _catchAsync = require("./catchAsync");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+var manageMessages = (0, _catchAsync.catchAsync)( /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(reqType, convoId, data, socket) {
+    var axiosOptions, response;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            axiosOptions = {
+              url: "/api/v1/conversations/".concat(convoId, "/messages"),
+              method: reqType,
+              data: data
+            };
+            _context.next = 3;
+            return (0, _axios.default)(axiosOptions);
+
+          case 3:
+            response = _context.sent;
+            renderMessage(response.data.data, true);
+            socket.emit('sendMessage', {
+              convoId: convoId,
+              content: response.data.data.content
+            });
+
+          case 6:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function (_x, _x2, _x3, _x4) {
+    return _ref.apply(this, arguments);
+  };
+}());
+exports.manageMessages = manageMessages;
+
+var getCorrespondantProfilePhoto = function getCorrespondantProfilePhoto() {
+  var selectedConvoElement = document.querySelector('.conversation--selected');
+  return selectedConvoElement.children[0].getAttribute('data-image');
+};
+
+var renderMessage = function renderMessage(data, isOwn) {
+  var conversationContentEl = document.querySelector('.conversation-content');
+  conversationContentEl.insertAdjacentHTML('beforeend', "\n        <div class='message ".concat(isOwn && 'message--logged-in-users', "'>\n            <div class='message__main'>\n                ").concat(isOwn ? '' : "<img class='message__user-photo user-photo' src=/images/users/".concat(getCorrespondantProfilePhoto(), ">"), "\n                <p class='message__content'>").concat(data.content, "</p>\n            </div>\n            <div class='message__meta'>\n                <p class='message__time'>").concat((0, _timeago.format)(data.dateSent), "</p>\n            </div>\n        </div>\n    "));
+  conversationContentEl.scrollTop = conversationContentEl.scrollHeight;
+};
+
+exports.renderMessage = renderMessage;
+},{"axios":"../../node_modules/axios/index.js","timeago.js":"../../node_modules/timeago.js/esm/index.js","./catchAsync":"catchAsync.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 require("core-js/stable");
@@ -17277,6 +17732,8 @@ var _managePasswordRecovery = require("./managePasswordRecovery");
 
 var _manageQuickSearch = require("./manageQuickSearch");
 
+var _manageMessages = require("./manageMessages");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var loginForm = document.querySelector('#login-form');
@@ -17293,6 +17750,32 @@ var settingsDeleteButton = document.querySelector('#settings-delete-button');
 var forgotPasswordForm = document.querySelector('#forgot-password-form');
 var passwordRecoveryForm = document.querySelector('#password-recovery-form');
 var searchUsersField = document.querySelector('#search-users__input-field');
+var newMessageForm = document.querySelector('.new-message__form');
+var conversationContentEl = document.querySelector('.conversation-content');
+
+if (window.location.pathname.startsWith('/messages/')) {
+  var socket = io();
+  var convoId = newMessageForm.getAttribute('data-convo-id');
+  socket.emit('saveUser', convoId);
+  socket.on('onlineUsers', function (users) {
+    console.log('onlineUsers', users);
+  });
+  socket.on('chatMessage', function (message) {
+    (0, _manageMessages.renderMessage)(message, false);
+  });
+
+  if (newMessageForm) {
+    conversationContentEl.scrollTop = conversationContentEl.scrollHeight;
+    newMessageForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var data = {
+        content: e.target.children[0].value
+      };
+      e.target.children[0].value = '';
+      (0, _manageMessages.manageMessages)('POST', e.target.getAttribute('data-convo-id'), data, socket);
+    });
+  }
+}
 
 var modifyClassOnElement = function modifyClassOnElement(el, className, action) {
   if (action === 'remove') {
@@ -17391,6 +17874,7 @@ if (userDropdownButton) {
 if (loginForm) {
   loginForm.addEventListener('submit', function (e) {
     e.preventDefault();
+    console.log('login data submitted');
     var email = document.querySelector('#email-field').value;
     var password = document.querySelector('#password-field').value;
     (0, _signupOrLogin.signupOrLogin)('login', {
@@ -17534,7 +18018,7 @@ if (searchUsersField) {
     }
   });
 }
-},{"core-js/stable":"../../node_modules/core-js/stable/index.js","regenerator-runtime/runtime":"../../node_modules/regenerator-runtime/runtime.js","masonry-layout":"../../node_modules/masonry-layout/masonry.js","./signupOrLogin":"signupOrLogin.js","./ratingInput":"ratingInput.js","./deleteConfirmationModal":"deleteConfirmationModal.js","./manageBookData":"manageBookData.js","./manageNotesData":"manageNotesData.js","./manageUserData":"manageUserData.js","./managePasswordRecovery":"managePasswordRecovery.js","./manageQuickSearch":"manageQuickSearch.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"core-js/stable":"../../node_modules/core-js/stable/index.js","regenerator-runtime/runtime":"../../node_modules/regenerator-runtime/runtime.js","masonry-layout":"../../node_modules/masonry-layout/masonry.js","./signupOrLogin":"signupOrLogin.js","./ratingInput":"ratingInput.js","./deleteConfirmationModal":"deleteConfirmationModal.js","./manageBookData":"manageBookData.js","./manageNotesData":"manageNotesData.js","./manageUserData":"manageUserData.js","./managePasswordRecovery":"managePasswordRecovery.js","./manageQuickSearch":"manageQuickSearch.js","./manageMessages":"manageMessages.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -17562,7 +18046,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42327" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33139" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -30,8 +30,11 @@ exports.createConversation = catchAsync(async (req, res, next) => {
         return next(new AppError('The recipient cannot be the sender.', 400));
 
     // Check if there is already an existing conversation with the same participants.
-    const existingConversation = await Conversation.find({
-        participants: [req.user._id, filteredBody.recipient]
+    const existingConversation = await Conversation.findOne({
+        $and: [
+            { participants: { $in: [filteredBody.recipient] } },
+            { participants: { $in: [req.user._id] } }
+        ]
     });
 
     if (existingConversation)
@@ -57,5 +60,40 @@ exports.createConversation = catchAsync(async (req, res, next) => {
     res.status(201).json({
         status: 'success',
         data: conversation
+    });
+});
+
+// @ToDo
+// 1. Check if the request format needs to be modified. If so, how.
+
+exports.getParticipants = catchAsync(async (req, res, next) => {
+    const convoParticipants = await Conversation.findById(
+        req.params.conversationId
+    )
+        .select('participants')
+        .populate({
+            path: 'participants',
+            select: ['-email']
+        });
+
+    if (!convoParticipants)
+        return next(new AppError('The conversation was not found.', 404));
+
+    if (
+        convoParticipants.participants.findIndex(
+            (participant) =>
+                participant._id.toString() === req.user._id.toString()
+        ) === -1
+    )
+        return next(
+            new AppError(
+                'You must be a participant in the conversation to access this data.',
+                403
+            )
+        );
+
+    res.status(200).json({
+        status: 'success',
+        data: convoParticipants
     });
 });

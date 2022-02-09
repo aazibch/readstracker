@@ -1,5 +1,5 @@
 const newMessageForm = document.querySelector('.new-message__form');
-const conversationEl = document.querySelector('.conversation');
+const conversationContentEl = document.querySelector('.conversation-content');
 
 // socket.io
 const socket = io();
@@ -8,7 +8,7 @@ socket.on('message', (message) => {
     console.log('Message from backend', message);
     outputMessage(message);
 
-    conversationEl.scrollTop = conversationEl.scrollHeight;
+    conversationContentEl.scrollTop = conversationContentEl.scrollHeight;
 });
 
 newMessageForm.addEventListener('submit', function (e) {
@@ -24,7 +24,7 @@ newMessageForm.addEventListener('submit', function (e) {
 });
 
 const outputMessage = (message) => {
-    conversationEl.insertAdjacentHTML(
+    conversationContentEl.insertAdjacentHTML(
         'beforeend',
         `
         <div class="message">

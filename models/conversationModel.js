@@ -1,5 +1,25 @@
 const mongoose = require('mongoose');
 
+const messageSchema = new mongoose.Schema({
+    sender: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    content: {
+        type: String,
+        maxlength: [
+            255,
+            'Messages must have fewer than two hundred and fifty six characters.'
+        ],
+        required: true
+    },
+    dateSent: {
+        type: Date,
+        default: Date.now
+    }
+});
+
 const conversationSchema = new mongoose.Schema({
     participants: {
         type: [
@@ -15,25 +35,7 @@ const conversationSchema = new mongoose.Schema({
             message: 'There must be two participants in a conversation.'
         }
     },
-    messages: [
-        {
-            sender: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'User'
-            },
-            content: {
-                type: String,
-                maxlength: [
-                    255,
-                    'Messages must have fewer than two hundred and fifty six characters.'
-                ]
-            },
-            dateSent: {
-                type: Date,
-                default: Date.now
-            }
-        }
-    ]
+    messages: [messageSchema]
 });
 
 const Conversation = mongoose.model('Conversation', conversationSchema);
