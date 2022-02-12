@@ -35,7 +35,7 @@ const searchUsersField = document.querySelector('#search-users__input-field');
 const newMessageForm = document.querySelector('.new-message__form');
 const conversationContentEl = document.querySelector('.conversation-content');
 
-if (window.location.pathname.startsWith('/messages/')) {
+if (newMessageForm) {
     const socket = io();
 
     const convoId = newMessageForm.getAttribute('data-convo-id');
@@ -50,26 +50,24 @@ if (window.location.pathname.startsWith('/messages/')) {
         renderMessage(message, false);
     });
 
-    if (newMessageForm) {
-        conversationContentEl.scrollTop = conversationContentEl.scrollHeight;
+    conversationContentEl.scrollTop = conversationContentEl.scrollHeight;
 
-        newMessageForm.addEventListener('submit', (e) => {
-            e.preventDefault();
+    newMessageForm.addEventListener('submit', (e) => {
+        e.preventDefault();
 
-            const data = {
-                content: e.target.children[0].value
-            };
+        const data = {
+            content: e.target.children[0].value
+        };
 
-            e.target.children[0].value = '';
+        e.target.children[0].value = '';
 
-            manageMessages(
-                'POST',
-                e.target.getAttribute('data-convo-id'),
-                data,
-                socket
-            );
-        });
-    }
+        manageMessages(
+            'POST',
+            e.target.getAttribute('data-convo-id'),
+            data,
+            socket
+        );
+    });
 }
 
 const modifyClassOnElement = (el, className, action) => {

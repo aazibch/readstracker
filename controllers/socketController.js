@@ -1,5 +1,3 @@
-// const io = require('socket');
-
 let onlineUsers = [];
 
 const saveUser = (data) => {
@@ -9,6 +7,11 @@ const saveUser = (data) => {
 const removeUser = (socketId) => {
     onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId);
 };
+
+const getRecipient = (convoId, currentSocketId) => onlineUsers.find(
+    (user) =>
+        user.convoId === convoId && user.socketId !== currentSocketId
+);
 
 exports.onConnection = (io) => {
     return (socket) => {
@@ -21,13 +24,9 @@ exports.onConnection = (io) => {
         });
 
         socket.on('sendMessage', (data) => {
-            // To refactor
-            const receiver = onlineUsers.find(
-                (user) =>
-                    user.convoId === data.convoId && user.socketId !== socket.id
-            );
+            const recipient = getRecipient(data.convoId, socket.id);
 
-            io.to(receiver.socketId).emit('chatMessage', {
+            io.to(recipient.socketId).emit('chatMessage', {
                 content: data.content
             });
         });
@@ -38,8 +37,6 @@ exports.onConnection = (io) => {
             );
 
             removeUser(socket.id);
-
-            // io.emit('onlineUsers', onlineUsers);
         });
     };
 };

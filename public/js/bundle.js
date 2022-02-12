@@ -17753,7 +17753,7 @@ var searchUsersField = document.querySelector('#search-users__input-field');
 var newMessageForm = document.querySelector('.new-message__form');
 var conversationContentEl = document.querySelector('.conversation-content');
 
-if (window.location.pathname.startsWith('/messages/')) {
+if (newMessageForm) {
   var socket = io();
   var convoId = newMessageForm.getAttribute('data-convo-id');
   socket.emit('saveUser', convoId);
@@ -17763,18 +17763,15 @@ if (window.location.pathname.startsWith('/messages/')) {
   socket.on('chatMessage', function (message) {
     (0, _manageMessages.renderMessage)(message, false);
   });
-
-  if (newMessageForm) {
-    conversationContentEl.scrollTop = conversationContentEl.scrollHeight;
-    newMessageForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var data = {
-        content: e.target.children[0].value
-      };
-      e.target.children[0].value = '';
-      (0, _manageMessages.manageMessages)('POST', e.target.getAttribute('data-convo-id'), data, socket);
-    });
-  }
+  conversationContentEl.scrollTop = conversationContentEl.scrollHeight;
+  newMessageForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var data = {
+      content: e.target.children[0].value
+    };
+    e.target.children[0].value = '';
+    (0, _manageMessages.manageMessages)('POST', e.target.getAttribute('data-convo-id'), data, socket);
+  });
 }
 
 var modifyClassOnElement = function modifyClassOnElement(el, className, action) {
@@ -18046,7 +18043,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33139" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44397" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
