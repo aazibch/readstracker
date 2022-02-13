@@ -6,7 +6,6 @@ const socketController = require('./controllers/socketController');
 process.on('uncaughtException', (err) => {
     console.log('UNCAUGHT EXCEPTION');
     console.log(err.name, err.message);
-    console.log(err);
     process.exit(1);
 });
 
@@ -42,7 +41,6 @@ mongoose
 process.on('unhandledRejection', (err) => {
     console.log('UNHANDLED REJECTION');
     console.log(err.name, err.message);
-    console.log(err);
     exitProcess();
 });
 

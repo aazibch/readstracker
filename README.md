@@ -6,13 +6,19 @@ ReadsTracker allows you to keep track of the books you've read. You can even com
 
 ## Running the Application
 
-In order to run the app, install the required dependencies by running the following command:
+Install the required dependencies by running the following command:
 
 ```
 npm install
 ```
 
-Then run the following to run the development server:
+Build Javascript files into a bundle:
+
+```
+npm run build:js
+```
+
+Then enter the following to run the development server:
 
 ```
 npm start
