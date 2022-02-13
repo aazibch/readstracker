@@ -5,21 +5,12 @@ const ApiFeatures = require('../utils/apiFeatures');
 const filterObject = require('../utils/filterObject');
 
 exports.getAllMyBooks = catchAsync(async (req, res, next) => {
-    const features = new ApiFeatures(
-        Book.find({ user: req.user._id }),
-        req.query
-    )
-        .filter()
-        .sort()
-        .limitFields()
-        .paginate();
-
-    const docs = await features.query;
+    const books = await Book.find({ user: req.user._id });
 
     res.status(200).json({
         status: 'success',
-        results: docs.length,
-        data: docs
+        results: books.length,
+        data: books
     });
 });
 
@@ -45,10 +36,10 @@ exports.createMyBook = catchAsync(async (req, res, next) => {
         'rating',
         'genre'
     );
+
     req.body.user = req.user._id;
 
-    const book = new Book(req.body);
-    await book.save();
+    const book = await Book.create(req.body);
 
     res.status(201).json({
         status: 'success',
@@ -65,7 +56,7 @@ exports.updateMyBook = catchAsync(async (req, res, next) => {
         'genre'
     );
 
-    const doc = await Book.findOneAndUpdate(
+    const book = await Book.findOneAndUpdate(
         {
             _id: req.params.id,
             user: req.user._id
@@ -74,24 +65,24 @@ exports.updateMyBook = catchAsync(async (req, res, next) => {
         { new: true, runValidators: true }
     );
 
-    if (!doc) return next(new AppError('No book found.', 404));
+    if (!book) return next(new AppError('No book found.', 404));
 
     res.status(200).json({
         status: 'success',
-        data: doc
+        data: book
     });
 });
 
 exports.deleteMyBook = catchAsync(async (req, res, next) => {
-    const doc = await Book.findOneAndDelete({
+    const book = await Book.findOneAndDelete({
         _id: req.params.id,
         user: req.user._id
     });
 
-    if (!doc) return next(new AppError('No book found.', 404));
+    if (!book) return next(new AppError('No book found.', 404));
 
     res.status(204).json({
         status: 'success',
-        data: doc
+        data: book
     });
 });

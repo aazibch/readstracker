@@ -4,16 +4,13 @@ const router = express.Router({ mergeParams: true });
 const authController = require('../controllers/authController');
 const notesController = require('../controllers/notesController');
 
-router.use(authController.protect);
-
 router
     .route('/')
-    .get(notesController.getAllNotes)
-    .post(notesController.createNote);
+    .get(authController.protect, notesController.getAllNotes)
+    .post(authController.protect, notesController.createNote);
 
 router
     .route('/:id')
-    .get(notesController.getNote)
-    .delete(notesController.deleteNote);
+    .delete(authController.protect, notesController.deleteNote);
 
 module.exports = router;

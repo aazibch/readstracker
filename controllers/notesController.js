@@ -38,22 +38,6 @@ exports.createNote = catchAsync(async (req, res, next) => {
     });
 });
 
-exports.getNote = catchAsync(async (req, res, next) => {
-    const book = await Book.findOne({
-        _id: req.params.bookId,
-        user: req.user._id
-    });
-    const note = book.notes.id(req.params.id);
-
-    if (!book) return next(new AppError('No book found.', 404));
-    if (!note) return next(new AppError('No note found.', 404));
-
-    res.status(200).json({
-        status: 'success',
-        data: note
-    });
-});
-
 exports.deleteNote = catchAsync(async (req, res, next) => {
     const book = await Book.findOne({
         _id: req.params.bookId,
@@ -71,6 +55,6 @@ exports.deleteNote = catchAsync(async (req, res, next) => {
 
     res.status(204).json({
         status: 'success',
-        data: null
+        data: note
     });
 });

@@ -17,8 +17,8 @@ const bookSchema = new mongoose.Schema({
             "The author's name should at least have two characters."
         ],
         maxlength: [
-            20,
-            "The author's name can be the maximum length of twenty characters."
+            100,
+            "The author's name should have fewer than one hundred characters."
         ],
         required: [true, 'Please provide an author.']
     },
