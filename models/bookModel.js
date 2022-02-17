@@ -14,7 +14,7 @@ const bookSchema = new mongoose.Schema({
         type: String,
         minlength: [
             3,
-            "The author's name should at least have two characters."
+            "The author's name should at least have three characters."
         ],
         maxlength: [
             100,

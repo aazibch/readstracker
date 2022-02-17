@@ -1,8 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
-const crypto = require('crypto');
 const AppError = require('../utils/appError');
-const Email = require('../utils/email');
 const catchAsync = require('../middleware/catchAsync');
 const User = require('../models/userModel');
 const filterObject = require('../utils/filterObject');
@@ -13,15 +11,15 @@ const signToken = (id) => {
     });
 };
 
-const createSendToken = (user, req, res) => {
-    const token = signToken(user._id);
+const createSendToken = (userId, req, res) => {
+    const token = signToken(userId);
 
     res.cookie('jwt', token, {
         expires: new Date(
             Date.now() + process.env.JWT_COOKIE_EXPIRATION * 24 * 60 * 60 * 1000
         ),
         httpOnly: true,
-        secure: req.secure || req.header['x-forwarded-proto'] === 'https'
+        secure: req.secure
     });
 
     return token;
@@ -45,17 +43,8 @@ exports.signup = catchAsync(async (req, res, next) => {
 
     const newUser = await User.create(filteredBody);
 
-    // const url = `${req.protocol}://${req.get('host')}/`;
-
-    // try {
-    //     await new Email(newUser, url).sendWelcomeMessage();
-    // } catch(err) {
-    //     await User.findByIdAndDelete(newUser._id);
-    //     return next(new AppError('Unable to send email. Try again later.', 500));
-    // }
-
     // Send the cookie.
-    const token = createSendToken(newUser, req, res);
+    const token = createSendToken(newUser._id, req, res);
 
     // Remove the password property.
     newUser.password = undefined;
@@ -72,28 +61,23 @@ exports.login = catchAsync(async (req, res, next) => {
 
     if (!email || !password) {
         return next(
-            new AppError('Please provide the email address and password.', 400)
+            new AppError('Please an email address and password.', 400)
         );
     }
 
     const user = await User.findOne({ email }).select('+password');
 
     if (!user || !(await user.isPasswordCorrect(password, user.password))) {
-        return next(new AppError('Incorrect email or password.', 401));
+        return next(new AppError('Incorrect email address or password.', 401));
     }
 
-    const token = createSendToken(user, req, res);
+    const token = createSendToken(user._id, req, res);
 
     res.status(200).json({
         status: 'success',
         token
     });
 });
-
-passErrorForProtectHandler = (next) => {
-    const errMessage = "You're not logged in.";
-    next(new AppError(errMessage, 401));
-};
 
 exports.protect = catchAsync(async (req, res, next) => {
     let token;
@@ -108,7 +92,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     }
 
     if (!token) {
-        return passErrorForProtectHandler(next);
+        return next(new AppError("You're not logged in.", 401));
     }
 
     let decodedToken;
@@ -119,29 +103,17 @@ exports.protect = catchAsync(async (req, res, next) => {
             process.env.JWT_SECRET
         );
     } catch (err) {
-        if (err.name === 'TokenExpiredError') {
-            sendLogoutCookie(res);
-            return passErrorForProtectHandler(next);
-        }
-
-        if (err.name === 'JsonWebTokenError') {
-            sendLogoutCookie(res);
-            return next(new AppError('Invalid login token.', 401));
-        }
+        sendLogoutCookie(res);
+        return next(new AppError("You're not logged in.", 401));
     }
 
     const user = await User.findById(decodedToken.id).populate({
-        path: 'books',
-        options: {
-            sort: {
-                dateCreated: -1
-            }
-        }
+        path: 'books'
     });
 
     if (!user || user.changedPasswordAfterToken(decodedToken.iat)) {
         sendLogoutCookie(res);
-        return passErrorForProtectHandler(next);
+        return next(new AppError("You're not logged in.", 401));
     }
 
     req.user = user;
@@ -149,47 +121,30 @@ exports.protect = catchAsync(async (req, res, next) => {
     next();
 });
 
-exports.isLoggedIn = async (req, res, next) => {
-    if (req.cookies.jwt) {
-        try {
-            let token = req.cookies.jwt;
+exports.isLoggedIn = catchAsync(async (req, res, next) => {
+    if (!req.cookies.jwt) return next();
 
-            const decodedToken = await promisify(jwt.verify)(
-                token,
-                process.env.JWT_SECRET
-            );
+    try {
+        let token = req.cookies.jwt;
+        
+        decodedToken = await promisify(jwt.verify)(
+            token,
+            process.env.JWT_SECRET
+        );
 
-            const user = await User.findById(decodedToken.id);
+        const user = await User.findById(decodedToken.id);
 
-            if (!user) {
-                return next();
-            }
+        if (!user) return next();
 
-            if (user.changedPasswordAfterToken(decodedToken.iat)) {
-                return next();
-            }
+        if (user.changedPasswordAfterToken(decodedToken.iat)) return next();
 
-            res.locals.user = user;
-
-            if (
-                req.originalUrl !== '/' &&
-                !req.originalUrl.startsWith('/users/') &&
-                !req.originalUrl.startsWith('/search-results')
-            ) {
-                res.status(401).render('error', {
-                    title: 'Error',
-                    message: "You can't visit this page while logged in."
-                });
-            }
-
-            return next();
-        } catch (err) {
-            return next();
-        }
+        res.locals.user = user;
+    } catch (err) {
+        next()
     }
 
     next();
-};
+});
 
 exports.logout = (req, res, next) => {
     sendLogoutCookie(res);
@@ -203,7 +158,7 @@ exports.updateMyPassword = catchAsync(async (req, res, next) => {
         !(await user.isPasswordCorrect(req.body.currentPassword, user.password))
     ) {
         return next(
-            new AppError('The current password entered is incorrect.', 401)
+            new AppError('Incorrect value for the current password.', 400)
         );
     }
 

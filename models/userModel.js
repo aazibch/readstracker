@@ -18,9 +18,9 @@ const userSchema = new mongoose.Schema(
                     return /^[a-zA-Z0-9_]*$/.test(val);
                 },
                 message:
-                    'A username can only contain alphanumeric characters (letters A-Z, numbers 0-9) and the underscore (_).'
+                    'The username can only contain alphanumeric characters (letters A-Z, numbers 0-9) and underscores (_).'
             },
-            unique: [true, 'User with the same username already present.']
+            unique: [true, 'The username already exists.']
         },
         email: {
             type: String,
@@ -29,15 +29,15 @@ const userSchema = new mongoose.Schema(
                 validator.isEmail,
                 'Please provide a valid email address.'
             ],
-            unique: [true, 'User with the same email address already present.'],
+            unique: [true, 'The email address already exists.'],
             lowercase: true,
             maxlength: [
-                55,
-                'The email address should have fewer than fifty five characters.'
+                50,
+                'The email address should have fewer than fifty characters.'
             ],
             minlength: [
                 5,
-                'The email address should have at least five characters.'
+                'The email address should at least have five characters.'
             ]
         },
         profilePhoto: {
@@ -49,7 +49,7 @@ const userSchema = new mongoose.Schema(
             required: [true, 'Please provide a password.'],
             minlength: [
                 8,
-                'The password should have at least eight characters.'
+                'The password should at least have eight characters.'
             ],
             select: false
         },
@@ -113,10 +113,6 @@ userSchema.pre(/^find/, function (next) {
     next();
 });
 
-userSchema.statics.encryptPasswordResetToken = function (token) {
-    return crypto.createHash('sha256').update(token).digest('hex');
-};
-
 userSchema.methods.isPasswordCorrect = async function (
     inputPass,
     encryptedPass
@@ -135,15 +131,6 @@ userSchema.methods.changedPasswordAfterToken = function (
     }
 
     return false;
-};
-
-userSchema.methods.generatePasswordResetToken = function () {
-    const token = crypto.randomBytes(32).toString('hex');
-
-    this.passwordResetToken = this.constructor.encryptPasswordResetToken(token);
-    this.passwordResetTokenExpirationDate = Date.now() + 1000 * 60 * 10;
-
-    return token;
 };
 
 const User = mongoose.model('User', userSchema);
