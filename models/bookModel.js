@@ -5,8 +5,8 @@ const bookSchema = new mongoose.Schema({
         type: String,
         minlength: [2, 'The title should at least have two characters.'],
         maxlength: [
-            255,
-            'The title should have fewer than two hundred and fifty five characters.'
+            100,
+            'The title should have fewer than one hundred and one characters.'
         ],
         required: [true, 'Please provide a title.']
     },
@@ -18,7 +18,7 @@ const bookSchema = new mongoose.Schema({
         ],
         maxlength: [
             100,
-            "The author's name should have fewer than one hundred characters."
+            "The author's name should have fewer than one hundred and one characters."
         ],
         required: [true, 'Please provide an author.']
     },
@@ -70,7 +70,12 @@ const bookSchema = new mongoose.Schema({
         {
             note: {
                 type: String,
-                required: [true, 'Please provide the content for the note.']
+                required: [true, 'Please provide the content for the note.'],
+                minlength: [2, 'The note content should at least have two characters.'],
+                maxlength: [
+                    255,
+                    "The note content should have fewer than two hundred and fifty five characters."
+                ]
             },
             dateCreated: {
                 type: Date,
@@ -83,3 +88,7 @@ const bookSchema = new mongoose.Schema({
 const Book = mongoose.model('Book', bookSchema);
 
 module.exports = Book;
+
+/* @todo
+1. Check if a separate schema for notes is necessary?
+*/

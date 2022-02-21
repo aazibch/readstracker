@@ -10,7 +10,7 @@ const messageSchema = new mongoose.Schema({
         type: String,
         maxlength: [
             255,
-            'Messages must have fewer than two hundred and fifty six characters.'
+            'Message content should have fewer than two hundred and fifty six characters.'
         ],
         required: true
     },

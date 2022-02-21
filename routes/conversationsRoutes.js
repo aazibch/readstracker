@@ -10,7 +10,6 @@ router.use('/:conversationId/messages', messagesRouter);
 
 router
     .route('/')
-    .get(authController.protect, conversationsController.getAllConversations)
     .post(authController.protect, conversationsController.createConversation);
 
 module.exports = router;
