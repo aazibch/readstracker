@@ -13,8 +13,4 @@ router
     .get(authController.protect, conversationsController.getAllConversations)
     .post(authController.protect, conversationsController.createConversation);
 
-router
-    .route('/:conversationId/participants')
-    .get(authController.protect, conversationsController.getParticipants);
-
 module.exports = router;

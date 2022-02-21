@@ -16,23 +16,23 @@ exports.getAllConversations = catchAsync(async (req, res, next) => {
 });
 
 exports.createConversation = catchAsync(async (req, res, next) => {
-    const filteredBody = filterObject(req.body, 'recipient');
+    const filteredBody = filterObject(req.body, 'participant');
 
-    if (!filteredBody.recipient)
+    if (!filteredBody.participant)
         return next(
             new AppError(
-                'The request must contain the "recipient" property.',
+                'Invalid input data. Please provide the second participant.',
                 400
             )
         );
 
-    if (filteredBody.recipient === req.user._id.toString())
-        return next(new AppError('The recipient cannot be the sender.', 400));
+    if (filteredBody.participant === req.user._id.toString())
+        return next(new AppError('The participant cannot be the same user as the creator of the conversation.', 400));
 
     // Check if there is already an existing conversation with the same participants.
     const existingConversation = await Conversation.findOne({
         $and: [
-            { participants: { $in: [filteredBody.recipient] } },
+            { participants: { $in: [filteredBody.participant] } },
             { participants: { $in: [req.user._id] } }
         ]
     });
@@ -40,60 +40,25 @@ exports.createConversation = catchAsync(async (req, res, next) => {
     if (existingConversation)
         return next(
             new AppError(
-                'A conversation with the same participants is already present.',
+                'A conversation with the same participants already exists.',
                 400
             )
         );
 
-    const { recipient } = filteredBody;
-    delete filteredBody.recipient;
+    const { participant } = filteredBody;
+    delete filteredBody.participant;
 
-    const recipientUser = await User.findById(recipient);
+    const participantUser = await User.findById(participant);
 
-    if (!recipientUser)
-        return next(new AppError('The recipient cannot be found.', 404));
+    if (!participantUser)
+        return next(new AppError('The participant cannot be found.', 404));
 
-    filteredBody.participants = [recipient, req.user._id];
+    filteredBody.participants = [participant, req.user._id];
 
     const conversation = await Conversation.create(filteredBody);
 
     res.status(201).json({
         status: 'success',
         data: conversation
-    });
-});
-
-// @ToDo
-// 1. Check if the request format needs to be modified. If so, how.
-
-exports.getParticipants = catchAsync(async (req, res, next) => {
-    const convoParticipants = await Conversation.findById(
-        req.params.conversationId
-    )
-        .select('participants')
-        .populate({
-            path: 'participants',
-            select: ['-email']
-        });
-
-    if (!convoParticipants)
-        return next(new AppError('The conversation was not found.', 404));
-
-    if (
-        convoParticipants.participants.findIndex(
-            (participant) =>
-                participant._id.toString() === req.user._id.toString()
-        ) === -1
-    )
-        return next(
-            new AppError(
-                'You must be a participant in the conversation to access this data.',
-                403
-            )
-        );
-
-    res.status(200).json({
-        status: 'success',
-        data: convoParticipants
     });
 });
