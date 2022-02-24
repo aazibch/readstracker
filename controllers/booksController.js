@@ -1,7 +1,6 @@
 const Book = require('../models/bookModel');
 const catchAsync = require('../middleware/catchAsync');
 const AppError = require('../utils/appError');
-const ApiFeatures = require('../utils/apiFeatures');
 const filterObject = require('../utils/filterObject');
 
 exports.getAllMyBooks = catchAsync(async (req, res, next) => {
@@ -20,7 +19,7 @@ exports.getMyBook = catchAsync(async (req, res, next) => {
         user: req.user._id
     });
 
-    if (!book) return next(new AppError('No book found.', 404));
+    if (!book) return next(new AppError('Book not found.', 404));
 
     res.status(200).json({
         status: 'success',
@@ -65,7 +64,7 @@ exports.updateMyBook = catchAsync(async (req, res, next) => {
         { new: true, runValidators: true }
     );
 
-    if (!book) return next(new AppError('No book found.', 404));
+    if (!book) return next(new AppError('Book not found.', 404));
 
     res.status(200).json({
         status: 'success',
@@ -79,7 +78,7 @@ exports.deleteMyBook = catchAsync(async (req, res, next) => {
         user: req.user._id
     });
 
-    if (!book) return next(new AppError('No book found.', 404));
+    if (!book) return next(new AppError('Book not found.', 404));
 
     res.status(204).json({
         status: 'success',

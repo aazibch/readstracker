@@ -9,7 +9,7 @@ exports.getAllNotes = catchAsync(async (req, res, next) => {
         user: req.user._id
     });
 
-    if (!book) return next(new AppError('No book found.', 404));
+    if (!book) return next(new AppError('Book not found.', 404));
 
     res.status(200).json({
         status: 'success',
@@ -23,7 +23,7 @@ exports.createNote = catchAsync(async (req, res, next) => {
         user: req.user._id
     });
 
-    if (!book) return next(new AppError('No book found.', 404));
+    if (!book) return next(new AppError('Book not found.', 404));
 
     const filteredBody = filterObject(req.body, 'note');
 
@@ -44,7 +44,7 @@ exports.deleteNote = catchAsync(async (req, res, next) => {
         user: req.user._id
     });
 
-    if (!book) return next(new AppError('No book found.', 404));
+    if (!book) return next(new AppError('Book not found.', 404));
 
     const note = book.notes.id(req.params.id);
 

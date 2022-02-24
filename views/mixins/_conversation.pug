@@ -1,5 +1,5 @@
 mixin conversation(convo, selected)
-    - const user = convo.participants[0];
+    - const user = convo.participant;
     a(href=`/messages/${convo._id}` class=`${!selected ? 'conversation' : 'conversation conversation--selected'}`)
         img(src=`/images/users/${user.profilePhoto}` data-image= user.profilePhoto).user-photo
         div

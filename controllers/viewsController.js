@@ -6,37 +6,22 @@ const AppError = require('../utils/appError');
 const timeago = require('timeago.js');
 
 exports.getHome = (req, res) => {
-    res.status(200).render('home', { title: 'Home' });
+    res.status(200).render('home', { title: 'Home | ReadsTracker' });
 };
 
 exports.getLoginForm = (req, res) => {
-    res.status(200).render('login', { title: 'Login' });
+    res.status(200).render('login', { title: 'Login | ReadsTracker' });
 };
 
 exports.getSignupForm = (req, res) => {
-    res.status(200).render('signup', { title: 'Signup' });
+    res.status(200).render('signup', { title: 'Signup | ReadsTracker' });
 };
 
-exports.getForgotPasswordPage = (req, res) => {
-    res.status(200).render('forgotPassword', { title: 'Forgot Password' });
-};
-
-exports.getPasswordRecoveryPage = catchAsync(async (req, res, next) => {
-    const encryptedToken = User.encryptPasswordResetToken(req.params.token);
-
-    const user = await User.findOne({ passwordResetToken: encryptedToken });
-    if (!user) return next(new AppError('Route not found.', 404));
-
-    res.status(200).render('passwordRecovery', {
-        title: 'Recover your Password'
-    });
-});
-
-exports.getProfile = catchAsync(async (req, res) => {
+exports.getProfile = catchAsync(async (req, res, next) => {
     if (req.user && req.user.username === req.params.username) {
         return res
             .status(200)
-            .render('profile', { title: 'Profile', profile: req.user });
+            .render('profile', { title: `${req.user.username}'s Profile | ReadsTracker`, profile: req.user });
     }
 
     const user = await User.findOne({ username: req.params.username }).populate(
@@ -45,7 +30,7 @@ exports.getProfile = catchAsync(async (req, res) => {
 
     if (!user) return next(new AppError('User not found.', 404));
 
-    res.status(200).render('profile', { title: 'Profile', profile: user });
+    res.status(200).render('profile', { title: `${user.username}'s Profile | ReadsTracker`, profile: user });
 });
 
 exports.getBook = catchAsync(async (req, res, next) => {
@@ -55,44 +40,43 @@ exports.getBook = catchAsync(async (req, res, next) => {
     });
 
     if (!book || book.user.username !== req.params.username)
-        return next(new AppError('No book found.', 404));
+        return next(new AppError('Book not found.', 404));
 
     res.status(200).render('book', {
-        title: book.title,
+        title: 'ReadsTracker',
         book
     });
 });
 
-exports.getEditPage = catchAsync(async (req, res, next) => {
+exports.getBookEditPage = catchAsync(async (req, res, next) => {
     const book = await Book.findById(req.params.id);
 
-    if (!book) return next(new AppError('No book found.', 404));
+    if (!book || book.user._id.toString() !== req.user._id.toString()) return next(new AppError('Book not found.', 404));
 
     res.status(200).render('editBook', {
-        title: `Edit ${book.title}`,
+        title: `Edit Book | ReadsTracker`,
         book
     });
 });
 
 exports.getSettingsPage = catchAsync(async (req, res) => {
     res.status(200).render('settings', {
-        title: 'Settings'
+        title: 'Settings | ReadsTracker'
     });
 });
 
 exports.getSearchResults = catchAsync(async (req, res, next) => {
     const results = await User.find({
         username: {
-            $regex: req.query['search-query'],
+            $regex: req.query['search_query'],
             $options: 'i'
         }
     })
         .select('-email')
-        .populate({ path: 'books' })
-        .limit(5);
+        .populate({ path: 'books' });
 
     res.status(200).render('searchResults', {
-        title: 'Results',
+        title: 'Search | ReadsTracker',
         results
     });
 });
@@ -102,11 +86,12 @@ const getConversations = async (user) => {
         participants: { $in: [user._id] }
     });
 
-    // Remove the user id for the logged in user.
-    for (let convo of conversations) {
-        const myIndex = convo.participants.indexOf(user._id);
-        convo.participants.splice(myIndex, 1);
-    }
+    // Remove the user ID for the logged in user.
+    conversations = conversations.map(convo => {
+        convo.participants.splice(convo.participants.indexOf(user._id), 1)
+
+        return convo;
+    });
 
     // Populate existing participant
     await Conversation.populate(conversations, {
@@ -119,13 +104,20 @@ const getConversations = async (user) => {
         return convo.participants.length > 0;
     });
 
+    // Changing property "participants" to "participant" with the value to the user object of the other participant.
+    for (let i in conversations) {
+        conversations[i] = conversations[i].toObject();
+        conversations[i].participant = { ...conversations[i].participants[0] }
+        delete conversations[i].participants;
+    }
+
     return conversations;
 };
 
 exports.getConversations = catchAsync(async (req, res, next) => {
     const conversations = await getConversations(req.user);
 
-    res.status(200).render('messages', { title: 'Messages', conversations });
+    res.status(200).render('messages', { title: 'Messages | ReadsTracker', conversations });
 });
 
 exports.getMessages = catchAsync(async (req, res, next) => {
@@ -135,18 +127,13 @@ exports.getMessages = catchAsync(async (req, res, next) => {
         (convo) => convo._id.toString() === req.params.convoId
     );
 
-    // console.log('selectedConvo', selectedConvo);
-
     if (!selectedConvo)
         return next(new AppError('No conversation found.', 404));
 
     res.status(200).render('messages', {
-        title: 'Messages',
+        title: 'Messages | ReadsTracker',
         conversations,
         selectedConvo,
         timeago
     });
 });
-
-// @todo
-// Check if you can "select" a user in a conversation if his account is inactive.

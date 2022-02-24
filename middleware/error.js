@@ -1,13 +1,13 @@
 const AppError = require('../utils/appError');
 
 const getCastError = (err) => {
-    const message = `Invalid ${err.path}: ${err.value}`;
+    const message = `Invalid value "${err.value}" for the path "${err.path}".`;
     return new AppError(message, 400);
 };
 
 const getDublicateFieldError = (err) => {
     const key = Object.keys(err.keyPattern)[0];
-    const message = `Duplicate key value for the key ${key}.`;
+    const message = `Duplicate value for the key "${key}".`;
     return new AppError(message, 400);
 };
 
@@ -17,14 +17,13 @@ const getDublicateFieldErrorForEmail = (err) => {
 };
 
 const getValidationError = (err) => {
-    // editing!!!
     const errors = Object.values(err.errors).map((el) => {
-        if (el.name === 'CastError') return `Invalid ${el.path}: ${el.value}.`;
+        if (el.name === 'CastError') return `Invalid value "${el.value}" for the path "${el.path}".`;
 
         return el.message;
     });
 
-    const message = `Invalid input data. ${errors.join(' ')}`;
+    const message = `The following validation errors occured: ${errors.join(' ')}`;
     return new AppError(message, 400);
 };
 
@@ -37,7 +36,7 @@ const sendError = (err, req, res) => {
             });
         }
 
-        console.log('ERROR', err);
+        console.log('API ERROR', err);
         return res.status(500).json({
             status: 'error',
             message: 'Something went wrong.'
@@ -51,7 +50,7 @@ const sendError = (err, req, res) => {
         });
     }
 
-    console.log('ERROR', err);
+    console.log('WEBPAGE ERROR', err);
     return res.status(500).render('error', {
         title: 'Error',
         message: 'Something went wrong.'

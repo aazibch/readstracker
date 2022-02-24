@@ -96,9 +96,7 @@ exports.getSearchResults = catchAsync(async (req, res, next) => {
     })
         .select('-email')
         .populate({ path: 'books' });
-
-    console.log('results', results);
-
+        
     res.status(200).json({
         status: 'success',
         data: results
