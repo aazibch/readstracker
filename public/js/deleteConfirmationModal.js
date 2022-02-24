@@ -4,10 +4,10 @@ import { manageUserData } from './manageUserData';
 
 export const hideConfirmationModal = () => {
     document
-        .querySelector('#confirmation-modal__options')
+        .querySelector('.confirmation-modal__options')
         .removeEventListener('click', optionsClickHandler);
 
-    const modalEl = document.querySelector('#confirmation-modal');
+    const modalEl = document.querySelector('.confirmation-modal');
 
     modalEl.removeAttribute('data-note');
     modalEl.style.display = 'none';
@@ -18,9 +18,9 @@ const optionsClickHandler = (e) => {
 
     if (selectedEl.tagName === 'BUTTON') {
         if (selectedEl.getAttribute('data-value') === 'true') {
-            const modalEl = document.querySelector('#confirmation-modal');
+            const modalEl = document.querySelector('.confirmation-modal');
 
-            const book = document.querySelector('#full-book');
+            const book = document.querySelector('.full-book');
             let bookId;
 
             if (book) {
@@ -44,7 +44,7 @@ const optionsClickHandler = (e) => {
 
 export const displayConfirmationModal = (query) => {
     const bookDropdownMenu = document.querySelector(
-        '#full-book__dropdown-menu'
+        '.full-book__dropdown-menu'
     );
 
     if (bookDropdownMenu) {
@@ -52,21 +52,21 @@ export const displayConfirmationModal = (query) => {
     }
 
     document.querySelector(
-        '#confirmation-modal__query'
+        '.confirmation-modal__query'
     ).innerHTML = `<p>${query}</p>`;
-    document.querySelector('#confirmation-modal').style.display = 'block';
+    document.querySelector('.confirmation-modal').style.display = 'block';
     document
-        .querySelector('#confirmation-modal__options')
+        .querySelector('.confirmation-modal__options')
         .addEventListener('click', optionsClickHandler);
     document
-        .querySelector('#confirmation-modal__close-button')
+        .querySelector('.confirmation-modal__close-button')
         .addEventListener('click', () => {
             hideConfirmationModal();
         });
 };
 
 export const prepareConfirmationModal = (target, noteId) => {
-    const modalEl = document.querySelector('#confirmation-modal');
+    const modalEl = document.querySelector('.confirmation-modal');
 
     modalEl.setAttribute('data-target', target);
 

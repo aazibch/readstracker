@@ -7,7 +7,7 @@ import {
 import { catchAsync } from './catchAsync';
 
 export const noteDeleteClickHandler = (e) => {
-    const bookId = document.querySelector('#full-book').getAttribute('data-id');
+    const bookId = document.querySelector('.full-book').getAttribute('data-id');
     const noteId = e.target.getAttribute('data-id');
 
     prepareConfirmationModal('note', noteId);
@@ -28,7 +28,7 @@ export const addNoteEl = (note) => {
         minute: '2-digit'
     });
 
-    document.querySelector('#full-book__notes').insertAdjacentHTML(
+    document.querySelector('.full-book__notes').insertAdjacentHTML(
         'beforeend',
         `<div id='note-${note._id}' class='full-book__note'>
             <div class='full-book__note-content-1'>
@@ -70,7 +70,7 @@ export const manageNotesData = catchAsync(async (reqType, data) => {
         }
     } else if (reqType === 'POST') {
         if (response.status === 201) {
-            document.querySelector('#full-book__new-note-body').value = '';
+            document.querySelector('.full-book__new-note-body').value = '';
             displayAlert('success', 'Note successfully posted!');
             addNoteEl(response.data.data);
         }

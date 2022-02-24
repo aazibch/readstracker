@@ -3,18 +3,18 @@ extends base
 block content
     .page-container
         .form-container.signup-form-container
-            form#signup-form.form
+            form.signup-form.form
                 h1.heading-1.form__heading Signup for an account
                 label.form__label Username
-                input#signup-form__name-field.form__input-field(type='text')
+                input.signup-form__name-field.form__input-field(type='text')
                 label.form__label Email
-                input#signup-form__email-field.form__input-field(type='email')
+                input.signup-form__email-field.form__input-field(type='email')
                 label.form__label Password
-                input#signup-form__password-field.form__input-field(type='password')
+                input.signup-form__password-field.form__input-field(type='password')
                 label.form__label Confirm Password
-                input#signup-form__confirm-password-field.form__input-field(type='password')
+                input.signup-form__confirm-password-field.form__input-field(type='password')
                 input.button-primary(type='submit' value='Signup')
-                #signup-form__loading-spinner.loading-spinner.signup-form__loading-spinner
+                .loading-spinner.signup-form__loading-spinner
         
         .form-links
             a(href='/login') Already have an account? Login.

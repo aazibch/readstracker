@@ -5,7 +5,7 @@ import { catchAsync } from './catchAsync';
 export const signupOrLogin = catchAsync(async (routeType, data) => {
     document.querySelector(
         `${
-            routeType === 'login' ? '#login-form' : '#signup-form'
+            routeType === 'login' ? '.login-form' : '.signup-form'
         }__loading-spinner`
     ).style.display = 'inline-block';
 

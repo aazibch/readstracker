@@ -4,12 +4,12 @@ import { catchAsync } from './catchAsync';
 
 const clearPasswordInputFields = () => {
     document.querySelector(
-        '#settings-password-form__current-password-field'
+        '.settings-password-form__current-password-field'
     ).value = '';
-    document.querySelector('#settings-password-form__password-field').value =
+    document.querySelector('.settings-password-form__password-field').value =
         '';
     document.querySelector(
-        '#settings-password-form__confirm-password-field'
+        '.settings-password-form__confirm-password-field'
     ).value = '';
 };
 
@@ -32,7 +32,7 @@ export const manageUserData = catchAsync(async (routeType, reqType, data) => {
     }-form__loading-spinner`;
 
     if (routeType === 'deleteMe') {
-        spinnerEl = '#settings-delete__loading-spinner';
+        spinnerEl = '.settings-delete__loading-spinner';
     }
 
     document.querySelector(spinnerEl).style.display = 'inline-block';
@@ -42,13 +42,13 @@ export const manageUserData = catchAsync(async (routeType, reqType, data) => {
     if (response.status === 200) {
         if (routeType === 'updateMyPassword') {
             document.querySelector(
-                '#settings-password-form__loading-spinner'
+                '.settings-password-form__loading-spinner'
             ).style.display = 'none';
             displayAlert('success', 'Password successfully updated!');
             clearPasswordInputFields();
         } else {
             document.querySelector(
-                '#settings-details-form__loading-spinner'
+                '.settings-details-form__loading-spinner'
             ).style.display = 'none';
             displayAlert('success', 'Data successfully updated!');
         }

@@ -37,7 +37,7 @@ const clearResults = () => {
 };
 
 export const showSearchDropdown = (bool) => {
-    const searchUsersEl = document.querySelector('#search-users');
+    const searchUsersEl = document.querySelector('.search-users');
 
     if (bool) {
         clearResults();

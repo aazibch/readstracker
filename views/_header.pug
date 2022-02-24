@@ -4,9 +4,9 @@ header.header
             a(href='/')
                 img.header__logo-standard(src='/images/logo.png', alt='ReadsTracker Logo')
                 img.header__logo-icon(src='/images/logo-icon.png', alt='ReadsTracker Icon')
-        #search-users.search-users
-            form(action="/search-results")#search-users__form.search-users__form
-                input(type="search" name="search_query" placeholder="Search users" autocomplete="off")#search-users__input-field.search-users__input-field
+        .search-users
+            form(action="/search-results").search-users__form
+                input(type="search" name="search_query" placeholder="Search users" autocomplete="off").search-users__input-field
                 button(type="submit").search-users__button <i class="fas fa-search"></i>
             .search-users__dropdown
                 .search-users__quick-results
@@ -14,11 +14,11 @@ header.header
 
         nav.main-nav
             if user
-                #main-nav__dropdown.main-nav__dropdown
-                    a#main-nav__user-button.main-nav__button.main-nav__user-button(role='button')
+                .main-nav__dropdown
+                    a.main-nav__button.main-nav__user-button(role='button')
                         img.user-photo.main-nav__user-photo(src=`/images/users/${user.profilePhoto}`)
                         span.main-nav__username #{user.username}
-                    #main-nav__dropdown-menu-container.main-nav__dropdown-menu-container
+                    .main-nav__dropdown-menu-container
                         i.dropdown-menu__arrow.main-nav__dropdown-menu-arrow
                         ul.dropdown-menu.main-nav__dropdown-menu
                             li
@@ -30,6 +30,6 @@ header.header
                             li
                                 a(href='/user/settings') <i class="fas fa-cog"></i> <p>Settings</p>
                             li
-                                a(href='#')#logout-list-item <i class="fas fa-sign-out-alt"></i> <p>Logout</p>
+                                a(href='#').logout-list-item <i class="fas fa-sign-out-alt"></i> <p>Logout</p>
             else
                 a.button-outline-primary.main-nav__button(href='/login' role='button') Login
