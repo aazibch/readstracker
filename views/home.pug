@@ -2,6 +2,6 @@ extends base
 
 block content
     if (!user)
-        include _homeLoggedOutContent
+        include includes/_homeLoggedOutContent
     else
-        include _homeLoggedInContent
+        include includes/_homeLoggedInContent

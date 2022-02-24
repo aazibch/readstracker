@@ -22,11 +22,11 @@ html
                     button.confirmation-modal__yes-button(data-value='true') Yes
 
         if title !== 'Error'
-            include _header
+            include includes/_header
         
         main
             block content
 
-        include _footer
+        include includes/_footer
 
         script(src='/js/bundle.js')
