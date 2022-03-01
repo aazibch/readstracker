@@ -42,6 +42,7 @@ exports.createMyBook = catchAsync(async (req, res, next) => {
 
     res.status(201).json({
         status: 'success',
+        message: 'Book was created successfully.',
         data: book
     });
 });
@@ -68,6 +69,7 @@ exports.updateMyBook = catchAsync(async (req, res, next) => {
 
     res.status(200).json({
         status: 'success',
+        message: 'Book was updated successfully.',
         data: book
     });
 });
@@ -82,6 +84,7 @@ exports.deleteMyBook = catchAsync(async (req, res, next) => {
 
     res.status(204).json({
         status: 'success',
+        message: 'Book was deleted successfully.',
         data: book
     });
 });

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { displayAlert } from './alerts';
-import { catchAsync } from './catchAsync';
+import catchAsync from './catchAsync';
 
 export const managePasswordRecovery = catchAsync(async (routeType, reqType, data) => {
     const axiosOptions = {

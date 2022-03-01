@@ -1,22 +1,15 @@
 import { displayAlert } from './alerts';
 
-export const catchAsync = (method) => {
+const catchAsync = (fn) => {
     return function () {
-        method(...arguments).catch((err) => {
-            const spinnerElements =
-                document.querySelectorAll('.loading-spinner');
+        fn(...arguments).catch((err) => {
+            if (err.response?.data.message) return displayAlert('error', err.response.data.message);
+            
+            console.log('[catchAsync (frontend)] err', err);
 
-            for (let x of spinnerElements) {
-                x.style.display = 'none';
-            }
-
-            console.log('err', err);
-
-            if (err.response.data.message) {
-                displayAlert('error', err.response.data.message);
-            } else {
-                displayAlert('error', 'Something went wrong.');
-            }
+            displayAlert('error', 'Something went wrong.');
         });
     };
 };
+
+export default catchAsync;

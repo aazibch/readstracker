@@ -3,7 +3,7 @@ extends base
 block content
     .page-container
         .form-container
-            form.edit-book-form.form
+            form.edit-book-form.form(data-id = book._id)
                     h1.heading-1.form__heading Edit book
                     label.form__label Title
                     input.edit-book-form__title-field.form__input-field(type='text' value=book.title)

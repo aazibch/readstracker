@@ -3,8 +3,8 @@ import { displayAlert } from './alerts';
 import {
     prepareConfirmationModal,
     displayConfirmationModal
-} from './deleteConfirmationModal';
-import { catchAsync } from './catchAsync';
+} from './confirmationModal';
+import catchAsync from './catchAsync';
 
 export const noteDeleteClickHandler = (e) => {
     const bookId = document.querySelector('.full-book').getAttribute('data-id');

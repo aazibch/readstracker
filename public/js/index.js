@@ -1,7 +1,6 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import Masonry from 'masonry-layout';
-import { signupOrLogin, logout } from './signupOrLogin';
 import {
     ratingMouseOverHandler,
     ratingMouseLeaveHandler,
@@ -10,22 +9,26 @@ import {
 import {
     prepareConfirmationModal,
     displayConfirmationModal
-} from './deleteConfirmationModal';
-import { manageBookData } from './manageBookData';
+} from './confirmationModal';
 import { manageNotesData, noteDeleteClickHandler } from './manageNotesData';
 import { manageUserData } from './manageUserData';
 import { managePasswordRecovery } from './managePasswordRecovery';
 import { manageQuickSearch, showSearchDropdown } from './manageQuickSearch';
 import { manageMessages, renderMessage } from './manageMessages';
 
+import { auth, logout } from './auth';
+import { createBook, updateBook, deleteBook } from './books';
+import { modifyClassOnElement } from './utils';
+
 const loginForm = document.querySelector('.login-form');
 const signupForm = document.querySelector('.signup-form');
+
 const bookForm = document.querySelector('.book-form');
 const logoutListItem = document.querySelector('.logout-list-item');
-const ratingInput = document.querySelector('#form__stars');
+const ratingInput = document.querySelector('.form__stars');
 const fullBook = document.querySelector('.full-book');
 const editBookForm = document.querySelector('.edit-book-form');
-const userDropdownButton = document.querySelector('#main-nav__user-button');
+const userDropdownButton = document.querySelector('.main-nav__user-button');
 const settingsDetailsForm = document.querySelector('.settings-details-form');
 const settingsPasswordForm = document.querySelector('.settings-password-form');
 const settingsDeleteButton = document.querySelector('.settings-delete-button');
@@ -34,6 +37,153 @@ const passwordRecoveryForm = document.querySelector('#password-recovery-form');
 const searchUsersField = document.querySelector('.search-users__input-field');
 const newMessageForm = document.querySelector('.new-message__form');
 const conversationContentEl = document.querySelector('.conversation-content');
+
+if (signupForm) {
+    signupForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const username = document.querySelector('.signup-form__name-field').value;
+        const email = document.querySelector('.signup-form__email-field').value;
+        const password = document.querySelector('.signup-form__password-field').value;
+        const confirmPassword = document.querySelector('.signup-form__confirm-password-field').value;
+
+        auth('signup', { username, email, password, confirmPassword });
+    });
+}
+
+if (loginForm) {
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const email = document.querySelector('.login-form__email-field').value;
+        const password = document.querySelector('.login-form__password-field').value;
+
+        auth('login', { email, password });
+    });
+}
+
+if (userDropdownButton) {
+    userDropdownButton.addEventListener('click', (e) => {
+        const el = document.querySelector('.main-nav__dropdown');
+        const activeClass = 'main-nav__dropdown--active';
+
+        if (el.classList.contains(activeClass)) {
+            modifyClassOnElement(el, activeClass, 'remove');
+        } else {
+            modifyClassOnElement(el, activeClass, 'add');
+        }
+    });
+}
+
+if (logoutListItem) {
+    logoutListItem.addEventListener('click', function () {
+        logout();
+    });
+}
+
+// Books functionality
+
+if (bookForm) {
+    bookForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const title = document.querySelector('.book-form__title-field').value;
+        const author = document.querySelector('.book-form__author-field').value;
+
+        const selectedStarElement = document.querySelector(
+            '.form__star--selected'
+        );
+
+        let rating;
+        if (selectedStarElement) rating = +selectedStarElement.getAttribute('data-index') + 1;
+        
+        const genre = document.querySelector('.book-form__genre-field').value;
+
+        createBook({ title, author, rating, genre });
+    });
+}
+
+if (editBookForm) {
+    editBookForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const id = editBookForm.getAttribute('data-id');
+        const title = document.querySelector(
+            '.edit-book-form__title-field'
+        ).value;
+        const author = document.querySelector(
+            '.edit-book-form__author-field'
+        ).value;
+
+        const selectedStarElement = document.querySelector(
+            '.form__star--selected'
+        );
+
+        let rating;
+        if (selectedStarElement) rating = +selectedStarElement.getAttribute('data-index') + 1;
+        const genre = document.querySelector('.edit-book-form__genre-field').value;
+
+        updateBook(id, { title, author, rating, genre });
+    });
+}
+
+// Book page
+
+// Unfactored
+if (fullBook) {
+    const bookDropdownButton = document.querySelector(
+        '.full-book__dropdown-button'
+    );
+
+    const bookNoteForm = document.querySelector('.full-book__note-form');
+
+    bookDropdownButton.addEventListener('click', (e) => {
+        if (
+            document.querySelector('.full-book__dropdown-menu').style
+                .display === '' ||
+            document.querySelector('.full-book__dropdown-menu').style
+                .display === 'none'
+        ) {
+            document.querySelector(
+                '.full-book__dropdown-menu'
+            ).style.display = 'block';
+        } else {
+            document.querySelector(
+                '.full-book__dropdown-menu'
+            ).style.display = 'none';
+        }
+    });
+
+    document
+        .querySelector('.full-book__book-delete-button')
+        .addEventListener('click', (e) => {
+            displayConfirmationModal('Are you sure you want to delete the book?', (id) => {
+                const bookId = fullBook.getAttribute('data-id');
+                deleteBook(bookId);
+            });
+        });
+
+    if (bookNoteForm) {
+        bookNoteForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const note = document.querySelector(
+                '.full-book__new-note-body'
+            ).value;
+            const bookId = document
+                .querySelector('.full-book')
+                .getAttribute('data-id');
+
+            manageNotesData('POST', { note, bookId });
+        });
+
+        // attachListenerToNoteDeleteButtons(noteDeleteClickHandler);
+    }
+}
+
+// @todo check delete book functionality.
+
+// Unfactored
 
 if (newMessageForm) {
     const socket = io();
@@ -67,66 +217,6 @@ if (newMessageForm) {
             data,
             socket
         );
-    });
-}
-
-const modifyClassOnElement = (el, className, action) => {
-    if (action === 'remove') {
-        el.classList.remove(className);
-    } else if (action === 'add') {
-        el.classList.add(className);
-    }
-};
-
-if (signupForm) {
-    signupForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const username = document.querySelector(
-            '.signup-form__name-field'
-        ).value;
-        const email = document.querySelector('.signup-form__email-field').value;
-        const password = document.querySelector(
-            '.signup-form__password-field'
-        ).value;
-        const confirmPassword = document.querySelector(
-            '.signup-form__confirm-password-field'
-        ).value;
-
-        signupOrLogin('signup', { username, email, password, confirmPassword });
-    });
-}
-
-if (passwordRecoveryForm) {
-    passwordRecoveryForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        let token = window.location.href.split('/');
-        token = token[token.length - 1];
-        const password = document.querySelector(
-            '#password-recovery-form__password-field'
-        ).value;
-        const confirmPassword = document.querySelector(
-            '#password-recovery-form__confirm-password-field'
-        ).value;
-
-        managePasswordRecovery('reset', 'PATCH', {
-            token,
-            password,
-            confirmPassword
-        });
-    });
-}
-
-if (forgotPasswordForm) {
-    forgotPasswordForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const email = document.querySelector(
-            '#forgot-password-form__email-field'
-        ).value;
-
-        managePasswordRecovery('forgot', 'POST', { email });
     });
 }
 
@@ -185,87 +275,10 @@ if (settingsDeleteButton) {
     });
 }
 
-if (userDropdownButton) {
-    userDropdownButton.addEventListener('click', (e) => {
-        const el = document.querySelector('.main-nav__dropdown');
-        const activeClass = 'main-nav__dropdown--active';
-
-        if (el.classList.contains(activeClass)) {
-            modifyClassOnElement(el, activeClass, 'remove');
-        } else {
-            modifyClassOnElement(el, activeClass, 'add');
-        }
-    });
-}
-
-if (loginForm) {
-    loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        console.log('login data submitted');
-
-        const email = document.querySelector('.login-form__email-field').value;
-        const password = document.querySelector('.login-form__password-field').value;
-
-        signupOrLogin('login', { email, password });
-    });
-}
-
-if (logoutListItem) {
-    logoutListItem.addEventListener('click', function () {
-        logout();
-    });
-}
-
 if (ratingInput) {
     ratingInput.addEventListener('mouseover', ratingMouseOverHandler);
     ratingInput.addEventListener('mouseleave', ratingMouseLeaveHandler);
     ratingInput.addEventListener('click', ratingClickHandler);
-}
-
-if (bookForm) {
-    bookForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const title = document.querySelector('.book-form__title-field').value;
-        const author = document.querySelector('.book-form__author-field').value;
-
-        const selectedStarElement = document.querySelector(
-            '.form__star--selected'
-        );
-        let rating;
-        if (selectedStarElement)
-            rating = +selectedStarElement.getAttribute('data-index') + 1;
-        const genre = document.querySelector('.book-form__genre-field').value;
-
-        manageBookData('POST', { title, author, rating, genre });
-    });
-}
-
-if (editBookForm) {
-    editBookForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const id = window.location.href.split('/')[4];
-        const title = document.querySelector(
-            '.edit-book-form__title-field'
-        ).value;
-        const author = document.querySelector(
-            '.edit-book-form__author-field'
-        ).value;
-
-        const selectedStarElement = document.querySelector(
-            '.form__star--selected'
-        );
-        let rating;
-        if (selectedStarElement)
-            rating = +selectedStarElement.getAttribute('data-index') + 1;
-        const genre = document.querySelector(
-            '.edit-book-form__genre-field'
-        ).value;
-
-        manageBookData('PATCH', { id, title, author, rating, genre });
-    });
 }
 
 window.addEventListener('click', function (e) {
@@ -310,59 +323,6 @@ const attachListenerToNoteDeleteButtons = (handler) => {
         el.addEventListener('click', handler);
     });
 };
-
-if (fullBook) {
-    const bookDropdownButton = document.querySelector(
-        '.full-book__dropdown-button'
-    );
-
-    const bookNoteForm = document.querySelector('.full-book__note-form');
-
-    if (bookDropdownButton) {
-        bookDropdownButton.addEventListener('click', (e) => {
-            if (
-                document.querySelector('.full-book__dropdown-menu').style
-                    .display === '' ||
-                document.querySelector('.full-book__dropdown-menu').style
-                    .display === 'none'
-            ) {
-                document.querySelector(
-                    '.full-book__dropdown-menu'
-                ).style.display = 'block';
-            } else {
-                document.querySelector(
-                    '.full-book__dropdown-menu'
-                ).style.display = 'none';
-            }
-        });
-
-        document
-            .querySelector('.full-book__book-delete-button')
-            .addEventListener('click', (e) => {
-                prepareConfirmationModal('book');
-                displayConfirmationModal(
-                    'Are you sure you want to delete the book?'
-                );
-            });
-    }
-
-    if (bookNoteForm) {
-        bookNoteForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            const note = document.querySelector(
-                '.full-book__new-note-body'
-            ).value;
-            const bookId = document
-                .querySelector('.full-book')
-                .getAttribute('data-id');
-
-            manageNotesData('POST', { note, bookId });
-        });
-
-        attachListenerToNoteDeleteButtons(noteDeleteClickHandler);
-    }
-}
 
 // End of book page
 

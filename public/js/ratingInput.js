@@ -1,4 +1,4 @@
-let starsContainerElement = document.querySelector('#form__stars');
+let starsContainerElement = document.querySelector('.form__stars');
 let starElements;
 if (starsContainerElement) {
     starElements = starsContainerElement.children;

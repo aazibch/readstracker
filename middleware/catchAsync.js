@@ -1,5 +1,5 @@
-module.exports = (handler) => {
+module.exports = fn => {
     return (req, res, next) => {
-        handler(req, res, next).catch(next);
+        fn(req, res, next).catch(next);
     }
 }

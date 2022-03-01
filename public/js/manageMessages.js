@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { format } from 'timeago.js';
-import { catchAsync } from './catchAsync';
+import catchAsync from './catchAsync';
 
 export const manageMessages = catchAsync(
     async (reqType, convoId, data, socket) => {
