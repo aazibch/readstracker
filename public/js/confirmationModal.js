@@ -1,7 +1,3 @@
-import { manageBookData } from './books';
-import { manageNotesData } from './manageNotesData';
-import { manageUserData } from './manageUserData';
-
 const removeEventListenersFromModal = () => {
     const oldEl = document.querySelector('.confirmation-modal__content');
     var newEl = oldEl.cloneNode(true);

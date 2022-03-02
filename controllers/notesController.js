@@ -34,6 +34,7 @@ exports.createNote = catchAsync(async (req, res, next) => {
 
     res.status(201).json({
         status: 'success',
+        message: 'Note was created successfully.',
         data: note
     });
 });

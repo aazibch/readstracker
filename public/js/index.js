@@ -6,18 +6,15 @@ import {
     ratingMouseLeaveHandler,
     ratingClickHandler
 } from './ratingInput';
-import {
-    prepareConfirmationModal,
-    displayConfirmationModal
-} from './confirmationModal';
-import { manageNotesData, noteDeleteClickHandler } from './manageNotesData';
-import { manageUserData } from './manageUserData';
+import { manageUserData } from './users';
 import { managePasswordRecovery } from './managePasswordRecovery';
 import { manageQuickSearch, showSearchDropdown } from './manageQuickSearch';
 import { manageMessages, renderMessage } from './manageMessages';
 
 import { auth, logout } from './auth';
 import { createBook, updateBook, deleteBook } from './books';
+import { updateUser, deleteUser, updatePassword } from './users';
+import { displayConfirmationModal } from './confirmationModal';
 import { modifyClassOnElement } from './utils';
 
 const loginForm = document.querySelector('.login-form');
@@ -129,13 +126,10 @@ if (editBookForm) {
 
 // Book page
 
-// Unfactored
 if (fullBook) {
     const bookDropdownButton = document.querySelector(
         '.full-book__dropdown-button'
     );
-
-    const bookNoteForm = document.querySelector('.full-book__note-form');
 
     bookDropdownButton.addEventListener('click', (e) => {
         if (
@@ -144,44 +138,80 @@ if (fullBook) {
             document.querySelector('.full-book__dropdown-menu').style
                 .display === 'none'
         ) {
-            document.querySelector(
+            return document.querySelector(
                 '.full-book__dropdown-menu'
             ).style.display = 'block';
-        } else {
-            document.querySelector(
-                '.full-book__dropdown-menu'
-            ).style.display = 'none';
         }
+
+        document.querySelector(
+            '.full-book__dropdown-menu'
+        ).style.display = 'none';
     });
 
     document
         .querySelector('.full-book__book-delete-button')
         .addEventListener('click', (e) => {
-            displayConfirmationModal('Are you sure you want to delete the book?', (id) => {
+            displayConfirmationModal('Are you sure you want to delete the book?', () => {
                 const bookId = fullBook.getAttribute('data-id');
                 deleteBook(bookId);
             });
         });
-
-    if (bookNoteForm) {
-        bookNoteForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            const note = document.querySelector(
-                '.full-book__new-note-body'
-            ).value;
-            const bookId = document
-                .querySelector('.full-book')
-                .getAttribute('data-id');
-
-            manageNotesData('POST', { note, bookId });
-        });
-
-        // attachListenerToNoteDeleteButtons(noteDeleteClickHandler);
-    }
 }
 
-// @todo check delete book functionality.
+// Settings page
+
+if (settingsDetailsForm) {
+    settingsDetailsForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+
+        formData.append(
+            'username',
+            document.querySelector('.settings-details-form__name-field').value
+        );
+        formData.append(
+            'email',
+            document.querySelector('.settings-details-form__email-field').value
+        );
+        formData.append(
+            'profilePhoto',
+            document.querySelector('.settings-details-form__photo-upload')
+                .files[0]
+        );
+
+        updateUser(formData);
+    });
+
+    settingsPasswordForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const currentPassword = document.querySelector(
+            '.settings-password-form__current-password-field'
+        ).value;
+        const password = document.querySelector(
+            '.settings-password-form__password-field'
+        ).value;
+        const confirmPassword = document.querySelector(
+            '.settings-password-form__confirm-password-field'
+        ).value;
+
+        updatePassword({
+            currentPassword,
+            password,
+            confirmPassword
+        });
+    });
+
+    settingsDeleteButton.addEventListener('click', (e) => {
+        displayConfirmationModal(
+            'Are you sure you want to delete your account?',
+            () => {
+                deleteUser();
+            }
+        );
+    });
+}
 
 // Unfactored
 
@@ -216,61 +246,6 @@ if (newMessageForm) {
             e.target.getAttribute('data-convo-id'),
             data,
             socket
-        );
-    });
-}
-
-if (settingsDetailsForm) {
-    settingsDetailsForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const formData = new FormData();
-
-        formData.append(
-            'name',
-            document.querySelector('.settings-details-form__name-field').value
-        );
-        formData.append(
-            'email',
-            document.querySelector('.settings-details-form__email-field').value
-        );
-        formData.append(
-            'profilePhoto',
-            document.querySelector('.settings-details-form__photo-upload')
-                .files[0]
-        );
-
-        manageUserData('updateMe', 'PATCH', formData);
-    });
-}
-
-if (settingsPasswordForm) {
-    settingsPasswordForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const currentPassword = document.querySelector(
-            '.settings-password-form__current-password-field'
-        ).value;
-        const password = document.querySelector(
-            '.settings-password-form__password-field'
-        ).value;
-        const confirmPassword = document.querySelector(
-            '.settings-password-form__confirm-password-field'
-        ).value;
-
-        manageUserData('updateMyPassword', 'PATCH', {
-            currentPassword,
-            password,
-            confirmPassword
-        });
-    });
-}
-
-if (settingsDeleteButton) {
-    settingsDeleteButton.addEventListener('click', (e) => {
-        prepareConfirmationModal('account');
-        displayConfirmationModal(
-            'Are you sure you want to delete your account?'
         );
     });
 }
@@ -311,20 +286,6 @@ window.addEventListener('click', function (e) {
         }
     }
 });
-
-// book page
-
-const attachListenerToNoteDeleteButtons = (handler) => {
-    const noteDeleteButtons = document.querySelectorAll(
-        '.full-book__note-delete-button'
-    );
-
-    noteDeleteButtons.forEach((el) => {
-        el.addEventListener('click', handler);
-    });
-};
-
-// End of book page
 
 // Masonry.js config
 const initializeMasonry = () => {
