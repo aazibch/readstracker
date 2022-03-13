@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { displayAlert } from './alerts';
-import { showLoadingSpinner } from './loadingSpinners';
 import catchAsync from './catchAsync';
 
 export const createBook = catchAsync(async (data) => {
@@ -9,8 +8,6 @@ export const createBook = catchAsync(async (data) => {
         method: 'POST',
         data
     });
-
-    showLoadingSpinner('.book-form__loading-spinner');
     
     displayAlert(response.data.status, response.data.message);
 
@@ -25,8 +22,6 @@ export const updateBook = catchAsync(async (bookId, data) => {
         method: 'PATCH',
         data
     });
-
-    showLoadingSpinner('.edit-book-form__loading-spinner');
     
     displayAlert(response.data.status, response.data.message);
 

@@ -31,6 +31,12 @@
         }
     }
 
+    &__dropdown--active {
+        .full-book__dropdown-menu {
+            display: block;
+        }
+    }
+
     &__user {
         display: flex;
         align-items: center;

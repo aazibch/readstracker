@@ -878,6 +878,9 @@ main {
 .full-book__dropdown-menu li a {
   color: #4d5156;
 }
+.full-book__dropdown--active .full-book__dropdown-menu {
+  display: block;
+}
 .full-book__user {
   display: flex;
   align-items: center;
@@ -1066,9 +1069,21 @@ main {
 .conversation__username {
   font-size: 1rem;
   font-weight: bold;
+  display: inline-block;
+  margin-right: 0.5rem;
 }
-.conversation__excerpt {
+.conversation__extract {
   font-size: 0.8rem;
+}
+.conversation__online-indicator {
+  height: 0.65rem;
+  width: 0.65rem;
+  border-radius: 50%;
+  background: #14dd14;
+  display: none;
+}
+.conversation__online-indicator--active {
+  display: inline-block;
 }
 .conversation--selected {
   background: #f2f2f2;

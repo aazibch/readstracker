@@ -6,20 +6,16 @@ import {
     ratingMouseLeaveHandler,
     ratingClickHandler
 } from './ratingInput';
-import { manageUserData } from './users';
-import { managePasswordRecovery } from './managePasswordRecovery';
-import { manageQuickSearch, showSearchDropdown } from './manageQuickSearch';
-import { manageMessages, renderMessage } from './manageMessages';
 
 import { auth, logout } from './auth';
 import { createBook, updateBook, deleteBook } from './books';
 import { updateUser, deleteUser, updatePassword } from './users';
 import { displayConfirmationModal } from './confirmationModal';
-import { modifyClassOnElement } from './utils';
+import { search, hideSearchDropdown } from './search';
+import { sendMessage, renderMessage, displayOnlineIndicators } from './messages';
 
 const loginForm = document.querySelector('.login-form');
 const signupForm = document.querySelector('.signup-form');
-
 const bookForm = document.querySelector('.book-form');
 const logoutListItem = document.querySelector('.logout-list-item');
 const ratingInput = document.querySelector('.form__stars');
@@ -29,12 +25,63 @@ const userDropdownButton = document.querySelector('.main-nav__user-button');
 const settingsDetailsForm = document.querySelector('.settings-details-form');
 const settingsPasswordForm = document.querySelector('.settings-password-form');
 const settingsDeleteButton = document.querySelector('.settings-delete-button');
-const forgotPasswordForm = document.querySelector('#forgot-password-form');
-const passwordRecoveryForm = document.querySelector('#password-recovery-form');
 const searchUsersField = document.querySelector('.search-users__input-field');
 const newMessageForm = document.querySelector('.new-message__form');
 const conversationContentEl = document.querySelector('.conversation-content');
+const bookDropdown = document.querySelector('.full-book__dropdown');
+const bookDropdownButton = document.querySelector('.full-book__dropdown-button');
 
+// messages
+
+const userId = localStorage.getItem('userId');
+
+if (userId) {
+    const socket = io();
+    
+    socket.on('connect', () => {
+        let onlineUsers;
+    
+        const convoId = newMessageForm ? newMessageForm.getAttribute('data-convo-id') : null;
+    
+        socket.emit('saveUser', userId);
+
+        if (conversationContentEl) {
+            conversationContentEl.scrollTop = conversationContentEl.scrollHeight;
+        }
+    
+        socket.on('onlineUsers', (users) => {
+            onlineUsers = [...users];
+
+            console.log('onlineUsers', onlineUsers);
+    
+            displayOnlineIndicators(onlineUsers);
+        });
+    
+        socket.on('chatMessage', (data) => {
+            renderMessage(data, false);
+        });
+    
+        if (newMessageForm) {
+            newMessageForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+        
+                const data = {
+                    content: e.target.children[0].value
+                };
+        
+                e.target.children[0].value = '';
+        
+                sendMessage(
+                    convoId,
+                    data,
+                    socket
+                );
+            });
+        }
+    });
+}
+
+// auth
 if (signupForm) {
     signupForm.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -59,26 +106,15 @@ if (loginForm) {
     });
 }
 
-if (userDropdownButton) {
-    userDropdownButton.addEventListener('click', (e) => {
-        const el = document.querySelector('.main-nav__dropdown');
-        const activeClass = 'main-nav__dropdown--active';
-
-        if (el.classList.contains(activeClass)) {
-            modifyClassOnElement(el, activeClass, 'remove');
-        } else {
-            modifyClassOnElement(el, activeClass, 'add');
-        }
-    });
-}
-
 if (logoutListItem) {
     logoutListItem.addEventListener('click', function () {
         logout();
     });
 }
 
-// Books functionality
+// end of auth
+
+// books
 
 if (bookForm) {
     bookForm.addEventListener('submit', (e) => {
@@ -124,28 +160,21 @@ if (editBookForm) {
     });
 }
 
-// Book page
+if (ratingInput) {
+    ratingInput.addEventListener('mouseover', ratingMouseOverHandler);
+    ratingInput.addEventListener('mouseleave', ratingMouseLeaveHandler);
+    ratingInput.addEventListener('click', ratingClickHandler);
+}
 
 if (fullBook) {
-    const bookDropdownButton = document.querySelector(
-        '.full-book__dropdown-button'
-    );
-
     bookDropdownButton.addEventListener('click', (e) => {
         if (
-            document.querySelector('.full-book__dropdown-menu').style
-                .display === '' ||
-            document.querySelector('.full-book__dropdown-menu').style
-                .display === 'none'
+            !bookDropdown.classList.contains('full-book__dropdown--active')
         ) {
-            return document.querySelector(
-                '.full-book__dropdown-menu'
-            ).style.display = 'block';
+            return bookDropdown.classList.add('full-book__dropdown--active');
         }
 
-        document.querySelector(
-            '.full-book__dropdown-menu'
-        ).style.display = 'none';
+        bookDropdown.classList.remove('full-book__dropdown--active');
     });
 
     document
@@ -158,7 +187,9 @@ if (fullBook) {
         });
 }
 
-// Settings page
+// end of books
+
+// settings
 
 if (settingsDetailsForm) {
     settingsDetailsForm.addEventListener('submit', (e) => {
@@ -213,86 +244,69 @@ if (settingsDetailsForm) {
     });
 }
 
-// Unfactored
+// end of settings
 
-if (newMessageForm) {
-    const socket = io();
+// general
 
-    const convoId = newMessageForm.getAttribute('data-convo-id');
+if (userDropdownButton) {
+    userDropdownButton.addEventListener('click', (e) => {
+        const el = document.querySelector('.main-nav__dropdown');
+        const activeClass = 'main-nav__dropdown--active';
 
-    socket.emit('saveUser', convoId);
-
-    socket.on('onlineUsers', (users) => {
-        console.log('onlineUsers', users);
+        if (el.classList.contains(activeClass)) {
+            el.classList.remove(activeClass);
+        } else {
+            el.classList.add(activeClass);
+        }
     });
-
-    socket.on('chatMessage', (message) => {
-        renderMessage(message, false);
-    });
-
-    conversationContentEl.scrollTop = conversationContentEl.scrollHeight;
-
-    newMessageForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const data = {
-            content: e.target.children[0].value
-        };
-
-        e.target.children[0].value = '';
-
-        manageMessages(
-            'POST',
-            e.target.getAttribute('data-convo-id'),
-            data,
-            socket
-        );
-    });
-}
-
-if (ratingInput) {
-    ratingInput.addEventListener('mouseover', ratingMouseOverHandler);
-    ratingInput.addEventListener('mouseleave', ratingMouseLeaveHandler);
-    ratingInput.addEventListener('click', ratingClickHandler);
 }
 
 window.addEventListener('click', function (e) {
+    const dropdownMenuContainer = document.querySelector('.main-nav__dropdown-menu-container');
+
     if (
-        document.querySelector('.main-nav__dropdown-menu-container') &&
-        !document
-            .querySelector('.main-nav__dropdown-menu-container')
+        dropdownMenuContainer &&
+        !dropdownMenuContainer
             .contains(e.target) &&
         !userDropdownButton.contains(e.target)
     ) {
-        modifyClassOnElement(
-            document.querySelector('.main-nav__dropdown'),
-            'main-nav__dropdown--active',
-            'remove'
-        );
+        document.querySelector('.main-nav__dropdown').classList.remove('main-nav__dropdown--active');
     }
 
-    const bookDropdownMenu = document.querySelector(
-        '.full-book__dropdown-menu'
-    );
-
-    if (bookDropdownMenu) {
-        if (
-            !bookDropdownMenu.contains(e.target) &&
-            !document
-                .querySelector('.full-book__dropdown-button')
-                .contains(e.target)
-        ) {
-            bookDropdownMenu.style.display = 'none';
-        }
+    if (
+        bookDropdown &&
+        !bookDropdown.contains(e.target) &&
+        !bookDropdownButton
+            .contains(e.target)
+    ) {
+        bookDropdown.classList.remove('full-book__dropdown--active');
     }
 });
 
-// Masonry.js config
+if (searchUsersField) {
+    let inputLength = 0;
+
+    searchUsersField.addEventListener('keydown', (e) => {
+        inputLength = e.target.value.length;
+    });
+
+    searchUsersField.addEventListener('keyup', (e) => {
+        if (e.target.value.length !== inputLength) {
+            if (e.target.value.length === 0) return hideSearchDropdown();
+
+            search(e.target.value);
+        }
+    });
+}
+
+// end of general
+
+// Masonry.js
 const initializeMasonry = () => {
     const booksGrid = document.querySelector('.books-grid');
 
     if (booksGrid) {
-        const masonry = new Masonry(booksGrid, {
+        new Masonry(booksGrid, {
             itemSelector: '.books-grid-item',
             columnWidth: '.books-grid-sizer',
             percentPosition: true
@@ -306,20 +320,3 @@ initializeMasonry();
 setTimeout(initializeMasonry, 2000);
 
 // End of Masonry.js config
-
-if (searchUsersField) {
-    let inputLength = 0;
-
-    searchUsersField.addEventListener('keydown', (e) => {
-        inputLength = e.target.value.length;
-    });
-
-    searchUsersField.addEventListener('keyup', (e) => {
-        if (e.target.value.length !== inputLength) {
-            if (e.target.value.length === 0) return showSearchDropdown(false);
-
-            console.log(e.target.value);
-            manageQuickSearch(e.target.value);
-        }
-    });
-}

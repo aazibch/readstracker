@@ -13,6 +13,8 @@ export const auth = catchAsync(async (action, data) => {
     hideAllSpinners();
     displayAlert(response.data.status, response.data.message);
 
+    localStorage.setItem('userId', response.data.data.userId);
+
     setTimeout(() => {
         location.assign('/');
     }, 1500);
@@ -23,6 +25,8 @@ export const logout = catchAsync(async () => {
         method: 'GET',
         url: '/api/v1/users/logout'
     });
+
+    localStorage.removeItem('userId');
 
     location.assign('/');
 });

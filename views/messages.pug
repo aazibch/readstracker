@@ -18,12 +18,10 @@ block content
             else
                 .conversation-content
                     each message in selectedConvo.messages
-                        +message(message, selectedConvo.participants[0], user)
+                        +message(message, selectedConvo.participant, user)
 
             if (selectedConvo)
                 form.new-message__form(data-convo-id=selectedConvo._id)
                     textarea.new-message__input
                     div
                         input(type="submit" value="Send").button-primary
-    
-    script(src='/socket.io/socket.io.js')

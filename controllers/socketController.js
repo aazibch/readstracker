@@ -8,35 +8,38 @@ const removeUser = (socketId) => {
     onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId);
 };
 
-const getRecipient = (convoId, currentSocketId) => onlineUsers.find(
-    (user) =>
-        user.convoId === convoId && user.socketId !== currentSocketId
+const getCorrespondent = (userId) => onlineUsers.find(
+    (user) => user.userId === userId
 );
 
 exports.onConnection = (io) => {
     return (socket) => {
         console.log('[Socket server] A user connected to the socket server.');
 
-        socket.on('saveUser', (convoId) => {
-            saveUser({ socketId: socket.id, convoId });
-
+        socket.on('saveUser', (userId) => {
+            const updatedData = { userId, socketId: socket.id };
+            
+            saveUser(updatedData);
             io.emit('onlineUsers', onlineUsers);
         });
 
         socket.on('sendMessage', (data) => {
-            const recipient = getRecipient(data.convoId, socket.id);
+            const correspondent = getCorrespondent(data.recipient);
 
-            io.to(recipient.socketId).emit('chatMessage', {
-                content: data.content
-            });
+            if (correspondent) {
+                io.to(correspondent.socketId).emit('chatMessage', {
+                    content: data.content,
+                    sender: data.sender
+                });
+            }
         });
 
-        socket.on('disconnect', (io) => {
+        socket.on('disconnect', () => {
             console.log(
                 '[Socket server] A user disconnected from the socket server.'
             );
-
             removeUser(socket.id);
+            io.emit('onlineUsers', onlineUsers);
         });
     };
 };

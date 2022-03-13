@@ -5,7 +5,7 @@ const filterObject = require('../utils/filterObject');
 
 exports.createMessage = catchAsync(async (req, res, next) => {
     // Check if conversation exists
-    const conversation = await Conversation.findById(req.params.conversationId);
+    let conversation = await Conversation.findById(req.params.conversationId);
 
     if (!conversation || !conversation.participants.includes(req.user._id))
         return next(new AppError('Conversation not found.', 404));
@@ -21,8 +21,14 @@ exports.createMessage = catchAsync(async (req, res, next) => {
     conversation.messages.push(filteredBody);
     await conversation.save();
 
+    conversation = conversation.toObject();
+
     res.status(200).json({
         status: 'success',
-        data: conversation.messages[conversation.messages.length - 1]
+        sender: req.user._id.toString(),
+        data: {
+            ...conversation.messages[conversation.messages.length - 1],
+            recipient: conversation.participants.find((user) => req.user._id.toString() !== user._id.toString())
+        }
     });
 });

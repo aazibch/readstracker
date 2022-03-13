@@ -1,7 +1,3 @@
-export const showLoadingSpinner = (el) => {
-    document.querySelector(el).style.display = 'inline-block';
-};
-
 export const hideAllSpinners = () => {
     const spinnerElements = document.querySelectorAll('.loading-spinner');
 

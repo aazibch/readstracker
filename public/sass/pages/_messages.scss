@@ -52,10 +52,24 @@
     &__username {
         font-size: 1rem;
         font-weight: bold;
+        display: inline-block;
+        margin-right: 0.5rem;
     }
 
-    &__excerpt {
+    &__extract {
         font-size: 0.8rem;
+    }
+
+    &__online-indicator {
+        height: 0.65rem;
+        width: 0.65rem;
+        border-radius: 50%;
+        background: #14dd14;
+        display: none;
+    }
+
+    &__online-indicator--active {
+        display: inline-block;
     }
 
     &--selected {

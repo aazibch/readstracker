@@ -2,7 +2,11 @@ import axios from 'axios';
 let controller;
 let signal;
 
-export const manageQuickSearch = async (query) => {
+const showLoadingSpinner = () => document.querySelector('.search-users__spinner').style.display = 'block';
+
+const hideLoadingSpinner = () => document.querySelector('.search-users__spinner').style.display = 'none';
+
+export const search = async (query) => {
     let results;
 
     if (controller) {
@@ -12,7 +16,8 @@ export const manageQuickSearch = async (query) => {
     controller = new AbortController();
     signal = controller.signal;
 
-    showSearchDropdown(true);
+    displaySearchDropdown();
+    showLoadingSpinner();
 
     try {
         results = await axios({
@@ -21,14 +26,14 @@ export const manageQuickSearch = async (query) => {
             signal
         });
     } catch (err) {
-        if (err.message && err.message === 'canceled') return;
+        if (err.message === 'canceled') return;
 
-        return showSearchDropdown(false);
+        return hideSearchDropdown();
     }
 
-    if (results.data.data.length === 0) return showSearchDropdown(false);
+    if (results.data.data.length === 0) return hideSearchDropdown();
 
-    addResultElements(results.data.data);
+    renderResultElements(results.data.data);
 };
 
 const clearResults = () => {
@@ -36,29 +41,20 @@ const clearResults = () => {
     quickResults.innerHTML = '';
 };
 
-export const showSearchDropdown = (bool) => {
+export const displaySearchDropdown = () => {
     const searchUsersEl = document.querySelector('.search-users');
 
-    if (bool) {
-        clearResults();
-        showLoadingSpinner(true);
-        return searchUsersEl.classList.add('search-users--active');
-    }
+    clearResults();
+    searchUsersEl.classList.add('search-users--active');
+};
+
+export const hideSearchDropdown = () => {
+    const searchUsersEl = document.querySelector('.search-users');
 
     searchUsersEl.classList.remove('search-users--active');
 };
 
-const showLoadingSpinner = (bool) => {
-    const loadingSpinner = document.querySelector('.search-users__spinner');
-
-    if (bool) {
-        return (loadingSpinner.style.display = 'block');
-    }
-
-    loadingSpinner.style.display = 'none';
-};
-
-const addResultElements = (results) => {
+const renderResultElements = (results) => {
     let html = '';
 
     for (let result of results) {
@@ -77,6 +73,7 @@ const addResultElements = (results) => {
         `;
     }
 
-    showLoadingSpinner(false);
+    hideLoadingSpinner();
+
     document.querySelector('.search-users__quick-results').innerHTML = html;
 };

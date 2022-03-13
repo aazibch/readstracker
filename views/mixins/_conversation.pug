@@ -1,7 +1,15 @@
 mixin conversation(convo, selected)
-    - const user = convo.participant;
-    a(href=`/messages/${convo._id}` class=`${!selected ? 'conversation' : 'conversation conversation--selected'}`)
+    -
+        const user = convo.participant;
+        let extract = '';
+        if (convo.messages.length > 0) extract = convo.messages[convo.messages.length - 1].content;
+
+    a(href=`/messages/${convo._id}` class=`${!selected ? 'conversation' : 'conversation conversation--selected'}` data-user-id=user._id)
         img(src=`/images/users/${user.profilePhoto}` data-image= user.profilePhoto).user-photo
         div
+            
             p.conversation__username= user.username
-            p.conversation__excerpt Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+            div.conversation__online-indicator.abc
+            p.conversation__extract= extract
+
+        
