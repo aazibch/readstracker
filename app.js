@@ -15,6 +15,7 @@ const booksRoutes = require('./routes/booksRoutes');
 const usersRoutes = require('./routes/usersRoutes');
 const viewsRoutes = require('./routes/viewsRoutes');
 const conversationsRoutes = require('./routes/conversationsRoutes');
+const followsRoutes = require('./routes/followsRoutes');
 const error = require('./middleware/error');
 
 const app = express();
@@ -59,6 +60,7 @@ app.use('/', viewsRoutes);
 app.use('/api/v1/books', booksRoutes);
 app.use('/api/v1/users', usersRoutes);
 app.use('/api/v1/conversations', conversationsRoutes);
+app.use('/api/v1/follows', followsRoutes);
 app.all('*', (req, res, next) => {
     next(new AppError('Route not found.', 404));
 });
