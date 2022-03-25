@@ -1,56 +1,50 @@
-.jumbotron {
-    background-color: $primary-color;
-    color: $light-color;
-    font-size: 1rem;
-    height: 25rem;
+.home {
+    display: flex;
+    height: 100%;
+}
 
-    
-    &__container {        
-        @extend %container;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-        padding: 0 2rem;
-    }
-
-    &__text {
-        font-size: 2rem;
-        margin-bottom: 1rem;
-    }
-
-    &__icon {
-        width: 13rem;
-        margin-left: 2rem;
-
-        img {
-            width: 100%;
-        }
-    }
+.auth-form {
+    flex-basis: 50%;
+    display: flex;;
+    align-items: center;
 }
 
 .services {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-basis: 50%;
     text-transform: uppercase;
-    margin: 2rem auto;
+    border-right: 1px solid $generic-border-color;
 
     &__box {
         text-align: center;
-        padding: 2rem;
-        margin: 0.5rem;
+        padding: 1.5rem;
+        margin: 0rem;
     }
     
     &__icon {
-        font-size: 4rem;
+        font-size: 2.75rem;
         margin-bottom: 1.5rem;
         color: $primary-color;
     }
-
+    
     & h2 {
-        font-size: 0.9rem;
+        font-size: 0.8rem;
         font-weight: 400;
         max-width: 11rem;
         margin: 0 auto;
     }
+}
+
+.services__logo {
+    width: 13rem;
+    margin-bottom: 1rem;
+}
+
+.services__container {
+    border-top: 1px solid $generic-border-color;
+    padding-top: 1rem;
 }
 
 @media (max-width: 767.98px) {

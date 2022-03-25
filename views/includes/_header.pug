@@ -9,7 +9,7 @@ header.header
                 input(type="search" name="search_query" placeholder="Search users" autocomplete="off").search-users__input-field
                 button(type="submit").search-users__button <i class="fas fa-search"></i>
             .search-users__dropdown
-                .search-users__quick-results
+                .users-list.search-users__quick-results
                 .loading-spinner.search-users__spinner
 
         nav.main-nav
@@ -26,7 +26,7 @@ header.header
                             li
                                 a(href='/') <i class="fas fa-plus"></i> <p>Add Book</p>
                             li
-                                a(href='/messages') <i class="fas fa-comments"></i> <p>Messages</p>
+                                a(href='/messages') <i class="fas fa-message"></i> <p>Messages</p>
                             li
                                 a(href='/user/settings') <i class="fas fa-cog"></i> <p>Settings</p>
                             li

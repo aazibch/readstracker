@@ -59,13 +59,13 @@ const renderResultElements = (results) => {
 
     for (let result of results) {
         html += `
-            <a class='search-users__result' href='/users/${result.username}'>
-                <img class='user-photo search-users__profile-photo' src='/images/users/${
+            <a class='users-list__item' href='/users/${result.username}'>
+                <img class='user-photo users-list__profile-photo' src='/images/users/${
                     result.profilePhoto
                 }'>
                 <div>
-                    <p class='search-users__username'>${result.username}</p>
-                    <p class='search-users__books'>${result.books.length} Book${
+                    <p class='users-list__username'>${result.username}</p>
+                    <p class='users-list__books'>${result.books.length} Book${
             result.books.length === 1 ? '' : 's'
         }</p>
                 </div>

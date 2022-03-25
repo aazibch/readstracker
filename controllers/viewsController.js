@@ -14,7 +14,7 @@ exports.getLoginForm = (req, res) => {
 };
 
 exports.getSignupForm = (req, res) => {
-    res.status(200).render('signup', { title: 'Signup | ReadsTracker' });
+    res.status(200).render('home', { title: 'Home | ReadsTracker', showSignupForm: true });
 };
 
 exports.getProfile = catchAsync(async (req, res, next) => {

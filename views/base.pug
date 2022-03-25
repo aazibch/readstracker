@@ -12,16 +12,62 @@ html
         link(href='/css/main.css' rel='stylesheet')
     body
         .alert
-        .confirmation-modal
-            .confirmation-modal__content
-                button.confirmation-modal__close-button &#10005;
-                .confirmation-modal__query
-                .confirmation-modal__options
-                    button.confirmation-modal__no-button(data-value='false') No
-                    | 
-                    button.confirmation-modal__yes-button(data-value='true') Yes
+        .modal.confirmation-modal
+                .modal__content.confirmation-modal__content
+                    button.modal__close-button.confirmation-modal__close-button &#10005;
+                    .confirmation-modal__query
+                    .confirmation-modal__options
+                        button.confirmation-modal__no-button(data-value='false') No
+                        | 
+                        button.confirmation-modal__yes-button(data-value='true') Yes
 
-        if title !== 'Error'
+        .modal.list-modal
+            .modal__content.list-modal__content
+                .modal__header
+                    h3.list-modal__heading Followers
+                    button.modal__close-button.list-modal__close-button &#10005;
+                .loading-spinner.list-modal__loading-spinner
+                .list-modal__list
+                    //- .users-list__item
+                    //-     <img class='user-photo users-list__profile-photo' src='/images/users/default.jpeg'>
+                    //-     <div>
+                    //-         <p class='users-list__username'>aazib</p>
+                    //-         <p class='users-list__books'>1 Book</p>
+                    //-     </div>
+                    //- .users-list__item
+                    //-     <img class='user-photo users-list__profile-photo' src='/images/users/default.jpeg'>
+                    //-     <div>
+                    //-         <p class='users-list__username'>aazib</p>
+                    //-         <p class='users-list__books'>1 Book</p>
+                    //-     </div>
+                    //- .users-list__item
+                    //-     <img class='user-photo users-list__profile-photo' src='/images/users/default.jpeg'>
+                    //-     <div>
+                    //-         <p class='users-list__username'>aazib</p>
+                    //-         <p class='users-list__books'>1 Book</p>
+                    //-     </div>
+                    //- .users-list__item
+                    //-     <img class='user-photo users-list__profile-photo' src='/images/users/default.jpeg'>
+                    //-     <div>
+                    //-         <p class='users-list__username'>aazib</p>
+                    //-         <p class='users-list__books'>1 Book</p>
+                    //-     </div>
+                    //- .users-list__item
+                    //-     <img class='user-photo users-list__profile-photo' src='/images/users/default.jpeg'>
+                    //-     <div>
+                    //-         <p class='users-list__username'>aazib</p>
+                    //-         <p class='users-list__books'>1 Book</p>
+                    //-     </div>
+                    //- .users-list__item
+                    //-     <img class='user-photo users-list__profile-photo' src='/images/users/default.jpeg'>
+                    //-     <div>
+                    //-         <p class='users-list__username'>aazib</p>
+                    //-         <p class='users-list__books'>1 Book</p>
+                    //-     </div>
+
+
+
+        if user && title !== 'Error'
             include includes/_header
         
         main

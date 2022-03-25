@@ -14,11 +14,48 @@
     background-color: #fff;
 }
 
+.profile-header__content {
+    max-width: 70rem;
+    margin: 0 auto;
+}
+
 .user-banner {
     &__name {
         font-size: 2.25rem;
         margin: 0;
         line-height: 10rem;
+    }
+}
+
+.connections {
+    text-align: right;
+
+    p {
+        display: inline-block;
+        margin-right: 1rem;
+        cursor: pointer;
+    }
+}
+
+.users-list-triggers {
+    display: inline-block;
+    margin-right: 1rem;
+
+    &__followers {
+        margin-right: 0.5rem;
+    }
+}
+
+.followers-count,
+.following-count {
+    font-weight: bold;
+}
+
+.connect-buttons {
+    display: inline-block;
+
+    &__follow-button {
+        margin-right: 0.5rem;
     }
 }
 

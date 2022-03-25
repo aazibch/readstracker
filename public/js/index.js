@@ -10,9 +10,11 @@ import {
 import { auth, logout } from './auth';
 import { createBook, updateBook, deleteBook } from './books';
 import { updateUser, deleteUser, updatePassword } from './users';
-import { displayConfirmationModal } from './confirmationModal';
+import { displayConfirmationModal } from './confirmationModals';
+import { displayListModal, hideListModal } from './listModals';
 import { search, hideSearchDropdown } from './search';
 import { sendMessage, renderMessage, displayOnlineIndicators } from './messages';
+import { getAccountsFollowing, getFollowers, followUser, unfollowUser } from './connections';
 
 const loginForm = document.querySelector('.login-form');
 const signupForm = document.querySelector('.signup-form');
@@ -30,6 +32,43 @@ const newMessageForm = document.querySelector('.new-message__form');
 const conversationContentEl = document.querySelector('.conversation-content');
 const bookDropdown = document.querySelector('.full-book__dropdown');
 const bookDropdownButton = document.querySelector('.full-book__dropdown-button');
+const connectionsEl = document.querySelector('.connections');
+const listModalEl = document.querySelector('.list-modal');
+const followButton = document.querySelector('.connect-buttons__follow-button');
+const unfollowButton = document.querySelector('.connect-buttons__unfollow-button');
+
+if (connectionsEl) {
+    const userId = document.querySelector('.connections').getAttribute('data-user-id');
+    const followersButton = document.querySelector('.users-list-triggers__followers');
+    const followingButton = document.querySelector('.users-list-triggers__following');
+
+    followersButton.addEventListener('click', (e) => {
+        displayListModal('Followers', getFollowers);
+    });
+
+    followingButton.addEventListener('click', () => {
+        displayListModal('Following', getAccountsFollowing);
+    });
+
+    if (followButton) {
+        followButton.addEventListener('click', () => {
+            followUser(userId);
+        });
+    }
+
+    if (unfollowButton) {
+        unfollowButton.addEventListener('click', () => {
+            // Working!!
+            unfollowUser();
+        });
+    }
+}
+
+if (listModalEl) {
+    document.querySelector('.list-modal__close-button').addEventListener('click',  () => {
+        hideListModal();
+    });
+}
 
 // messages
 

@@ -5,7 +5,7 @@ const authController = require('../controllers/authController');
 const viewsController = require('../controllers/viewsController');
 
 router.get('/', authController.isLoggedIn, viewsController.getHome);
-router.get('/login', authController.isLoggedIn, viewsController.getLoginForm);
+// router.get('/login', authController.isLoggedIn, viewsController.getLoginForm);
 router.get('/signup', authController.isLoggedIn, viewsController.getSignupForm);
 
 // Routes related to the logged in user.

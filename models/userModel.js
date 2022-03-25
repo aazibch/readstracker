@@ -78,6 +78,14 @@ const userSchema = new mongoose.Schema(
         active: {
             type: Boolean,
             default: true
+        },
+        followersCount: {
+            type: Number,
+            default: 0
+        },
+        followingCount: {
+            type: Number,
+            default: 0
         }
     },
     {

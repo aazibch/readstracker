@@ -3,9 +3,17 @@ include mixins/_bookCard
 
 block content
     .profile-header
-        img.user-photo(src=`/images/users/${profile.profilePhoto}`)
-        h1.heading-1= profile.username
-    
+        .profile-header__content
+            img.user-photo(src=`/images/users/${profile.profilePhoto}`)
+            h1.heading-1= profile.username
+                .connections(data-user-id= profile._id)
+                    .users-list-triggers
+                        button.users-list-triggers__followers.button-plain <span class='followers-count'>2</span> Followers
+                        button.users-list-triggers__following.button-plain <span class='following-count'>1</span> Following
+                    .connect-buttons
+                        button(type='button').button-light.connect-buttons__follow-button.connect-buttons__follow-toggle <i class="fas fa-plus"></i> Follow
+                        button(type='button').button-light.connect-buttons__message-button <i class="fas fa-message"></i> Message
+
     .books
         .books__buttons-container
             a(href='/').button-primary.books__add-book-button Add Book

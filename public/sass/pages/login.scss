@@ -2,27 +2,28 @@
     margin-bottom: 0;
 }
 
-.form-links {
+.form-link {
     text-align: center;
-    margin: 1rem 0 4rem;
+    display: block;
 
-    a {
-        display: block;
-        margin-bottom: 0.75rem;
-    }
-
-    a:link, a:visited {
+    &:link, &:visited {
         color: $secondary-color;
         text-decoration: none;
     }
 
-    a:hover {
+    &:hover {
         text-decoration: underline;
     }
 }
 
-.login-form {
-    &__loading-spinner {
-        display: none;
+.auth-form {
+    &__alternative {
+        border-top: 1px solid $generic-border-color;
+        padding-top: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    &__proceed-button {
+        margin: 0.5rem 0 1.5rem;
     }
 }

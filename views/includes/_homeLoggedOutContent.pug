@@ -1,20 +1,47 @@
 include ../mixins/_servicesBox
 
-section.jumbotron
-    .jumbotron__container
-        .jumbotron__call-to-action
-            p.jumbotron__text Tired of keeping track of your books?
-                <br> We'll help you sort out!
-            a.button-light.button-large(href='/signup') Signup
-        .jumbotron__icon
-            img(src='/images/logo-icon-light.png')
-
-section.services
-    .services__container
-        .row
-            .column
-                +servicesBox('book', 'Keep track of all your reads')
-            .column
-                +servicesBox('eye', 'Show off how well-read you are')
-            .column
-                +servicesBox('users', 'See what your friends are reading')
+.home
+    section.services
+        .services__content
+            .services__header
+                img.services__logo(src='/images/logo.png', alt='ReadsTracker Logo')
+            .services__container
+                .row
+                    .column
+                        +servicesBox('book', 'Keep track of all your reads')
+                    .column
+                        +servicesBox('eye', 'Show off how well-read you are')
+                    .column
+                        +servicesBox('users', 'See what your friends are reading')
+    section.auth-form
+        if showSignupForm
+            .form-container.signup-form-container
+                    form.signup-form.form
+                        h1.heading-1.form__heading Signup
+                        label.form__label Username
+                        input.signup-form__name-field.form__input-field(type='text')
+                        label.form__label Email
+                        input.signup-form__email-field.form__input-field(type='email')
+                        label.form__label Password
+                        input.signup-form__password-field.form__input-field(type='password')
+                        label.form__label Confirm Password
+                        input.signup-form__confirm-password-field.form__input-field(type='password')
+                        input.button-primary.button-block.auth-form__proceed-button(type='submit' value='Signup')
+                        .loading-spinner.signup-form__loading-spinner
+                        .auth-form__alternative
+                            a(href='/').button-outline-primary.button-block Login to Existing Account
+        else
+            .form-container.login-form-container
+                form.login-form.form
+                    h1.heading-1.form__heading Login
+                    label.form__label Email
+                    input.login-form__email-field.form__input-field(type='email')
+                    label.form__label Password
+                    input.login-form__password-field.form__input-field(type='password')
+                    input.button-primary.button-block.auth-form__proceed-button(type='submit' value='Login')
+                    a(href='#').form-link Forgot your password?
+                    loading-spinner.login-form__loading-spinner
+                .auth-form__alternative
+                    a(href='/signup').button-outline-primary.button-block Create a New Account
+            
+                    

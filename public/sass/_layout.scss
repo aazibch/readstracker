@@ -41,7 +41,7 @@ main {
 // Header
 
 .header {
-    background: #cbe4ad;
+    background: #92a37e;
     background: linear-gradient(to bottom right, #cbe4ad, #d8e3ca);
     border-bottom: 1px solid #c9c7c7;
     
@@ -135,40 +135,6 @@ main {
         display: none;
         margin: 1rem auto;
     }
-
-    &__result {
-        display: flex;
-        align-items: center;
-        padding: 0.5rem;
-        font-size: 0.9rem;
-        border-bottom: 1px solid $generic-border-color;
-        background-color: #fff;
-
-        &:link, &:visited, &:active {
-            color: $body-text-color;
-        }
-
-        &:last-child {
-            border-bottom-style: none;
-            border-bottom-left-radius: 5px;
-            border-bottom-right-radius: 5px;
-        }
-
-        &:hover {
-            background: darken(#fff, 5%);
-        }
-    }
-
-    &__profile-photo {
-        width: 45px;
-        height: auto;
-        margin-right: 0.5rem;
-    }
-
-    &__books {
-        color: $secondary-color;
-        font-size: 0.7rem;
-    }
 }
 
 .search-users--active {
@@ -256,12 +222,12 @@ main {
 .footer {
     color: #b1b1b1;
     font-size: 0.9rem;
-    padding: 0.7rem 1rem;
+    padding: 0.7rem 2rem;
     background-color: #444444;
     
     &__container {
         display: flex;
-        @extend %container;
+        // @extend %container;
     }
 
     &__nav {
