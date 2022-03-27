@@ -137,12 +137,15 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
             process.env.JWT_SECRET
         );
 
-        const user = await User.findById(decodedToken.id);
+        const user = await User.findById(decodedToken.id).populate(
+            { path: 'books' }
+        );
 
         if (!user) return next();
 
         if (user.changedPasswordAfterToken(decodedToken.iat)) return next();
 
+        req.user = user;
         res.locals.user = user;
     } catch (err) {
         next()

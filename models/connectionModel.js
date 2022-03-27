@@ -65,8 +65,9 @@ connectionSchema.post("save", function () {
     this.constructor.calcFollowing(this.follower);
 });
 
-connectionSchema.pre('findOneAndDelete', async function () {
+connectionSchema.pre('findOneAndDelete', async function (next) {
     this.f = await this.findOne();
+    next();
 });
 
 connectionSchema.post('findOneAndDelete', async function () {

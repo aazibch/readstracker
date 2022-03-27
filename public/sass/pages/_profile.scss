@@ -54,8 +54,16 @@
 .connect-buttons {
     display: inline-block;
 
-    &__follow-button {
+    &__follow-toggle {
         margin-right: 0.5rem;
+    }
+
+    &__unfollow-button {
+        @extend .button-light;
+    }
+
+    &__follow-button {
+        @extend .button-primary;
     }
 }
 

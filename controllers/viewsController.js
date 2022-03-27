@@ -1,6 +1,7 @@
 const Book = require('../models/bookModel');
 const User = require('../models/userModel');
 const Conversation = require('../models/conversationModel');
+const Connection = require('../models/connectionModel');
 const catchAsync = require('../middleware/catchAsync');
 const AppError = require('../utils/appError');
 const timeago = require('timeago.js');
@@ -18,19 +19,34 @@ exports.getSignupForm = (req, res) => {
 };
 
 exports.getProfile = catchAsync(async (req, res, next) => {
+    const pugData = {
+        title: `${req.params.username}'s Profile | ReadsTracker`, profile: req.user, isOwn: true
+    };
+
     if (req.user && req.user.username === req.params.username) {
         return res
             .status(200)
-            .render('profile', { title: `${req.user.username}'s Profile | ReadsTracker`, profile: req.user });
+            .render('profile', pugData);
     }
 
+    
     const user = await User.findOne({ username: req.params.username }).populate(
         { path: 'books' }
     );
-
+        
     if (!user) return next(new AppError('User not found.', 404));
+        
+    const conn = await Connection.findOne({ following: user._id, follower: req.user._id });
+    
+    if (conn) {
+        pugData.conn = true;
+        pugData.connId = conn._id;
+    }
 
-    res.status(200).render('profile', { title: `${user.username}'s Profile | ReadsTracker`, profile: user });
+    pugData.isOwn = false;
+    pugData.profile = user;
+
+    res.status(200).render('profile', pugData);
 });
 
 exports.getBook = catchAsync(async (req, res, next) => {

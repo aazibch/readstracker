@@ -2,17 +2,24 @@ extends base
 include mixins/_bookCard
 
 block content
+    -
+        console.log({ isOwn, conn, connId });
+
     .profile-header
         .profile-header__content
             img.user-photo(src=`/images/users/${profile.profilePhoto}`)
             h1.heading-1= profile.username
-                .connections(data-user-id= profile._id)
+                .connections(data-user-id= profile._id data-conn-id= connId)
                     .users-list-triggers
-                        button.users-list-triggers__followers.button-plain <span class='followers-count'>2</span> Followers
-                        button.users-list-triggers__following.button-plain <span class='following-count'>1</span> Following
-                    .connect-buttons
-                        button(type='button').button-light.connect-buttons__follow-button.connect-buttons__follow-toggle <i class="fas fa-plus"></i> Follow
-                        button(type='button').button-light.connect-buttons__message-button <i class="fas fa-message"></i> Message
+                        button.users-list-triggers__followers.button-plain <span class='followers-count'>#{profile.followersCount}</span> Follower#{profile.followersCount === 1 ? '' : 's'}
+                        button.users-list-triggers__following.button-plain <span class='following-count'>#{profile.followingCount}</span> Following
+                    if !isOwn    
+                        .connect-buttons
+                            if conn
+                                button(type='button').connect-buttons__unfollow-button.connect-buttons__follow-toggle <i class='fa-solid fa-xmark'></i> Unfollow
+                            else
+                                button(type='button').connect-buttons__follow-button.connect-buttons__follow-toggle <i class="fas fa-plus"></i> Follow
+                            button(type='button').button-light.connect-buttons__message-button <i class="fas fa-message"></i> Message
 
     .books
         .books__buttons-container

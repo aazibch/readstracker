@@ -14,7 +14,7 @@ import { displayConfirmationModal } from './confirmationModals';
 import { displayListModal, hideListModal } from './listModals';
 import { search, hideSearchDropdown } from './search';
 import { sendMessage, renderMessage, displayOnlineIndicators } from './messages';
-import { getAccountsFollowing, getFollowers, followUser, unfollowUser } from './connections';
+import { getAccountsFollowing, getFollowers, followButtonHandler, unfollowButtonHandler } from './connections';
 
 const loginForm = document.querySelector('.login-form');
 const signupForm = document.querySelector('.signup-form');
@@ -38,7 +38,6 @@ const followButton = document.querySelector('.connect-buttons__follow-button');
 const unfollowButton = document.querySelector('.connect-buttons__unfollow-button');
 
 if (connectionsEl) {
-    const userId = document.querySelector('.connections').getAttribute('data-user-id');
     const followersButton = document.querySelector('.users-list-triggers__followers');
     const followingButton = document.querySelector('.users-list-triggers__following');
 
@@ -51,16 +50,11 @@ if (connectionsEl) {
     });
 
     if (followButton) {
-        followButton.addEventListener('click', () => {
-            followUser(userId);
-        });
+        followButton.addEventListener('click', followButtonHandler);
     }
 
     if (unfollowButton) {
-        unfollowButton.addEventListener('click', () => {
-            // Working!!
-            unfollowUser();
-        });
+        unfollowButton.addEventListener('click', unfollowButtonHandler);
     }
 }
 

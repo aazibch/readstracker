@@ -3,6 +3,8 @@ import catchAsync from './catchAsync';
 import { displayAlert } from './alerts';
 import { hideListModal } from './listModals';
 
+const connectionsEl = document.querySelector('.connections');
+
 const modalCatchAsync = (fn) => {
     return function () {
         return fn(...arguments).catch((err) => {
@@ -43,22 +45,6 @@ export const getAccountsFollowing = modalCatchAsync(async (userId) => {
     return editedRes;
 });
 
-const changeFollowButtonState = (state) => {
-    const followToggle = document.querySelector('.connect-buttons__follow-toggle');
-
-    if ('unfollow') {
-        followToggle.innerText = 'Unfollow';
-        followToggle.classList.remove('.connect-buttons__follow-button');
-        followToggle.classList.add('.connect-buttons__unfollow-button');
-    }
-
-    if ('follow') {
-        followToggle.innerHTML = '<i class="fas fa-plus"></i> Follow';
-        followToggle.classList.remove('.connect-buttons__unfollow-button');
-        followToggle.classList.add('.connect-buttons__follow-button');
-    }
-};
-
 export const followUser = catchAsync(async (userId) => {
     const response = await axios({
         url: '/api/v1/connections',
@@ -68,7 +54,7 @@ export const followUser = catchAsync(async (userId) => {
         }
     });
 
-    changeFollowButtonState('unfollow');
+    location.reload();
 });
 
 export const unfollowUser = catchAsync(async (connId) => {
@@ -77,5 +63,17 @@ export const unfollowUser = catchAsync(async (connId) => {
         method: 'DELETE'
     });
 
-    changeFollowButtonState('follow');
+    location.reload();
 });
+
+// Handlers
+
+export const followButtonHandler = () => {
+    const userId = connectionsEl.getAttribute('data-user-id');
+    followUser(userId);
+};
+
+export const unfollowButtonHandler = () => {
+    const connId = connectionsEl.getAttribute('data-conn-id');
+    unfollowUser(connId);
+};

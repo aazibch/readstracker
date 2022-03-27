@@ -316,7 +316,7 @@
     &__content {
         max-width: 32rem;
         background: #fff;
-        margin: 10rem auto;
+        // margin: 10rem auto;
         border: 1px solid $generic-border-color;
         overflow: auto;
         border-radius: 5px;
@@ -349,6 +349,12 @@
 
 .confirmation-modal {
     display: none;
+
+    &--active {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
     &__query {
         margin: 1rem;
@@ -430,17 +436,19 @@
     display: none;
 
     &__content {
-        max-width: 25rem;
+        width: 25rem;
+        height: 35rem;
     }
 
     &__list {
         overflow-y: auto;
-        height: 20rem;
     }
 }
 
 .list-modal--active {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .dropdown-menu {

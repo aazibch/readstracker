@@ -41,19 +41,21 @@ main {
 // Header
 
 .header {
-    background: #92a37e;
-    background: linear-gradient(to bottom right, #cbe4ad, #d8e3ca);
-    border-bottom: 1px solid #c9c7c7;
+    background: #fff;
+    // background: linear-gradient(to bottom right, #cbe4ad, #d8e3ca);
+    // border-bottom: 1px solid #c9c7c7;
+    box-shadow: 0px 2px 2px 0px rgba(191,189,191,0.63);
+    position: relative;
     
     a {
         text-decoration: none;
     }
     
     &__container {   
-        padding: 1rem;
+        padding: 1rem 2rem;
         display: flex;
         align-items: center;
-        @extend %container;
+        // @extend %container;
     }
 
     &__site-title {
@@ -80,20 +82,22 @@ main {
 }
 
 .search-users {
-    width: 17rem;
+    width: 20rem;
     min-width: 10rem;
     margin-left: 1rem;
     position: relative;
 
     &__form {
         display: flex;
+        border: 1px solid $generic-border-color;
+        border-radius: 5px;
     }
 
     &__input-field {
         flex: 1 1;
         width: 0;
         border-radius: 5px;
-        height: 2rem;
+        height: 2.5rem;
         border-style: none;
         padding: 0 0.5rem;
         background: #fff;
@@ -106,8 +110,8 @@ main {
     }
 
     &__button {
-        height: 2rem;
-        padding: 0 0.75rem;
+        height: 2.5rem;
+        padding: 0 1rem;
         border-radius: 0;
         border-top-right-radius: 5px;
         border-bottom-right-radius: 5px;
@@ -178,7 +182,8 @@ main {
 
         &-menu-arrow {
             top: -0.2rem;
-            right: 0.3rem;
+            right: 0.2rem;
+            border: 1px solid $generic-border-color;
         }
 
         &-menu {
@@ -227,7 +232,6 @@ main {
     
     &__container {
         display: flex;
-        // @extend %container;
     }
 
     &__nav {

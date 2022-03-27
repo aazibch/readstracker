@@ -8,7 +8,7 @@ const removeEventListenersFromModal = () => {
 
 export function hideConfirmationModal () {
     const modalEl = document.querySelector('.confirmation-modal');
-    modalEl.style.display = 'none';
+    modalEl.classList.remove('confirmation-modal--active');
     removeEventListenersFromModal();
 };
 
@@ -22,7 +22,7 @@ const attachClickHandlersToCloseButtons = () => {
 
 export const displayConfirmationModal = (query, callback) => {
     document.querySelector('.confirmation-modal__query').innerHTML = `<p>${query}</p>`;
-    document.querySelector('.confirmation-modal').style.display = 'block';
+    document.querySelector('.confirmation-modal').classList.add('confirmation-modal--active');
 
     attachClickHandlersToCloseButtons();
 
