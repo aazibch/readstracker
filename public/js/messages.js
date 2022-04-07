@@ -2,6 +2,32 @@ import axios from 'axios';
 import { format } from 'timeago.js';
 import catchAsync from './catchAsync';
 
+export const createConversation = catchAsync(async (userId) => {
+    const response = await axios({
+        url: '/api/v1/conversations/',
+        method: 'POST',
+        data: {
+            participant: userId
+        }
+    });
+
+    location.assign(`/messages/${response.data.data._id}`);
+});
+
+export const deleteConversation = catchAsync(async (convoId) => {
+    const res = await axios({
+        url: `/api/v1/conversations/${convoId}`,
+        method: 'DELETE'
+    });
+
+    // Response with status code 204 don't return a response, therefore I'm hardcoding it.
+    displayAlert('success', 'The conversation was deleted successfully.');
+
+    setTimeout(() => {
+        location.assign('/messages');
+    }, 1500);
+});
+
 export const sendMessage = async (convoId, data, socket) => {
     const response = await storeMessageInDatabase(convoId, data);
 

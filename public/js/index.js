@@ -13,7 +13,7 @@ import { updateUser, deleteUser, updatePassword } from './users';
 import { displayConfirmationModal } from './confirmationModals';
 import { displayListModal, hideListModal } from './listModals';
 import { search, hideSearchDropdown } from './search';
-import { sendMessage, renderMessage, displayOnlineIndicators } from './messages';
+import { createConversation, sendMessage, renderMessage, displayOnlineIndicators, deleteConversation } from './messages';
 import { getAccountsFollowing, getFollowers, followButtonHandler, unfollowButtonHandler } from './connections';
 
 const loginForm = document.querySelector('.login-form');
@@ -36,18 +36,24 @@ const connectionsEl = document.querySelector('.connections');
 const listModalEl = document.querySelector('.list-modal');
 const followButton = document.querySelector('.connect-buttons__follow-button');
 const unfollowButton = document.querySelector('.connect-buttons__unfollow-button');
+const messageButton = document.querySelector('.connect-buttons__message-button');
+const deleteConvoButton = document.querySelector('.conversation__delete-button');
 
 if (connectionsEl) {
     const followersButton = document.querySelector('.users-list-triggers__followers');
     const followingButton = document.querySelector('.users-list-triggers__following');
 
-    followersButton.addEventListener('click', (e) => {
-        displayListModal('Followers', getFollowers);
-    });
+    if (followersButton) {
+        followersButton.addEventListener('click', (e) => {
+            displayListModal('Followers', getFollowers);
+        });
+    }
 
-    followingButton.addEventListener('click', () => {
-        displayListModal('Following', getAccountsFollowing);
-    });
+    if (followingButton) {
+        followingButton.addEventListener('click', () => {
+            displayListModal('Following', getAccountsFollowing);
+        });
+    }
 
     if (followButton) {
         followButton.addEventListener('click', followButtonHandler);
@@ -56,6 +62,10 @@ if (connectionsEl) {
     if (unfollowButton) {
         unfollowButton.addEventListener('click', unfollowButtonHandler);
     }
+
+    messageButton.addEventListener('click', () => {
+        createConversation(connectionsEl.dataset.userId);
+    });
 }
 
 if (listModalEl) {
@@ -64,9 +74,9 @@ if (listModalEl) {
     });
 }
 
-// messages
-
 const userId = localStorage.getItem('userId');
+
+// messages
 
 if (userId) {
     const socket = io();
@@ -111,6 +121,16 @@ if (userId) {
                 );
             });
         }
+
+        // if (deleteConvoButton) {
+        //     deleteConvoButton.addEventListener('click', () => {
+        //         displayConfirmationModal('Are you sure you want to delete this conversation?', () => {
+        //             const convoId = newMessageForm.dataset.convoId;
+                    
+        //             deleteConversation(convoId);
+        //         });
+        //     });
+        // }
     });
 }
 

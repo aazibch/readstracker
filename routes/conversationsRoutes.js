@@ -12,4 +12,8 @@ router
     .route('/')
     .post(authController.protect, conversationsController.createConversation);
 
+router
+    .route('/:convoId')
+    .delete(authController.protect, conversationsController.deleteConversation);
+
 module.exports = router;

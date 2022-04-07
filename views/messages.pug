@@ -13,15 +13,18 @@ block content
                     else
                         +conversation(convo)
         .messages__main
-            if (!selectedConvo)
+            if (!selectedConvo && !params.new_id)
                 p.system-note Your selected conversation will appear here.
-            else
+            if (selectedConvo || params.new_id)
+                .conversation__header
+                    button.button-danger.conversation__delete-button Delete
                 .conversation-content
-                    each message in selectedConvo.messages
-                        +message(message, selectedConvo.participant, user)
+                    if (selectedConvo)
+                        each message in selectedConvo.messages
+                            +message(message, selectedConvo.participant, user)
 
-            if (selectedConvo)
-                form.new-message__form(data-convo-id=selectedConvo._id)
+            if (selectedConvo || params.new_id)
+                form.new-message__form(data-convo-id= selectedConvo ? selectedConvo._id : '')
                     textarea.new-message__input
                     div
                         input(type="submit" value="Send").button-primary

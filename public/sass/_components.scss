@@ -42,7 +42,6 @@
     font-weight: 400;
     border-style: none;
     border-radius: 0.25rem;
-    line-height: 1.5;
     padding: .450rem .75rem;
     box-sizing: border-box;
 
@@ -130,6 +129,10 @@
     background: $light-color;
     border: 1px solid $generic-border-color;
     color: $body-text-color;
+
+    &:link, &:visited, &:active {
+        color: $body-text-color;
+    }
 
     &:hover {
         background: darken($light-color, 5%);

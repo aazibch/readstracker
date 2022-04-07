@@ -20,7 +20,7 @@ exports.getSignupForm = (req, res) => {
 
 exports.getProfile = catchAsync(async (req, res, next) => {
     const pugData = {
-        title: `${req.params.username}'s Profile | ReadsTracker`, profile: req.user, isOwn: true
+        title: `${req.params.username}'s Profile | ReadsTracker`, profile: req.user
     };
 
     if (req.user && req.user.username === req.params.username) {
@@ -35,16 +35,35 @@ exports.getProfile = catchAsync(async (req, res, next) => {
     );
         
     if (!user) return next(new AppError('User not found.', 404));
-        
-    const conn = await Connection.findOne({ following: user._id, follower: req.user._id });
     
-    if (conn) {
-        pugData.conn = true;
-        pugData.connId = conn._id;
+    pugData.relation = {
+        following: false,
+        followed: false
+    };
+    
+    const followingConn = await Connection.findOne({ following: user._id, follower: req.user._id });
+
+    if (followingConn) {
+        pugData.relation.following = true;
+        pugData.relation.followingConnId = followingConn._id
     }
 
-    pugData.isOwn = false;
+    const followedConn = await Connection.findOne({ following: req.user._id, follower: user._id });
+
+    if (followedConn) {
+        pugData.relation.followed = true;
+    }
+
     pugData.profile = user;
+
+    const convo = await Conversation.findOne({
+        $and: [
+            { participants: { $in: [user._id] } },
+            { participants: { $in: [req.user._id] } }
+        ]
+    });
+
+    if (convo) pugData.relation.convoId = convo._id;
 
     res.status(200).render('profile', pugData);
 });
@@ -132,8 +151,8 @@ const getConversations = async (user) => {
 
 exports.getConversations = catchAsync(async (req, res, next) => {
     const conversations = await getConversations(req.user);
-
-    res.status(200).render('messages', { title: 'Messages | ReadsTracker', conversations });
+    
+    res.status(200).render('messages', { title: 'Messages | ReadsTracker', conversations, params: req.query });
 });
 
 exports.getMessages = catchAsync(async (req, res, next) => {

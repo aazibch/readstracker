@@ -35,7 +35,8 @@ const conversationSchema = new mongoose.Schema({
             message: 'There must be two participants in a conversation.'
         }
     },
-    messages: [messageSchema]
+    messages: [messageSchema],
+    deletedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
 const Conversation = mongoose.model('Conversation', conversationSchema);

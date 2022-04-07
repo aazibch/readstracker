@@ -3,27 +3,35 @@ include mixins/_bookCard
 
 block content
     -
-        console.log({ isOwn, conn, connId });
+        console.log({ relation });
 
     .profile-header
         .profile-header__content
             img.user-photo(src=`/images/users/${profile.profilePhoto}`)
             h1.heading-1= profile.username
-                .connections(data-user-id= profile._id data-conn-id= connId)
-                    .users-list-triggers
+            .connections(data-user-id= profile._id data-conn-id= relation ? relation.followingConnId : '')
+                .users-list-triggers
+                    if profile.followersCount > 0
                         button.users-list-triggers__followers.button-plain <span class='followers-count'>#{profile.followersCount}</span> Follower#{profile.followersCount === 1 ? '' : 's'}
+                    else
+                        p <span class='followers-count'>0</span> Followers
+
+                    if profile.followingCount > 0
                         button.users-list-triggers__following.button-plain <span class='following-count'>#{profile.followingCount}</span> Following
-                    if !isOwn    
-                        .connect-buttons
-                            if conn
-                                button(type='button').connect-buttons__unfollow-button.connect-buttons__follow-toggle <i class='fa-solid fa-xmark'></i> Unfollow
-                            else
-                                button(type='button').connect-buttons__follow-button.connect-buttons__follow-toggle <i class="fas fa-plus"></i> Follow
-                            button(type='button').button-light.connect-buttons__message-button <i class="fas fa-message"></i> Message
+                    else
+                        p <span class='following-count'>0</span> Following
+                if relation    
+                    .connect-buttons
+                        if relation.following
+                            button(type='button').connect-buttons__unfollow-button.connect-buttons__follow-toggle <i class='fa-solid fa-xmark'></i> Unfollow
+                        else
+                            button(type='button').connect-buttons__follow-button.connect-buttons__follow-toggle <i class="fas fa-plus"></i> Follow
+                        a(href= relation.convoId ? `/messages/${relation.convoId}` : `/messages/?new_id=${profile._id}`).button-light.connect-buttons__message-button <i class="fas fa-message"></i> Message
 
     .books
         .books__buttons-container
-            a(href='/').button-primary.books__add-book-button Add Book
+            if !relation
+                a(href='/').button-primary.books__add-book-button Add Book
         if profile.books.length === 0
             .message.no-books-message
                 p No books to show.

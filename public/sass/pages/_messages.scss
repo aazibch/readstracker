@@ -1,7 +1,6 @@
 .messages-page {
-    height: 5rem;
+    height: 100vh;
     display: flex;
-    min-height: 35rem;
     max-width: 55rem;
     margin-left: auto;
     margin-right: auto;
@@ -21,11 +20,11 @@
 
     &__main {
         flex: 1 0 auto;
+        display: flex;
+        flex-direction: column;
         border: 1px solid $generic-border-color;
         border-left-style: none;
-        position: relative;
         background-color: #fff;
-        overflow: hidden;
     }
 }
 
@@ -80,9 +79,16 @@
 .conversation-content {
     padding: 1rem;
     overflow-y: scroll;
-    height: 81.5%;
     display: flex;
+    flex: 1 1 auto;
     flex-direction: column;
+}
+
+.conversation__header {
+    border-bottom: 1px solid $generic-border-color;
+    padding: 1rem;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .message {
@@ -138,12 +144,9 @@
 .new-message {
     &__form {
         border-top: 1px solid $generic-border-color;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
         display: flex;
         padding: 1rem;
+        flex: 0 0 auto;
     }
 
     &__input {
