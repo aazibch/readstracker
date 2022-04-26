@@ -1,7 +1,6 @@
 const Book = require('../models/bookModel');
 const catchAsync = require('../middleware/catchAsync');
 const AppError = require('../utils/appError');
-const filterObject = require('../utils/filterObject');
 
 exports.getAllMyBooks = catchAsync(async (req, res, next) => {
     const books = await Book.find({ user: req.user._id });

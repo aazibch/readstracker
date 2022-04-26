@@ -19,8 +19,6 @@ exports.getMe = catchAsync(async (req, res, next) => {
 const multerStorage = multer.memoryStorage();
 
 const multerFilter = (req, file, next) => {
-    console.log('file', file, req);
-
     if (file.mimetype.startsWith('image')) {
         return next(null, true);
     }
@@ -71,11 +69,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteMe = catchAsync(async (req, res, next) => {
-    const user = await User.findByIdAndUpdate(
-        req.user._id,
-        { active: false },
-        { new: true }
-    );
+    const user = await User.findByIdAndUpdate(req.user._id, { active: false });
 
     res.status(204).json({
         status: 'success',
@@ -89,7 +83,7 @@ exports.getSearchResults = catchAsync(async (req, res, next) => {
             $regex: req.params.query,
             $options: 'i'
         }
-    }).populate({ path: 'books' });
+    });
 
     res.status(200).json({
         status: 'success',
