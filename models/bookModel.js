@@ -65,30 +65,9 @@ const bookSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: [true, 'Please provide a user.']
-    },
-    notes: [
-        {
-            note: {
-                type: String,
-                required: [true, 'Please provide the content for the note.'],
-                minlength: [2, 'The note content should at least have two characters.'],
-                maxlength: [
-                    255,
-                    "The note content should have fewer than two hundred and fifty five characters."
-                ]
-            },
-            dateCreated: {
-                type: Date,
-                default: Date.now
-            }
-        }
-    ]
+    }
 });
 
 const Book = mongoose.model('Book', bookSchema);
 
 module.exports = Book;
-
-/* @todo
-1. Check if a separate schema for notes is necessary?
-*/

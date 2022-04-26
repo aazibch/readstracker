@@ -4,10 +4,6 @@ const router = express.Router();
 const booksController = require('../controllers/booksController');
 const authController = require('../controllers/authController');
 
-const notesRouter = require('./notesRoutes');
-
-router.use('/:bookId/notes', notesRouter);
-
 router
     .route('/')
     .get(authController.protect, booksController.getAllMyBooks)
