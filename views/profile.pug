@@ -3,13 +3,18 @@ include mixins/_bookCard
 
 block content
     -
-        console.log({ relation });
+        let convoLink;
 
+        if (relation) {
+            convoLink = `/messages/${relation.convoId}`;
+            if (relation.convoToRestore) convoLink = `/messages/${relation.convoId}?toRestore=true`;
+        }
+        
     .profile-header
         .profile-header__content
             img.user-photo(src=`/images/users/${profile.profilePhoto}`)
             h1.heading-1= profile.username
-            .connections(data-user-id= profile._id data-conn-id= relation ? relation.followingConnId : '')
+            .connections(data-user-id=profile._id data-conn-id=relation ? relation.followingConnId : '')
                 .users-list-triggers
                     if profile.followersCount > 0
                         button.users-list-triggers__followers.button-plain <span class='followers-count'>#{profile.followersCount}</span> Follower#{profile.followersCount === 1 ? '' : 's'}
@@ -26,7 +31,8 @@ block content
                             button(type='button').connect-buttons__unfollow-button.connect-buttons__follow-toggle <i class='fa-solid fa-xmark'></i> Unfollow
                         else
                             button(type='button').connect-buttons__follow-button.connect-buttons__follow-toggle <i class="fas fa-plus"></i> Follow
-                        a(href= relation.convoId ? `/messages/${relation.convoId}` : `/messages/?new_id=${profile._id}`).button-light.connect-buttons__message-button <i class="fas fa-message"></i> Message
+                        if relation.following && relation.followed
+                            a(href= relation.convoId ? convoLink : `/messages/?newId=${profile._id}`).button-light.connect-buttons__message-button <i class="fas fa-message"></i> Message
 
     .books
         .books__buttons-container

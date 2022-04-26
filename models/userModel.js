@@ -38,7 +38,8 @@ const userSchema = new mongoose.Schema(
             minlength: [
                 5,
                 'The email address should at least have five characters.'
-            ]
+            ],
+            select: false
         },
         profilePhoto: {
             type: String,

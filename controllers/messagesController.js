@@ -5,9 +5,16 @@ const filterObject = require('../utils/filterObject');
 
 exports.createMessage = catchAsync(async (req, res, next) => {
     // Check if conversation exists
-    let conversation = await Conversation.findById(req.params.conversationId);
+    let conversation = await Conversation.findById(
+        req.params.conversationId
+    ).populate('participants');
 
-    if (!conversation || !conversation.participants.includes(req.user._id))
+    if (
+        !conversation ||
+        !conversation.participants.some(
+            (el) => el._id.toString() === req.user._id.toString()
+        )
+    )
         return next(new AppError('Conversation not found.', 404));
 
     let filteredBody = filterObject(req.body, 'content');
@@ -19,16 +26,34 @@ exports.createMessage = catchAsync(async (req, res, next) => {
     };
 
     conversation.messages.push(filteredBody);
+
+    if (conversation.deletedBy) conversation.deletedBy = undefined;
+
+    conversation.unreadBy = [
+        conversation.participants.find(
+            (user) => req.user._id.toString() !== user._id.toString()
+        )
+    ];
+
     await conversation.save();
 
     conversation = conversation.toObject();
 
+    const sender = conversation.participants.find(
+        (user) => req.user._id.toString() === user._id.toString()
+    );
+
     res.status(200).json({
         status: 'success',
-        sender: req.user._id.toString(),
         data: {
+            convoId: conversation._id,
             ...conversation.messages[conversation.messages.length - 1],
-            recipient: conversation.participants.find((user) => req.user._id.toString() !== user._id.toString())
+            recipient: conversation.participants.find(
+                (user) => req.user._id.toString() !== user._id.toString()
+            )._id,
+            sender: conversation.participants.find(
+                (user) => req.user._id.toString() === user._id.toString()
+            )
         }
     });
 });

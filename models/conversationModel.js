@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const Connection = require('./connectionModel');
+const AppError = require('../utils/appError');
 
 const messageSchema = new mongoose.Schema({
     sender: {
@@ -17,6 +19,10 @@ const messageSchema = new mongoose.Schema({
     dateSent: {
         type: Date,
         default: Date.now
+    },
+    deletedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     }
 });
 
@@ -36,7 +42,39 @@ const conversationSchema = new mongoose.Schema({
         }
     },
     messages: [messageSchema],
-    deletedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+    deletedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    lastUpdated: {
+        type: Date,
+        default: Date.now
+    },
+    unreadBy: {
+        type: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'User'
+            }
+        ],
+        validate: {
+            validator: function (val) {
+                if (val.length > 0) {
+                    this.participants.every((el) =>
+                        this.participants.includes(el)
+                    );
+                }
+                console.log('[validator conversation Model]', val);
+            },
+            message:
+                'The users who have unread messages must be among the participants in the conversation.'
+        }
+    }
+});
+
+conversationSchema.pre('save', function (next) {
+    if (this.isModified('messages')) {
+        this.lastUpdated = Date.now();
+    }
+
+    next();
 });
 
 const Conversation = mongoose.model('Conversation', conversationSchema);

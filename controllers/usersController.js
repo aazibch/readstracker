@@ -25,7 +25,6 @@ const multerFilter = (req, file, next) => {
         return next(null, true);
     }
 
-
     next(
         new AppError('Not an image. Only image formats are accepted.', 400),
         false
@@ -43,7 +42,7 @@ exports.resizeProfilePhoto = catchAsync(async (req, res, next) => {
     if (!req.file) return next();
 
     // Saving filename to multer properties because it's needed in the .updateMe method.
-    req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
+    req.file.filename = `user-${req.user.id}-${Date.now()}.jpg`;
 
     await sharp(req.file.buffer)
         .resize(300, 300)
@@ -59,14 +58,10 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
     if (req.file) filteredBody.profilePhoto = req.file.filename;
 
-    const user = await User.findByIdAndUpdate(
-        req.user._id,
-        filteredBody,
-        {
-            runValidators: true,
-            new: true
-        }
-    );
+    const user = await User.findByIdAndUpdate(req.user._id, filteredBody, {
+        runValidators: true,
+        new: true
+    });
 
     res.status(200).json({
         status: 'success',
@@ -94,10 +89,8 @@ exports.getSearchResults = catchAsync(async (req, res, next) => {
             $regex: req.params.query,
             $options: 'i'
         }
-    })
-        .select('-email')
-        .populate({ path: 'books' });
-        
+    }).populate({ path: 'books' });
+
     res.status(200).json({
         status: 'success',
         data: results

@@ -1,17 +1,34 @@
 import axios from 'axios';
 import { format } from 'timeago.js';
+import { displayAlert } from './alerts';
 import catchAsync from './catchAsync';
 
-export const createConversation = catchAsync(async (userId) => {
+export const createConversation = catchAsync(async (data, socket) => {
     const response = await axios({
         url: '/api/v1/conversations/',
         method: 'POST',
-        data: {
-            participant: userId
-        }
+        data
     });
 
-    location.assign(`/messages/${response.data.data._id}`);
+    console.log('[createConversation] response', response.data.data);
+
+    const { recipient, sender, content } = response.data.data.message;
+
+    console.log(
+        '[createConversation]',
+        { recipient, sender, content },
+        'convoId',
+        response.data.data._id
+    );
+
+    socket.emit('sendMessage', {
+        recipient,
+        sender,
+        content,
+        convoId: response.data.data._id
+    });
+
+    return response.data.data;
 });
 
 export const deleteConversation = catchAsync(async (convoId) => {
@@ -38,7 +55,9 @@ export const sendMessage = async (convoId, data, socket) => {
     socket.emit('sendMessage', {
         recipient,
         sender,
-        content: response.data.data.content
+        convoId: response.data.data.convoId,
+        content: response.data.data.content,
+        user: response.data.data.participant
     });
 };
 
@@ -86,24 +105,38 @@ export const renderMessage = (data, isOwn) => {
         conversationContentEl.scrollTop = conversationContentEl.scrollHeight;
     }
 
-    let convoExtract = document.querySelector(`.conversation--selected .conversation__extract`);
-    if (!convoExtract) convoExtract = document.querySelector(`.conversation[data-user-id='${data.sender}'] .conversation__extract`);
+    // let convoExtract = document.querySelector(
+    //     `.conversation--selected .conversation__extract`
+    // );
+    // if (!convoExtract)
+    //     convoExtract = document.querySelector(
+    //         `.conversation[data-user-id='${data.sender}'] .conversation__extract`
+    //     );
 
-    convoExtract.textContent = data.content;
+    // convoExtract.textContent = data.content;
 };
 
 const hideAllOnlineIndicators = () => {
-    const onlineIndicators = document.querySelectorAll('.conversation__online-indicator');
- 
-    onlineIndicators.forEach(item => item.classList.remove('conversation__online-indicator--active'));
-}
+    const onlineIndicators = document.querySelectorAll(
+        '.conversation__online-indicator'
+    );
+
+    onlineIndicators.forEach((item) =>
+        item.classList.remove('conversation__online-indicator--active')
+    );
+};
 
 export const displayOnlineIndicators = (onlineUsers) => {
     hideAllOnlineIndicators();
 
-    onlineUsers.forEach(user => {
-        const onlineIndicator = document.querySelector(`[data-user-id='${user.userId}'] .conversation__online-indicator`);
+    onlineUsers.forEach((user) => {
+        const onlineIndicator = document.querySelector(
+            `[data-user-id='${user.userId}'] .conversation__online-indicator`
+        );
 
-        if (onlineIndicator) onlineIndicator.classList.add('conversation__online-indicator--active');
+        if (onlineIndicator)
+            onlineIndicator.classList.add(
+                'conversation__online-indicator--active'
+            );
     });
-}
+};

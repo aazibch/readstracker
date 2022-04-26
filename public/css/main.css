@@ -1151,6 +1151,12 @@ main {
   align-items: center;
   padding: 1rem;
 }
+.conversation--new .conversation__extract {
+  font-weight: bold;
+}
+.conversation--new .conversation__notification-indicator {
+  display: inline-block;
+}
 .conversation:link, .conversation:visited, .conversation:hover {
   color: inherit;
   text-decoration: none;
@@ -1181,6 +1187,18 @@ main {
 }
 .conversation__online-indicator--active {
   display: inline-block;
+}
+.conversation__notification-indicator-container {
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: flex-end;
+}
+.conversation__notification-indicator {
+  height: 0.65rem;
+  width: 0.65rem;
+  border-radius: 50%;
+  background: #0793f8;
+  display: none;
 }
 .conversation--selected {
   background: #f2f2f2;

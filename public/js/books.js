@@ -8,7 +8,7 @@ export const createBook = catchAsync(async (data) => {
         method: 'POST',
         data
     });
-    
+
     displayAlert(response.data.status, response.data.message);
 
     setTimeout(() => {
@@ -22,7 +22,7 @@ export const updateBook = catchAsync(async (bookId, data) => {
         method: 'PATCH',
         data
     });
-    
+
     displayAlert(response.data.status, response.data.message);
 
     setTimeout(() => {
@@ -35,7 +35,7 @@ export const deleteBook = catchAsync(async (bookId) => {
         url: `/api/v1/books/${bookId}`,
         method: 'DELETE'
     });
-    
+
     // Response with status code 204 don't return a response, therefore I'm hardcoding it.
     displayAlert('success', 'Book was deleted successfully.');
 

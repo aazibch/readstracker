@@ -3,28 +3,42 @@ include mixins/_conversation.pug
 include mixins/_message.pug
 
 block content
+    -
+        console.log('[messages.pug] profile', user);
     .page-container.messages-page
         .messages__sidebar
             h2.messages__page-title Messages
             .conversations
+                //- a(href=`/messages/123` class='conversation' data-user-id=123)
+                //-     img(src=`/images/users/default.jpg` data-image='default.jpg').user-photo
+                //-     div
+                //-         p.conversation__username Joe Rogan
+                //-         div.conversation__online-indicator
+                //-         p.conversation__extract Something is going right
+                //-     .conversation__notification-indicator-container
+                //-         div.conversation__notification-indicator
                 each convo in conversations
+                    -
+                        const includesUnreadMessages = convo.unreadBy.includes(user._id.toString());
                     if (selectedConvo && convo._id.toString() === selectedConvo._id.toString())
-                        +conversation(convo, true)
+                        +conversation(convo, true, includesUnreadMessages)
                     else
-                        +conversation(convo)
+                        +conversation(convo, null, includesUnreadMessages)
         .messages__main
-            if (!selectedConvo && !params.new_id)
+            if (!selectedConvo && !newConvo)
                 p.system-note Your selected conversation will appear here.
-            if (selectedConvo || params.new_id)
+            if (selectedConvo || newConvo)
                 .conversation__header
-                    button.button-danger.conversation__delete-button Delete
+                    if (selectedConvo)
+                        button.button-danger.conversation__delete-button Delete
                 .conversation-content
                     if (selectedConvo)
                         each message in selectedConvo.messages
-                            +message(message, selectedConvo.participant, user)
+                            if (!message.deletedBy || message.deletedBy && message.deletedBy.toString() !== user._id.toString())
+                                +message(message, selectedConvo.participant, user)
 
-            if (selectedConvo || params.new_id)
-                form.new-message__form(data-convo-id= selectedConvo ? selectedConvo._id : '')
+            if (selectedConvo || newConvo)
+                form.new-message__form(data-convo-id= selectedConvo ? selectedConvo._id : false data-new-convo= newConvo ? newConvo.toString() : false)
                     textarea.new-message__input
                     div
                         input(type="submit" value="Send").button-primary

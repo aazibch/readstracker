@@ -5,7 +5,6 @@ const conversationContentEl = document.querySelector('.conversation-content');
 const socket = io();
 
 socket.on('message', (message) => {
-    console.log('Message from backend', message);
     outputMessage(message);
 
     conversationContentEl.scrollTop = conversationContentEl.scrollHeight;

@@ -8,9 +8,8 @@ const removeUser = (socketId) => {
     onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId);
 };
 
-const getCorrespondent = (userId) => onlineUsers.find(
-    (user) => user.userId === userId
-);
+const getCorrespondent = (userId) =>
+    onlineUsers.find((user) => user.userId === userId);
 
 exports.onConnection = (io) => {
     return (socket) => {
@@ -18,7 +17,7 @@ exports.onConnection = (io) => {
 
         socket.on('saveUser', (userId) => {
             const updatedData = { userId, socketId: socket.id };
-            
+
             saveUser(updatedData);
             io.emit('onlineUsers', onlineUsers);
         });
@@ -26,10 +25,13 @@ exports.onConnection = (io) => {
         socket.on('sendMessage', (data) => {
             const correspondent = getCorrespondent(data.recipient);
 
+            console.log('[socketsController.js] data', data);
+
             if (correspondent) {
                 io.to(correspondent.socketId).emit('chatMessage', {
                     content: data.content,
-                    sender: data.sender
+                    sender: data.sender,
+                    convoId: data.convoId
                 });
             }
         });

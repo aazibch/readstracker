@@ -7,7 +7,7 @@
     "start": "node server.js",
     "start:dev": "nodemon server.js",
     "watch:js": "parcel watch ./public/js/index.js --out-dir ./public/js/ --out-file bundle.js --public-url /js",
-    "build:js": "parcel build ./public/js/index.js --out-dir ./public/js/ --out-file bundle.js --public-url /js",
+    "build:js": "parcel build ./public/js/index.js --out-dir ./public/js/ --out-file bundle.js",
     "watch:scss": "sass --watch public/sass/main.scss public/css/main.css",
     "build:scss": "sass public/sass/main.scss public/css/main.css"
   },

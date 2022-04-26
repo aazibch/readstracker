@@ -28,14 +28,6 @@ exports.getMyBook = catchAsync(async (req, res, next) => {
 });
 
 exports.createMyBook = catchAsync(async (req, res, next) => {
-    const filteredBody = filterObject(
-        req.body,
-        'title',
-        'author',
-        'rating',
-        'genre'
-    );
-
     req.body.user = req.user._id;
 
     const book = await Book.create(req.body);
@@ -48,20 +40,12 @@ exports.createMyBook = catchAsync(async (req, res, next) => {
 });
 
 exports.updateMyBook = catchAsync(async (req, res, next) => {
-    const filteredBody = filterObject(
-        req.body,
-        'title',
-        'author',
-        'rating',
-        'genre'
-    );
-
     const book = await Book.findOneAndUpdate(
         {
             _id: req.params.id,
             user: req.user._id
         },
-        filteredBody,
+        req.body,
         { new: true, runValidators: true }
     );
 

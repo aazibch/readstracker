@@ -2,9 +2,11 @@ import axios from 'axios';
 let controller;
 let signal;
 
-const showLoadingSpinner = () => document.querySelector('.search-users__spinner').style.display = 'block';
+const showLoadingSpinner = () =>
+    (document.querySelector('.search-users__spinner').style.display = 'block');
 
-const hideLoadingSpinner = () => document.querySelector('.search-users__spinner').style.display = 'none';
+const hideLoadingSpinner = () =>
+    (document.querySelector('.search-users__spinner').style.display = 'none');
 
 export const search = async (query) => {
     let results;
@@ -59,7 +61,7 @@ const renderResultElements = (results) => {
 
     for (let result of results) {
         html += `
-            <a class='users-list__item' href='/users/${result.username}'>
+            <a class='users-list__item' href='/${result.username}'>
                 <img class='user-photo users-list__profile-photo' src='/images/users/${
                     result.profilePhoto
                 }'>
