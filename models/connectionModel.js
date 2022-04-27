@@ -4,13 +4,35 @@ const User = require('./userModel');
 const connectionSchema = new mongoose.Schema({
     follower: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: [
+            true,
+            'To create a valid connection, a follower is required.'
+        ],
+        validate: {
+            validator: function (val) {
+                console.log(
+                    '[connectionSchema] validate',
+                    typeof val,
+                    typeof this.following
+                );
+                return val.toString() !== this.following.toString();
+            },
+            message:
+                'The follower cannot be the same user as the one you are following.'
+        }
     },
     following: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: [
+            true,
+            'To create a valid connection, the user to follow is required.'
+        ]
     }
 });
+
+connectionSchema.index({ follower: 1, following: 1 }, { unique: true });
 
 connectionSchema.statics.calcFollowers = async function (userId) {
     const stats = await this.aggregate([
@@ -58,9 +80,9 @@ connectionSchema.statics.calcFollowing = async function (userId) {
     await User.findByIdAndUpdate(userId, {
         followingCount: 0
     });
-}
+};
 
-connectionSchema.post("save", function () {
+connectionSchema.post('save', function () {
     this.constructor.calcFollowers(this.following);
     this.constructor.calcFollowing(this.follower);
 });

@@ -13,7 +13,7 @@ exports.getFollowers = catchAsync(async (req, res, next) => {
     res.status(200).json({
         status: 'success',
         data: followers
-    })
+    });
 });
 
 exports.getAccountsFollowing = catchAsync(async (req, res, next) => {
@@ -29,19 +29,8 @@ exports.getAccountsFollowing = catchAsync(async (req, res, next) => {
     });
 });
 
-// Follow user
 exports.createConnection = catchAsync(async (req, res, next) => {
-    if (req.user._id.toString() === req.body.following) return next(new AppError('You cannot follow yourself.', 400));
-
-    const existingConn = await Connection.findOne({ follower: req.user._id, following: req.body.following });
-
-    if (existingConn) return next(new AppError('You are already following this user.', 400)); 
-
-    const userToFollow = await User.findById(req.body.following);
-
-    if (!userToFollow) return next(new AppError('The user you are trying to follow was not found.', 404));
-
-    const conn = await Connection.create({ 
+    const conn = await Connection.create({
         follower: req.user._id,
         following: req.body.following
     });
@@ -53,7 +42,10 @@ exports.createConnection = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteConnection = catchAsync(async (req, res, next) => {
-    const conn = await Connection.findOneAndDelete({ _id: req.params.connId, follower: req.user._id });
+    const conn = await Connection.findOneAndDelete({
+        _id: req.params.connId,
+        follower: req.user._id
+    });
 
     if (!conn) return next(new AppError('Connection not found.', 404));
 
@@ -61,5 +53,5 @@ exports.deleteConnection = catchAsync(async (req, res, next) => {
         status: 'success',
         message: 'Unfollowed successfully.',
         data: conn
-    })
+    });
 });
