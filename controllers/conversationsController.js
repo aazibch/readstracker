@@ -17,90 +17,36 @@ exports.getAllConversations = catchAsync(async (req, res, next) => {
 });
 
 exports.createConversation = catchAsync(async (req, res, next) => {
-    const filteredBody = filterObject(req.body, 'participant', 'message');
+    const filteredConversation = filterObject(
+        req.body,
+        'participants',
+        'message'
+    );
     const filteredMessage = filterObject(req.body.message, 'content');
-
-    if (!filteredBody.participant)
-        return next(
-            new AppError(
-                'Invalid input data. Please provide the second participant.',
-                400
-            )
-        );
-
-    if (filteredBody.participant === req.user._id.toString())
-        return next(
-            new AppError(
-                'The participant cannot be the same user as the creator of the conversation.',
-                400
-            )
-        );
-
-    const participantUser = await User.findById(filteredBody.participant);
-
-    if (!participantUser)
-        return next(new AppError('The participant cannot be found.', 404));
 
     const conns = await Promise.all([
         Connection.findOne({
             follower: req.user._id,
-            following: filteredBody.participant
+            following: filteredConversation.participants[0]
         }),
         Connection.findOne({
-            follower: filteredBody.participant,
+            follower: filteredConversation.participants[0],
             following: req.user._id
         })
     ]);
 
     if (!conns.every((elem) => elem))
         return next(
-            new AppError(
-                'You and the other participant must be following each other.',
-                400
-            )
+            new AppError('The participants must be following each other.', 400)
         );
 
-    // Check if there is already an existing conversation with the same participants.
-    const existingConversation = await Conversation.findOne({
-        $and: [
-            { participants: { $in: [filteredBody.participant] } },
-            { participants: { $in: [req.user._id] } }
-        ]
-    });
+    filteredConversation.messages = [
+        { ...filteredMessage, sender: req.user._id }
+    ];
+    filteredConversation.unreadBy = participants[0];
+    filteredConversation.participants.push(req.user._id);
 
-    if (existingConversation)
-        return next(
-            new AppError(
-                'A conversation with the same participants already exists.',
-                400
-            )
-        );
-
-    const { participant } = filteredBody;
-    delete filteredBody.participant;
-
-    filteredBody.participants = [participant, req.user._id];
-    filteredBody.messages = [{ ...filteredMessage, sender: req.user._id }];
-    filteredBody.unreadBy = [participant];
-
-    let conversation = await Conversation.create(filteredBody);
-
-    console.log('[createConversation], conversation');
-
-    conversation = conversation.toObject();
-
-    conversation.messages[0].sender = await User.findById(
-        conversation.messages[0].sender
-    );
-
-    conversation.message = {
-        ...conversation.messages[0],
-        recipient: conversation.participants.find(
-            (user) => req.user._id.toString() !== user._id.toString()
-        )._id
-    };
-
-    delete conversation.messages;
+    const conversation = await Conversation.create(filteredConversation);
 
     res.status(201).json({
         status: 'success',
@@ -109,23 +55,22 @@ exports.createConversation = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteConversation = catchAsync(async (req, res, next) => {
-    const convo = await Conversation.findById(req.params.convoId);
+    const convo = await Conversation.findOne({
+        _id: req.params.convoId,
+        participants: { $in: [req.user._id] }
+    });
 
     if (!convo) return next(new AppError('Conversation not found.', 404));
 
-    if (!convo.participants.includes(req.user._id))
-        return next(new AppError('You cannot delete this conversation.', 403));
-
     if (convo.deletedBy && convo.deletedBy !== req.user._id) {
-        await Conversation.findByIdAndDelete(convo._id);
-    }
-
-    if (!convo.deletedBy) {
+        await convo.delete();
+    } else {
         convo.deletedBy = req.user._id;
 
-        for (let x in convo.messages) {
-            convo.messages[x].deletedBy = req.user._id;
-        }
+        convo.messages = convo.messages.map((el) => {
+            el.deletedBy = req.user._id;
+            return el;
+        });
 
         await convo.save();
     }
