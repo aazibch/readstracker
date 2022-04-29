@@ -26,8 +26,6 @@ const messageSchema = new mongoose.Schema({
     }
 });
 
-//@todo check if this works
-// for we are comparing objects.
 const checkIfValidParticipant = function (val) {
     return this.participants.includes(val);
 };
@@ -67,7 +65,7 @@ const conversationSchema = new mongoose.Schema({
             validator: checkIfValidParticipant,
             message: 'Only participants can delete the conversation.'
         }
-    }, //@todo implement custom validator.
+    },
     lastUpdated: {
         type: Date,
         default: Date.now

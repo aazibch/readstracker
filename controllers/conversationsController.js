@@ -43,7 +43,7 @@ exports.createConversation = catchAsync(async (req, res, next) => {
     filteredConversation.messages = [
         { ...filteredMessage, sender: req.user._id }
     ];
-    filteredConversation.unreadBy = participants[0];
+    filteredConversation.unreadBy = filteredConversation.participants[0];
     filteredConversation.participants.push(req.user._id);
 
     const conversation = await Conversation.create(filteredConversation);
