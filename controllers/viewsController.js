@@ -22,13 +22,13 @@ exports.getSignupForm = (req, res) => {
 };
 
 exports.getProfile = catchAsync(async (req, res, next) => {
-    const pugData = {
+    const viewData = {
         title: `${req.params.username}'s Profile | ReadsTracker`,
         profile: req.user
     };
 
     if (req.user?.username === req.params.username)
-        return res.status(200).render('profile', pugData);
+        return res.status(200).render('profile', viewData);
 
     const user = await User.findOne({ username: req.params.username }).populate(
         { path: 'books' }
@@ -36,10 +36,16 @@ exports.getProfile = catchAsync(async (req, res, next) => {
 
     if (!user) return next(new AppError('User not found.', 404));
 
-    pugData.relation = {
-        following: false,
-        followed: false,
-        convoToRestore: false
+    viewData.relation = {
+        following: {
+            status: false
+        },
+        followed: {
+            status: false
+        },
+        conversation: {
+            toRestore: false
+        }
     };
 
     const followingConn = await Connection.findOne({
@@ -48,8 +54,8 @@ exports.getProfile = catchAsync(async (req, res, next) => {
     });
 
     if (followingConn) {
-        pugData.relation.following = true;
-        pugData.relation.followingConnId = followingConn._id;
+        viewData.relation.following.status = true;
+        viewData.relation.following.connId = followingConn._id;
     }
 
     const followedConn = await Connection.findOne({
@@ -58,27 +64,30 @@ exports.getProfile = catchAsync(async (req, res, next) => {
     });
 
     if (followedConn) {
-        pugData.relation.followed = true;
+        viewData.relation.followed.status = true;
     }
 
-    pugData.profile = user;
+    viewData.profile = user;
 
-    const convo = await Conversation.findOne({
+    const conversation = await Conversation.findOne({
         $and: [
             { participants: { $in: [user._id] } },
             { participants: { $in: [req.user._id] } }
         ]
     });
 
-    if (convo) {
-        if (convo.deletedBy?.toString() === req.user._id.toString()) {
-            pugData.relation.convoToRestore = true;
-        }
-
-        pugData.relation.convoId = convo._id;
+    if (conversation) {
+        viewData.relation.conversation.id = conversation._id;
     }
 
-    res.status(200).render('profile', pugData);
+    if (
+        conversation &&
+        conversation.deletedBy?.toString() === req.user._id.toString()
+    ) {
+        viewData.relation.conversation.toRestore = true;
+    }
+
+    res.status(200).render('profile', viewData);
 });
 
 exports.getBook = catchAsync(async (req, res, next) => {
@@ -99,7 +108,7 @@ exports.getBook = catchAsync(async (req, res, next) => {
 exports.getBookEditPage = catchAsync(async (req, res, next) => {
     const book = await Book.findById(req.params.id);
 
-    if (!book || book.user._id.toString() !== req.user._id.toString())
+    if (!book || book.user.toString() !== req.user._id.toString())
         return next(new AppError('Book not found.', 404));
 
     res.status(200).render('editBook', {
@@ -117,10 +126,10 @@ exports.getSettingsPage = catchAsync(async (req, res) => {
 exports.getSearchResults = catchAsync(async (req, res, next) => {
     const results = await User.find({
         username: {
-            $regex: req.query['search_query'],
+            $regex: req.query['searchQuery'],
             $options: 'i'
         }
-    }).populate({ path: 'books' });
+    });
 
     res.status(200).render('searchResults', {
         title: 'Search | ReadsTracker',
@@ -128,6 +137,7 @@ exports.getSearchResults = catchAsync(async (req, res, next) => {
     });
 });
 
+// To work on this.
 const getConversations = async (user) => {
     let conversations = await Conversation.find({
         participants: { $in: [user._id] }
@@ -140,14 +150,16 @@ const getConversations = async (user) => {
 
     // Remove the user ID for the logged in user
     // and convert mongoIDs to strings in unreadBy property
-    conversations = conversations.map((convo) => {
-        convo.participants.splice(convo.participants.indexOf(user._id), 1);
-        if (convo.unreadBy)
-            for (let x in convo.unreadBy) {
-                convo.unreadBy[x] = convo.unreadBy[x].toString();
-            }
+    conversations = conversations.map((conversation) => {
+        conversation.participants.splice(
+            conversation.participants.indexOf(user._id),
+            1
+        );
 
-        return convo;
+        if (conversation.unreadBy)
+            conversation.unreadBy = conversation.unreadBy.toString();
+
+        return conversation;
     });
 
     // Populate existing participant
@@ -155,83 +167,66 @@ const getConversations = async (user) => {
         path: 'participants'
     });
 
-    // Remove converstions with accounts that are inactive
-    conversations = conversations.filter((convo) => {
-        return convo.participants.length > 0;
-    });
-
     // Changing property "participants" to "participant" with the value to the user object of the other participant.
-    for (let i in conversations) {
-        conversations[i] = conversations[i].toObject();
-        conversations[i].participant = { ...conversations[i].participants[0] };
-        delete conversations[i].participants;
-    }
+
+    conversations = conversations.map((conversation) => {
+        return (conversation.toObject().participant = {
+            ...conversation.toObject().participants[0]
+        });
+    });
 
     return conversations;
 };
 
 exports.getConversations = catchAsync(async (req, res, next) => {
     const conversations = await getConversations(req.user);
-    let newConvo = false;
+    let newConversation = false;
 
     if (req.query.newId) {
         const user = await User.findById(req.query.newId);
 
         if (!user) return;
 
-        const convo = await Conversation.findOne({
+        const conversation = await Conversation.findOne({
             $and: [
                 { participants: { $in: [user._id] } },
                 { participants: { $in: [req.user._id] } }
             ]
         });
 
-        if (convo) return res.redirect(303, `/messages/${convo._id}`);
+        if (conversation) return res.redirect(303, `/messages/${convo._id}`);
 
-        newConvo = true;
+        newConversation = true;
     }
 
     res.status(200).render('messages', {
         title: 'Messages | ReadsTracker',
         conversations,
-        newConvo
+        newConversation
     });
 });
 
 exports.getMessages = catchAsync(async (req, res, next) => {
-    const convoUpdates = {};
+    let selectedConversation = await Conversation.findById(req.params.convoId);
 
-    if (req.query.toRestore === 'true') convoUpdates.deletedBy = undefined;
-
-    // let selectedConvo = await Conversation.findByIdAndUpdate(
-    //     req.params.convoId,
-    //     { unreadMessages: false, ...convoUpdates },
-    //     { runValidators: true }
-    // );
-
-    let selectedConvo = await Conversation.findById(req.params.convoId);
-
-    if (!selectedConvo)
+    if (!selectedConversation)
         return next(new AppError('No conversation found.', 404));
 
-    if (selectedConvo.unreadBy?.includes(req.user._id.toString())) {
-        selectedConvo.unreadBy = selectedConvo.unreadBy.filter(
-            (el) => el.toString() !== req.user._id.toString()
-        );
-    }
+    if (selectedConversation.unreadBy === req.user._id.toString())
+        selectedConversation.unreadBy = undefined;
 
-    await selectedConvo.save();
+    await selectedConversation.save();
 
     const conversations = await getConversations(req.user);
 
-    selectedConvo = conversations.find(
+    selectedConversation = conversations.find(
         (convo) => convo._id.toString() === req.params.convoId
     );
 
     res.status(200).render('messages', {
         title: 'Messages | ReadsTracker',
         conversations,
-        selectedConvo,
+        selectedConversation,
         timeago
     });
 });
