@@ -7,9 +7,13 @@
 }
 
 .messages {
-    &__page-title {
-        padding: 1rem;
+    &__header {
+        // padding: 1rem;
         border-bottom: 1px solid $generic-border-color;
+        height: 4rem;
+        display: flex;
+        align-items: center;
+        padding: 0 1rem;
     }
 
     &__sidebar {
@@ -26,12 +30,37 @@
         border-left-style: none;
         background-color: #fff;
     }
+
+
+    &__app-message {
+        margin: 5rem 0 5rem;
+        font-size: 1.2rem;
+        text-align: center;
+        color: $secondary-color;
+    }
 }
 
 .conversation {
     display: flex;
     align-items: center;
     padding: 1rem;
+
+    &__header {
+        border-bottom: 1px solid $generic-border-color;
+        display: flex;
+        height: 4rem;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 1rem;
+    }
+
+    &__content {
+        padding: 1rem;
+        overflow-y: scroll;
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+    }
 
     &--new {
         .conversation__extract {
@@ -98,21 +127,6 @@
     &--selected {
         background: darken(#fff, 5%);
     }
-}
-
-.conversation-content {
-    padding: 1rem;
-    overflow-y: scroll;
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-}
-
-.conversation__header {
-    border-bottom: 1px solid $generic-border-color;
-    padding: 1rem;
-    display: flex;
-    justify-content: flex-end;
 }
 
 .message {

@@ -24,7 +24,8 @@ exports.getSignupForm = (req, res) => {
 exports.getProfile = catchAsync(async (req, res, next) => {
     const viewData = {
         title: `${req.params.username}'s Profile | ReadsTracker`,
-        profile: req.user
+        profile: req.user,
+        isOwn: true
     };
 
     if (req.user?.username === req.params.username)
@@ -86,6 +87,8 @@ exports.getProfile = catchAsync(async (req, res, next) => {
     ) {
         viewData.relation.conversation.toRestore = true;
     }
+
+    viewData.isOwn = false;
 
     res.status(200).render('profile', viewData);
 });
@@ -168,11 +171,21 @@ const getConversations = async (user) => {
     });
 
     // Changing property "participants" to "participant" with the value to the user object of the other participant.
-
     conversations = conversations.map((conversation) => {
-        return (conversation.toObject().participant = {
-            ...conversation.toObject().participants[0]
-        });
+        const convo = conversation.toObject();
+
+        convo.participant = {
+            ...conversation
+                .toObject()
+                .participants.find(
+                    (participant) =>
+                        participant._id.toString() !== user._id.toString()
+                )
+        };
+
+        delete convo.participants;
+
+        return convo;
     });
 
     return conversations;
@@ -180,10 +193,11 @@ const getConversations = async (user) => {
 
 exports.getConversations = catchAsync(async (req, res, next) => {
     const conversations = await getConversations(req.user);
-    let newConversation = false;
+    const newConversation = { status: false };
+    let user;
 
     if (req.query.newId) {
-        const user = await User.findById(req.query.newId);
+        user = await User.findById(req.query.newId);
 
         if (!user) return;
 
@@ -194,9 +208,11 @@ exports.getConversations = catchAsync(async (req, res, next) => {
             ]
         });
 
-        if (conversation) return res.redirect(303, `/messages/${convo._id}`);
+        if (conversation)
+            return res.redirect(303, `/messages/${conversation._id}`);
 
-        newConversation = true;
+        newConversation.participant = user;
+        newConversation.status = true;
     }
 
     res.status(200).render('messages', {

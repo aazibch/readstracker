@@ -3,18 +3,18 @@ include mixins/_bookCard
 
 block content
     -
-        let convoLink;
+        let conversationLink;
 
-        if (relation) {
-            convoLink = `/messages/${relation.convoId}`;
-            if (relation.convoToRestore) convoLink = `/messages/${relation.convoId}?toRestore=true`;
+        if (!isOwn) {
+            conversationLink = `/messages/${relation.conversation.id}`;
+            if (relation.conversation.toRestore) conversationLink = `/messages/${relation.conversation.id}?toRestore=true`;
         }
         
     .profile-header
         .profile-header__content
             img.user-photo(src=`/images/users/${profile.profilePhoto}`)
             h1.heading-1= profile.username
-            .connections(data-user-id=profile._id data-conn-id=relation ? relation.followingConnId : '')
+            .connections(data-user-id=profile._id data-following-id=!isOwn ? relation.following.id : false)
                 .users-list-triggers
                     if profile.followersCount > 0
                         button.users-list-triggers__followers.button-plain <span class='followers-count'>#{profile.followersCount}</span> Follower#{profile.followersCount === 1 ? '' : 's'}
@@ -25,18 +25,18 @@ block content
                         button.users-list-triggers__following.button-plain <span class='following-count'>#{profile.followingCount}</span> Following
                     else
                         p <span class='following-count'>0</span> Following
-                if relation    
+                if !isOwn    
                     .connect-buttons
-                        if relation.following
+                        if relation.following.status
                             button(type='button').connect-buttons__unfollow-button.connect-buttons__follow-toggle <i class='fa-solid fa-xmark'></i> Unfollow
                         else
                             button(type='button').connect-buttons__follow-button.connect-buttons__follow-toggle <i class="fas fa-plus"></i> Follow
-                        if relation.following && relation.followed
-                            a(href= relation.convoId ? convoLink : `/messages/?newId=${profile._id}`).button-light.connect-buttons__message-button <i class="fas fa-message"></i> Message
+                        if relation.following.status && relation.followed.status
+                            a(href= relation.convoId ? conversationLink : `/messages/?newId=${profile._id}`).button-light.connect-buttons__message-button <i class="fas fa-message"></i> Message
 
     .books
         .books__buttons-container
-            if !relation
+            if !isOwn
                 a(href='/').button-primary.books__add-book-button Add Book
         if profile.books.length === 0
             .message.no-books-message

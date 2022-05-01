@@ -3,42 +3,36 @@ include mixins/_conversation.pug
 include mixins/_message.pug
 
 block content
-    -
-        console.log('[messages.pug] profile', user);
     .page-container.messages-page
         .messages__sidebar
-            h2.messages__page-title Messages
+            .messages__header
+                h2.messages__heading Messages
             .conversations
-                //- a(href=`/messages/123` class='conversation' data-user-id=123)
-                //-     img(src=`/images/users/default.jpg` data-image='default.jpg').user-photo
-                //-     div
-                //-         p.conversation__username Joe Rogan
-                //-         div.conversation__online-indicator
-                //-         p.conversation__extract Something is going right
-                //-     .conversation__notification-indicator-container
-                //-         div.conversation__notification-indicator
-                each convo in conversations
+                each conversation in conversations
                     -
-                        const includesUnreadMessages = convo.unreadBy.includes(user._id.toString());
-                    if (selectedConvo && convo._id.toString() === selectedConvo._id.toString())
-                        +conversation(convo, true, includesUnreadMessages)
-                    else
-                        +conversation(convo, null, includesUnreadMessages)
-        .messages__main
-            if (!selectedConvo && !newConvo)
-                p.system-note Your selected conversation will appear here.
-            if (selectedConvo || newConvo)
+                        const unread = conversation.unreadBy !== undefined;
+                        const selected = selectedConversation ? conversation._id.toString() === selectedConversation._id.toString() : false;
+                    +conversation(conversation, unread, selected)
+        .messages__main(data-conversation-id= selectedConversation ? selectedConversation._id : false data-new-conversation= newConversation && newConversation.status ? newConversation.status.toString() : false)
+            if (!selectedConversation && !newConversation.status)
+                p.messages__app-message Your selected conversation will appear here.
+            else
                 .conversation__header
-                    if (selectedConvo)
+                    if (selectedConversation)
+                        h2.messages__heading= selectedConversation.participant.username
                         button.button-danger.conversation__delete-button Delete
-                .conversation-content
-                    if (selectedConvo)
-                        each message in selectedConvo.messages
+                    if (newConversation && newConversation.status)
+                        h2.messages__heading= newConversation.participant.username
+                .conversation__content
+                    if (selectedConversation)
+                        each message in selectedConversation.messages
                             if (!message.deletedBy || message.deletedBy && message.deletedBy.toString() !== user._id.toString())
-                                +message(message, selectedConvo.participant, user)
-
-            if (selectedConvo || newConvo)
-                form.new-message__form(data-convo-id= selectedConvo ? selectedConvo._id : false data-new-convo= newConvo ? newConvo.toString() : false)
-                    textarea.new-message__input
+                                -
+                                    const isOwn = message.sender.toString() === user._id.toString();
+                                    const userData = isOwn ? user : selectedConversation.participant;
+                                +message(message, isOwn, userData)
+            if (selectedConversation || newConversation.status)
+                form.new-message__form
+                    input(type="text").new-message__input
                     div
-                        input(type="submit" value="Send").button-primary
+                        input(type="submit" value="Send").button-light

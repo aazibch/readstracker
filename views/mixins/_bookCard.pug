@@ -14,6 +14,3 @@ mixin bookCard(book, username)
                         .book-card__secondary-data-content-1
                             p.book-card__genre= book.genre
                             p.book-card__date-added= book.dateCreated.toLocaleString('en-us', {day: '2-digit', weekday: 'short', month: 'long', year: 'numeric'})
-                        .book-card__secondary-data-content-2
-                            - const noteQuantity = book.notes.length;
-                            p.book-card__notes-quantity= `${noteQuantity} Note${noteQuantity > 1 || noteQuantity === 0 ? 's' : ''}`

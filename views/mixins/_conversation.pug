@@ -1,15 +1,13 @@
-mixin conversation(convo, selected, unreadMessages)
+mixin conversation(conversation, unread, selected)
     -
-        const user = convo.participant;
-        let extract = '';
-        if (convo.messages.length > 0) extract = convo.messages[convo.messages.length - 1].content;
-
+        const user = conversation.participant;
+        const extract =  conversation.messages[conversation.messages.length - 1].content;
         const conversationClasses = ['conversation'];
 
         if (selected) conversationClasses.push('conversation--selected');
-        if (unreadMessages) conversationClasses.push('conversation--new');
+        if (unread) conversationClasses.push('conversation--new');
 
-    a(href=`/messages/${convo._id}` class=conversationClasses.join(' ') data-user-id=user._id data-convo-id=convo._id)
+    a(href=`/messages/${conversation._id}` class=conversationClasses.join(' ') data-user-id=user._id data-conversation-id=conversation._id)
         img(src=`/images/users/${user.profilePhoto}` data-image= user.profilePhoto).user-photo
         div
             
