@@ -10,7 +10,7 @@ block content
             .conversations
                 each conversation in conversations
                     -
-                        const unread = conversation.unreadBy !== undefined;
+                        const unread = conversation.unreadBy?.toString() === user._id.toString();
                         const selected = selectedConversation ? conversation._id.toString() === selectedConversation._id.toString() : false;
                     +conversation(conversation, unread, selected)
         .messages__main(data-conversation-id= selectedConversation ? selectedConversation._id : false data-new-conversation= newConversation && newConversation.status ? newConversation.status.toString() : false)
