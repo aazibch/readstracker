@@ -50,6 +50,11 @@
         color: $light-color;
         text-align: center;
     }
+
+    &:disabled {
+        opacity: .65;
+        cursor: default;
+    }
 }
 
 .button-large {
@@ -65,6 +70,10 @@
 
     &:hover {
         background: darken($primary-color, 5%);
+    }
+
+    &:disabled:hover {
+        background-color: $primary-color;
     }
 }
 
@@ -136,6 +145,10 @@
 
     &:hover {
         background: darken($light-color, 5%);
+    }
+
+    &:disabled:hover {
+        background-color: $light-color;
     }
 }
 
@@ -316,13 +329,16 @@
     box-sizing: border-box;
     padding: 1rem;
 
+    &__dialog {
+        max-width: 35rem;
+        margin: 1rem;
+    }
+
     &__content {
-        max-width: 32rem;
-        background: #fff;
-        // margin: 10rem auto;
         border: 1px solid $generic-border-color;
         overflow: auto;
         border-radius: 5px;
+        background: #fff;
     }
 
     &__close-button {
@@ -330,12 +346,12 @@
         background: #fff;
         padding: 0.3rem 0.5rem;
         color: $danger-color;
-        float: right;
+        margin-left: auto;
     }
 
     &__header {
         display: flex;
-        padding: 1rem;
+        padding: 0.5rem;
         border-bottom: 1px solid $generic-border-color;
 
         h3 {
@@ -348,6 +364,17 @@
             flex: auto 0 0;
         }
     }
+
+    &__body {
+        padding: 1rem;
+    }
+
+    &__footer {
+        border-top: 1px solid $generic-border-color;
+        padding: 1rem;
+        display: flex;
+        justify-content: flex-end;
+    }
 }
 
 .confirmation-modal {
@@ -359,8 +386,11 @@
         align-items: center;
     }
 
+    &__content {
+        padding: 1rem;
+    }
+
     &__query {
-        margin: 1rem;
         clear: right;
     }
 

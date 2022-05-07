@@ -31,9 +31,9 @@ export const createConversation = catchAsync(async (data, socket) => {
     return response.data.data;
 });
 
-export const deleteConversation = catchAsync(async (convoId) => {
+export const deleteConversation = catchAsync(async (conversationId) => {
     const res = await axios({
-        url: `/api/v1/conversations/${convoId}`,
+        url: `/api/v1/conversations/${conversationId}`,
         method: 'DELETE'
     });
 

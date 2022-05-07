@@ -14,7 +14,7 @@ block content
         .profile-header__content
             img.user-photo(src=`/images/users/${profile.profilePhoto}`)
             h1.heading-1= profile.username
-            .connections(data-user-id=profile._id data-following-id=!isOwn ? relation.following.id : false)
+            .connections(data-user-id=profile._id data-following-id=!isOwn ? relation.following.connId : false)
                 .users-list-triggers
                     if profile.followersCount > 0
                         button.users-list-triggers__followers.button-plain <span class='followers-count'>#{profile.followersCount}</span> Follower#{profile.followersCount === 1 ? '' : 's'}
@@ -28,9 +28,9 @@ block content
                 if !isOwn    
                     .connect-buttons
                         if relation.following.status
-                            button(type='button').connect-buttons__unfollow-button.connect-buttons__follow-toggle <i class='fa-solid fa-xmark'></i> Unfollow
+                            button(type='button' data-state='unfollow').connect-buttons__unfollow-button.connect-buttons__toggle <i class='fa-solid fa-xmark'></i> Unfollow
                         else
-                            button(type='button').connect-buttons__follow-button.connect-buttons__follow-toggle <i class="fas fa-plus"></i> Follow
+                            button(type='button' data-state='follow').connect-buttons__follow-button.connect-buttons__toggle <i class="fas fa-plus"></i> Follow
                         if relation.following.status && relation.followed.status
                             a(href= relation.convoId ? conversationLink : `/messages/?newId=${profile._id}`).button-light.connect-buttons__message-button <i class="fas fa-message"></i> Message
 

@@ -10,8 +10,12 @@ import {
 import { auth, logout } from './auth';
 import { createBook, updateBook, deleteBook } from './books';
 import { updateUser, deleteUser, updatePassword } from './users';
-import { displayConfirmationModal } from './confirmationModals';
-import { displayListModal, hideListModal } from './listModals';
+import { displayConfirmationModal } from './modals';
+import {
+    displayListModal,
+    hideListModal,
+    hideConfirmationModal
+} from './modals';
 import { search, hideSearchDropdown } from './search';
 import {
     createConversation,
@@ -23,8 +27,8 @@ import {
 import {
     getAccountsFollowing,
     getFollowers,
-    followButtonHandler,
-    unfollowButtonHandler
+    followUsers,
+    unfollowUsers
 } from './connections';
 
 const loginForm = document.querySelector('.login-form');
@@ -45,54 +49,94 @@ const bookDropdown = document.querySelector('.full-book__dropdown');
 const bookDropdownButton = document.querySelector(
     '.full-book__dropdown-button'
 );
-const connectionsEl = document.querySelector('.connections');
-const listModalEl = document.querySelector('.list-modal');
+const listModalCloseButton = document.querySelector(
+    '.list-modal__close-button'
+);
 const followButton = document.querySelector('.connect-buttons__follow-button');
 const unfollowButton = document.querySelector(
     '.connect-buttons__unfollow-button'
 );
-// const messageButton = document.querySelector(
-//     '.connect-buttons__message-button'
-// );
-const deleteConvoButton = document.querySelector(
+
+// General
+const attachHandlersToConfirmationModalCloseButtons = () => {
+    const elements = [
+        document.querySelector('.confirmation-modal__no-button'),
+        document.querySelector('.confirmation-modal__close-button')
+    ];
+
+    for (let i in elements) {
+        elements[i].addEventListener('click', hideConfirmationModal);
+    }
+};
+
+attachHandlersToConfirmationModalCloseButtons();
+
+listModalCloseButton.addEventListener('click', () => {
+    hideListModal();
+});
+
+// Messages
+const deleteConversationButton = document.querySelector(
     '.conversation__delete-button'
 );
+const messagesMainEl = document.querySelector('.messages__main');
+let conversationId;
 
-if (connectionsEl) {
-    const followersButton = document.querySelector(
-        '.users-list-triggers__followers'
-    );
-    const followingButton = document.querySelector(
-        '.users-list-triggers__following'
-    );
-
-    if (followersButton) {
-        followersButton.addEventListener('click', (e) => {
-            displayListModal('Followers', getFollowers);
-        });
-    }
-
-    if (followingButton) {
-        followingButton.addEventListener('click', () => {
-            displayListModal('Following', getAccountsFollowing);
-        });
-    }
-
-    if (followButton) {
-        followButton.addEventListener('click', followButtonHandler);
-    }
-
-    if (unfollowButton) {
-        unfollowButton.addEventListener('click', unfollowButtonHandler);
-    }
+if (messagesMainEl) {
+    conversationId = messagesMainEl.dataset.conversationId;
 }
 
-if (listModalEl) {
-    document
-        .querySelector('.list-modal__close-button')
-        .addEventListener('click', () => {
-            hideListModal();
+if (deleteConversationButton) {
+    deleteConversationButton.addEventListener('click', () => {
+        displayConfirmationModal(
+            'Are you sure you want to delete this conversation?',
+            () => {
+                deleteConversation(conversationId);
+            }
+        );
+    });
+}
+
+// Profile
+const connectionsEl = document.querySelector('.connections');
+
+const followersButton = document.querySelector(
+    '.users-list-triggers__followers'
+);
+const followingButton = document.querySelector(
+    '.users-list-triggers__following'
+);
+
+if (followersButton) {
+    followersButton.addEventListener('click', (e) => {
+        displayListModal('Followers', async () => {
+            return await getFollowers(connectionsEl.dataset.userId);
         });
+    });
+}
+
+if (followingButton) {
+    followingButton.addEventListener('click', () => {
+        displayListModal('Following', async () => {
+            return await getAccountsFollowing(connectionsEl.dataset.userId);
+        });
+    });
+}
+
+if (followButton) {
+    followButton.addEventListener('click', () => {
+        const userId = connectionsEl.dataset.userId;
+
+        followUser(userId);
+    });
+}
+
+if (unfollowButton) {
+    unfollowButton.addEventListener('click', () => {
+        const followingId = connectionsEl.dataset.followingId;
+
+        unfollowUser(followingId);
+    });
 }
 
 const userId = localStorage.getItem('userId');
@@ -209,19 +253,6 @@ if (userId) {
                 }
 
                 e.target.children[0].value = '';
-            });
-        }
-
-        if (deleteConvoButton) {
-            deleteConvoButton.addEventListener('click', () => {
-                displayConfirmationModal(
-                    'Are you sure you want to delete this conversation?',
-                    () => {
-                        const convoId = newMessageForm.dataset.convoId;
-
-                        deleteConversation(convoId);
-                    }
-                );
             });
         }
     });
