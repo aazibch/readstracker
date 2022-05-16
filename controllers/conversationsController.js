@@ -48,9 +48,23 @@ exports.createConversation = catchAsync(async (req, res, next) => {
 
     const conversation = await Conversation.create(filteredConversation);
 
+    const sender = await User.findById(
+        conversation.messages[conversation.messages.length - 1].sender
+    );
+
+    // Returning data pertaining to the message.
+    const data = {
+        ...conversation.messages[conversation.messages.length - 1].toObject(),
+        conversationId: conversation._id,
+        sender,
+        recipient: conversation.participants.find(
+            (user) => user._id.toString() !== sender._id.toString()
+        )
+    };
+
     res.status(201).json({
         status: 'success',
-        data: conversation
+        data: data
     });
 });
 

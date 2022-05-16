@@ -19,16 +19,19 @@ import {
 import { search, hideSearchDropdown } from './search';
 import {
     createConversation,
-    sendMessage,
     renderMessage,
     displayOnlineIndicators,
-    deleteConversation
+    deleteConversation,
+    storeMessage,
+    createConversationButton,
+    updateButton,
+    sendMessageInRealtime
 } from './messages';
 import {
     getAccountsFollowing,
     getFollowers,
-    followUsers,
-    unfollowUsers
+    followUser,
+    unfollowUser
 } from './connections';
 
 const loginForm = document.querySelector('.login-form');
@@ -43,8 +46,6 @@ const settingsDetailsForm = document.querySelector('.settings-details-form');
 const settingsPasswordForm = document.querySelector('.settings-password-form');
 const settingsDeleteButton = document.querySelector('.settings-delete-button');
 const searchUsersField = document.querySelector('.search-users__input-field');
-const newMessageForm = document.querySelector('.new-message__form');
-const conversationContentEl = document.querySelector('.conversation-content');
 const bookDropdown = document.querySelector('.full-book__dropdown');
 const bookDropdownButton = document.querySelector(
     '.full-book__dropdown-button'
@@ -74,28 +75,6 @@ attachHandlersToConfirmationModalCloseButtons();
 listModalCloseButton.addEventListener('click', () => {
     hideListModal();
 });
-
-// Messages
-const deleteConversationButton = document.querySelector(
-    '.conversation__delete-button'
-);
-const messagesMainEl = document.querySelector('.messages__main');
-let conversationId;
-
-if (messagesMainEl) {
-    conversationId = messagesMainEl.dataset.conversationId;
-}
-
-if (deleteConversationButton) {
-    deleteConversationButton.addEventListener('click', () => {
-        displayConfirmationModal(
-            'Are you sure you want to delete this conversation?',
-            () => {
-                deleteConversation(conversationId);
-            }
-        );
-    });
-}
 
 // Profile
 const connectionsEl = document.querySelector('.connections');
@@ -141,26 +120,36 @@ if (unfollowButton) {
 
 const userId = localStorage.getItem('userId');
 
-// messages
+// Messages
+const conversationContentEl = document.querySelector('.conversation-content');
 
-const createConvoButton = (data) => {
-    const convosEl = document.querySelector('.conversations');
+const deleteConversationButton = document.querySelector(
+    '.conversation__delete-button'
+);
+const messagesMainEl = document.querySelector('.messages__main');
+let conversationId;
 
-    convosEl.insertAdjacentHTML(
-        'afterbegin',
-        `<a href='/messages/${data.convoId}' class='conversation conversation--new' data-user-id='${data.sender._id}' data-convo-id='${data.convoId}'>
-            <img src='/images/users/${data.sender.profilePhoto}' data-image=${data.sender.profilePhoto}) class='user-photo'>
-            <div>
-                <p class='conversation__username'>${data.sender.username}</p>
-                <div class='conversation__online-indicator'></div>
-                <p class='conversation__extract'></p>
-            </div>
-            <div class='conversation__notification-indicator-container'>
-                <div class='conversation__notification-indicator conversation__notification-indicator--active'></div>
-            </div>
-        </a>`
-    );
-};
+if (messagesMainEl) {
+    conversationId = messagesMainEl.dataset.conversationId;
+}
+
+if (conversationContentEl) {
+    conversationContentEl.scrollTop = conversationContentEl.scrollHeight;
+}
+
+if (deleteConversationButton) {
+    deleteConversationButton.addEventListener('click', () => {
+        displayConfirmationModal(
+            'Are you sure you want to delete this conversation?',
+            () => {
+                deleteConversation(conversationId);
+            }
+        );
+    });
+}
+
+// working
+// Web sockets
 
 if (userId) {
     const socket = io();
@@ -168,93 +157,112 @@ if (userId) {
     socket.on('connect', () => {
         let onlineUsers;
 
-        const convoId = newMessageForm
-            ? newMessageForm.getAttribute('data-convo-id')
-            : null;
-
         socket.emit('saveUser', userId);
-
-        if (conversationContentEl) {
-            conversationContentEl.scrollTop =
-                conversationContentEl.scrollHeight;
-        }
 
         socket.on('onlineUsers', (users) => {
             onlineUsers = [...users];
 
             console.log('onlineUsers', onlineUsers);
-
             displayOnlineIndicators(onlineUsers);
         });
 
-        // Render message or notification badge.
-        socket.on('chatMessage', (data) => {
-            const messageForm = document.querySelector(
-                `.new-message__form[data-convo-id='${data.convoId}']`
-            );
-
-            const convoButton = document.querySelector(
-                `.conversation[data-convo-id='${data.convoId}']`
-            );
-
-            console.log('[chatMessage]', { convoButton, messageForm });
-
-            if (messageForm) {
-                renderMessage(data, false);
-            } else if (convoButton) {
-                const clone = convoButton.cloneNode(true);
-                const convosEl = document.querySelector('.conversations');
-
-                convoButton.remove();
-
-                convosEl.insertAdjacentElement('afterbegin', clone);
-
-                document
-                    .querySelector(
-                        `.conversation[data-convo-id='${data.convoId}']`
-                    )
-                    .classList.add('conversation--new');
-            } else {
-                createConvoButton(data);
-                console.log(
-                    '[if conditional else createConvoButton] data',
-                    data
-                );
-            }
-        });
+        // Submit listener for new message form
+        const newMessageForm = document.querySelector('.new-message__form');
 
         if (newMessageForm) {
             newMessageForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
-                if (newMessageForm.getAttribute('data-new-convo') === 'true') {
+                const newMessageInput = document.querySelector(
+                    '.new-message__input'
+                );
+
+                if (messagesMainEl.dataset.newConversation === 'true') {
                     const searchParams = new URLSearchParams(
                         window.location.search
                     );
 
                     const data = {
-                        participant: searchParams.get('newId'),
+                        participants: [searchParams.get('newId')],
                         message: {
-                            content: e.target.children[0].value
+                            content: newMessageInput.value
                         }
                     };
 
-                    const newConvo = await createConversation(data, socket);
+                    newMessageInput.value = '';
 
-                    location.assign(`/messages/${newConvo._id}`);
-                } else {
-                    const convoId = newMessageForm.dataset.convoId;
+                    const newConversationMessage = await createConversation(
+                        data
+                    );
 
-                    const data = {
-                        content: e.target.children[0].value
-                    };
+                    console.log(
+                        '[index.js] returned data from createConversation() function',
+                        newConversationMessage
+                    );
 
-                    sendMessage(convoId, data, socket);
+                    sendMessageInRealtime(newConversationMessage, socket);
+
+                    return location.assign(
+                        `/messages/${newConversationMessage.conversationId}`
+                    );
                 }
 
-                e.target.children[0].value = '';
+                const content = newMessageInput.value;
+                newMessageInput.value = '';
+
+                const message = await storeMessage(
+                    messagesMainEl.dataset.conversationId,
+                    { content }
+                );
+
+                console.log(
+                    '[index.js] returned data from storeMessage() function',
+                    message
+                );
+
+                renderMessage(message, true);
+
+                updateButton(
+                    document.querySelector(
+                        `.conversation[data-conversation-id='${message.conversationId}']`
+                    ),
+                    message.conversationId,
+                    message.content
+                );
+
+                sendMessageInRealtime(message, socket);
             });
         }
+
+        // Render message or notification badge.
+        socket.on('chatMessage', (data) => {
+            const messagesMainEl = document.querySelector(
+                `.messages__main[data-conversation-id="${data.conversationId}"]`
+            );
+
+            const conversationButtonEl = document.querySelector(
+                `.conversation[data-conversation-id='${data.conversationId}']`
+            );
+
+            console.log('[index.js] chatMessage listener incoming data', data);
+
+            // Means the user has the conversation open, render message
+            if (messagesMainEl) {
+                renderMessage(data, false);
+            }
+
+            // Move the conversation button (link) to the top
+            if (conversationButtonEl) {
+                updateButton(
+                    conversationButtonEl,
+                    data.conversationId,
+                    data.content
+                );
+            } else {
+                // New conversation, create conversation button. (still testing)
+                createConversationButton(data);
+            }
+        });
     });
 }
 

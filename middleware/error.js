@@ -18,12 +18,15 @@ const getDublicateFieldErrorForEmail = (err) => {
 
 const getValidationError = (err) => {
     const errors = Object.values(err.errors).map((el) => {
-        if (el.name === 'CastError') return `Invalid value "${el.value}" for the path "${el.path}".`;
+        if (el.name === 'CastError')
+            return `Invalid value "${el.value}" for the path "${el.path}".`;
 
         return el.message;
     });
 
-    const message = `The following validation errors occured: ${errors.join(' ')}`;
+    const message = `The following validation errors occured: ${errors.join(
+        ' '
+    )}`;
     return new AppError(message, 400);
 };
 

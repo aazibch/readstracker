@@ -3,29 +3,14 @@ import { format } from 'timeago.js';
 import { displayAlert } from './alerts';
 import catchAsync from './catchAsync';
 
-export const createConversation = catchAsync(async (data, socket) => {
+const conversationsEl = document.querySelector('.conversations');
+const conversationContentEl = document.querySelector('.conversation__content');
+
+export const createConversation = catchAsync(async (data) => {
     const response = await axios({
         url: '/api/v1/conversations/',
         method: 'POST',
         data
-    });
-
-    console.log('[createConversation] response', response.data.data);
-
-    const { recipient, sender, content } = response.data.data.message;
-
-    console.log(
-        '[createConversation]',
-        { recipient, sender, content },
-        'convoId',
-        response.data.data._id
-    );
-
-    socket.emit('sendMessage', {
-        recipient,
-        sender,
-        content,
-        convoId: response.data.data._id
     });
 
     return response.data.data;
@@ -45,75 +30,41 @@ export const deleteConversation = catchAsync(async (conversationId) => {
     }, 1500);
 });
 
-export const sendMessage = async (convoId, data, socket) => {
-    const response = await storeMessageInDatabase(convoId, data);
-
-    renderMessage(response.data.data, true);
-
-    const { recipient, sender } = response.data.data;
-
-    socket.emit('sendMessage', {
-        recipient,
-        sender,
-        convoId: response.data.data.convoId,
-        content: response.data.data.content,
-        user: response.data.data.participant
-    });
-};
-
-const storeMessageInDatabase = catchAsync(async (convoId, data) => {
-    return await axios({
-        url: `/api/v1/conversations/${convoId}/messages`,
+export const storeMessage = catchAsync(async (conversationId, data) => {
+    const response = await axios({
+        url: `/api/v1/conversations/${conversationId}/messages`,
         method: 'POST',
         data
     });
+
+    return response.data.data;
 });
 
-const getCorrespondentProfilePhoto = () => {
-    const selectedConvoElement = document.querySelector(
-        '.conversation--selected'
-    );
-
-    return selectedConvoElement.children[0].getAttribute('data-image');
-};
-
 export const renderMessage = (data, isOwn) => {
-    const conversationContentEl = document.querySelector(
-        '.conversation-content'
+    const userPhotoEl = document.querySelector(
+        '.conversation--selected .user-photo'
     );
 
-    if (conversationContentEl) {
-        conversationContentEl.insertAdjacentHTML(
-            'beforeend',
-            `
-            <div class='message ${isOwn && 'message--logged-in-users'}'>
-                <div class='message__main'>
-                    ${
-                        isOwn
-                            ? ''
-                            : `<img class='message__user-photo user-photo' src=/images/users/${getCorrespondentProfilePhoto()}>`
-                    }
-                    <p class='message__content'>${data.content}</p>
-                </div>
-                <div class='message__meta'>
-                    <p class='message__time'>${format(data.dateSent)}</p>
-                </div>
-            </div>
+    conversationContentEl.insertAdjacentHTML(
+        'beforeend',
         `
-        );
+        <div class='message ${isOwn && 'message--logged-in-users'}'>
+            <div class='message__main'>
+                ${
+                    isOwn
+                        ? ''
+                        : `<img class='message__user-photo user-photo' src=/images/users/${userPhotoEl.dataset.image}>`
+                }
+                <p class='message__content'>${data.content}</p>
+            </div>
+            <div class='message__meta'>
+                <p class='message__time'>${format(data.dateSent)}</p>
+            </div>
+        </div>
+    `
+    );
 
-        conversationContentEl.scrollTop = conversationContentEl.scrollHeight;
-    }
-
-    // let convoExtract = document.querySelector(
-    //     `.conversation--selected .conversation__extract`
-    // );
-    // if (!convoExtract)
-    //     convoExtract = document.querySelector(
-    //         `.conversation[data-user-id='${data.sender}'] .conversation__extract`
-    //     );
-
-    // convoExtract.textContent = data.content;
+    conversationContentEl.scrollTop = conversationContentEl.scrollHeight;
 };
 
 const hideAllOnlineIndicators = () => {
@@ -138,5 +89,57 @@ export const displayOnlineIndicators = (onlineUsers) => {
             onlineIndicator.classList.add(
                 'conversation__online-indicator--active'
             );
+    });
+};
+
+export const createConversationButton = (data) => {
+    const buttonHtml = `
+    <a class="conversation conversation--new" href="/messages/${data.conversationId}" data-user-id="${data.sender._id}" data-conversation-id="${data.conversationId}">
+        <img class="user-photo" src="/images/users/${data.sender.profilePhoto}" data-image="${data.sender.profilePhoto}" />
+        <div>
+            <p class="conversation__username">${data.sender.username}</p>
+            <div class="conversation__online-indicator"></div>
+            <p class="conversation__extract">${data.content}</p>
+        </div>
+        <div class="conversation__notification-indicator-container"><div class="conversation__notification-indicator"></div></div>
+    </a>
+    `;
+
+    conversationsEl.insertAdjacentHTML('afterbegin', buttonHtml);
+};
+
+export const updateButton = (buttonEl, conversationId, extract) => {
+    const clone = buttonEl.cloneNode(true);
+    buttonEl.remove();
+
+    conversationsEl.insertAdjacentElement('afterbegin', clone);
+
+    // Conversation is not open, hence add notification indicator.
+    if (
+        !document.querySelector(
+            `.messages__main[data-conversation-id="${conversationId}"]`
+        )
+    ) {
+        const conversationButton = document.querySelector(
+            `.conversation[data-conversation-id='${conversationId}']`
+        );
+
+        conversationButton.classList.add('conversation--new');
+    }
+
+    // Update extract
+    document.querySelector(
+        `.conversation[data-conversation-id='${conversationId}'] .conversation__extract`
+    ).textContent = extract;
+};
+
+export const sendMessageInRealtime = (message, socket) => {
+    const { recipient, sender, conversationId, content } = message;
+
+    socket.emit('sendMessage', {
+        recipient,
+        sender,
+        conversationId,
+        content
     });
 };

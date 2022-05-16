@@ -1,10 +1,11 @@
 const Conversation = require('../models/conversationModel');
+const User = require('../models/userModel');
 const catchAsync = require('../middleware/catchAsync');
 const AppError = require('../utils/appError');
 const filterObject = require('../utils/filterObject');
 
 exports.createMessage = catchAsync(async (req, res, next) => {
-    const conversation = await Conversation.find({
+    const conversation = await Conversation.findOne({
         _id: req.params.conversationId,
         participants: { $in: [req.user._id] }
     });
@@ -25,8 +26,21 @@ exports.createMessage = catchAsync(async (req, res, next) => {
 
     await conversation.save();
 
+    const recipient = conversation.participants.find(
+        (id) => id.toString() !== req.user._id.toString()
+    );
+
+    const sender = await User.findById(req.user._id);
+
+    const data = {
+        ...conversation.messages[conversation.messages.length - 1].toObject(),
+        conversationId: conversation._id.toString(),
+        recipient,
+        sender
+    };
+
     res.status(200).json({
         status: 'success',
-        data: conversation.messages[conversation.messages.length - 1]
+        data
     });
 });

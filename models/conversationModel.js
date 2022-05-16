@@ -37,22 +37,23 @@ const conversationSchema = new mongoose.Schema({
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'User'
             }
-        ],
-        validate: [
-            {
-                validator: function (val) {
-                    return val.length === 2;
-                },
-                message: 'There must be two participants in a conversation.'
-            },
-            {
-                validator: function (val) {
-                    return val[0].toString() !== val[1].toString();
-                },
-                message: 'Both participants cannot be the same.'
-            }
-        ],
-        unique: [true, 'A conversation with these participants already exists.']
+        ]
+        // ,
+        // validate: [
+        //     {
+        //         validator: function (val) {
+        //             return val.length === 2;
+        //         },
+        //         message: 'There must be two participants in a conversation.'
+        //     },
+        //     {
+        //         validator: function (val) {
+        //             return val[0].toString() !== val[1].toString();
+        //         },
+        //         message: 'Both participants cannot be the same.'
+        //     }
+        // ],
+        // unique: [true, 'A conversation with these participants already exists.']
     },
     messages: {
         type: [messageSchema],
