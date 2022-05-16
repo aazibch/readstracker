@@ -5,6 +5,17 @@ const saveUser = (data) => {
         onlineUsers.push(data);
 };
 
+const updateUserActiveState = (data) => {
+    const index = onlineUsers.findIndex(
+        (user) => user.socketId === data.socketId
+    );
+
+    onlineUsers[index] = {
+        ...onlineUsers[index],
+        activeConversation: data.activeConversation
+    };
+};
+
 const removeUser = (socketId) => {
     onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId);
 };
@@ -16,7 +27,13 @@ exports.onConnection = (io) => {
         console.log('[Socket server] A user connected to the socket server.');
 
         socket.on('saveUser', (userId) => {
-            saveUser({ userId, socketId: socket.id });
+            saveUser({ userId, socketId: socket.id, activeConversation: null });
+            io.emit('onlineUsers', onlineUsers);
+        });
+
+        socket.on('updateUserActiveState', (data) => {
+            updateUserActiveState(data);
+
             io.emit('onlineUsers', onlineUsers);
         });
 

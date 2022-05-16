@@ -166,6 +166,13 @@ if (userId) {
             displayOnlineIndicators(onlineUsers);
         });
 
+        if (messagesMainEl && messagesMainEl.dataset.conversationId) {
+            socket.emit('updateUserActiveState', {
+                socketId: socket.id,
+                activeConversation: messagesMainEl.dataset.conversationId
+            });
+        }
+
         // Submit listener for new message form
         const newMessageForm = document.querySelector('.new-message__form');
 
@@ -207,12 +214,32 @@ if (userId) {
                     );
                 }
 
+                const selectedConversationButton = document.querySelector(
+                    '.conversation--selected'
+                );
+
                 const content = newMessageInput.value;
                 newMessageInput.value = '';
 
+                const onlineUser = onlineUsers.find(
+                    (user) =>
+                        user.userId ===
+                        selectedConversationButton.dataset.userId
+                );
+
+                const data = {
+                    content,
+                    unread:
+                        onlineUser &&
+                        onlineUser.activeConversation !==
+                            selectedConversationButton.dataset.conversationId
+                };
+
+                console.log('[index.js] data passed to storeMessage()', data);
+
                 const message = await storeMessage(
                     messagesMainEl.dataset.conversationId,
-                    { content }
+                    data
                 );
 
                 console.log(
@@ -259,7 +286,7 @@ if (userId) {
                     data.content
                 );
             } else {
-                // New conversation, create conversation button. (still testing)
+                // New conversation, create conversation button.
                 createConversationButton(data);
             }
         });

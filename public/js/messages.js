@@ -98,7 +98,7 @@ export const createConversationButton = (data) => {
         <img class="user-photo" src="/images/users/${data.sender.profilePhoto}" data-image="${data.sender.profilePhoto}" />
         <div>
             <p class="conversation__username">${data.sender.username}</p>
-            <div class="conversation__online-indicator"></div>
+            <div class="conversation__online-indicator conversation__online-indicator--active"></div>
             <p class="conversation__extract">${data.content}</p>
         </div>
         <div class="conversation__notification-indicator-container"><div class="conversation__notification-indicator"></div></div>

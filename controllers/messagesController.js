@@ -13,16 +13,18 @@ exports.createMessage = catchAsync(async (req, res, next) => {
     if (!conversation)
         return next(new AppError('Conversation not found.', 404));
 
-    let filteredBody = filterObject(req.body, 'content');
+    let filteredBody = filterObject(req.body, 'content', 'unread');
 
     filteredBody.sender = req.user._id;
 
     conversation.messages.push(filteredBody);
     conversation.deletedBy = undefined;
 
-    conversation.unreadBy = conversation.participants.find(
-        (user) => filteredBody.sender.toString() !== user._id.toString()
-    );
+    if (filteredBody.unread) {
+        conversation.unreadBy = conversation.participants.find(
+            (user) => filteredBody.sender.toString() !== user._id.toString()
+        );
+    }
 
     await conversation.save();
 
