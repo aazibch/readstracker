@@ -1147,15 +1147,18 @@ main {
 
 .messages__header {
   border-bottom: 1px solid #e0e0e0;
-  height: 4rem;
   display: flex;
   align-items: center;
   padding: 0 1rem;
+  flex: 0 0 4rem;
 }
 .messages__sidebar {
+  height: 100%;
   flex: 0 1 20rem;
   border: 1px solid #e0e0e0;
   background-color: #fff;
+  display: flex;
+  flex-direction: column;
 }
 .messages__main {
   flex: 1 0 auto;
@@ -1170,6 +1173,11 @@ main {
   font-size: 1.2rem;
   text-align: center;
   color: #4d5156;
+}
+
+.conversations {
+  height: 100%;
+  overflow-y: scroll;
 }
 
 .conversation {
