@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const User = require('./userModel');
 const Connection = require('./connectionModel');
 const AppError = require('../utils/appError');
 
@@ -88,6 +89,42 @@ conversationSchema.pre('save', function (next) {
     }
 
     next();
+});
+
+conversationSchema.statics.calcUnreadConversations = async function (userId) {
+    const stats = await this.aggregate([
+        {
+            $match: { unreadBy: userId }
+        },
+        {
+            $group: {
+                _id: '$unreadBy',
+                unreadConversations: { $sum: 1 }
+            }
+        }
+    ]);
+
+    if (stats.length > 0) {
+        return await User.findByIdAndUpdate(userId, {
+            unreadConversations: stats[0].unreadConversations
+        });
+    }
+
+    await User.findByIdAndUpdate(userId, {
+        unreadConversations: 0
+    });
+};
+
+conversationSchema.pre('save', function (next) {
+    this.u = this.isModified('unreadBy');
+    next();
+});
+
+conversationSchema.post('save', function () {
+    if (!this.u) return;
+
+    this.constructor.calcUnreadConversations(this.participants[0]);
+    this.constructor.calcUnreadConversations(this.participants[1]);
 });
 
 const Conversation = mongoose.model('Conversation', conversationSchema);

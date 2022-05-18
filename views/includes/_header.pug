@@ -14,6 +14,10 @@ header.header
 
         nav.main-nav
             if user
+                .notification-buttons
+                    .notification-buttons__container
+                        .notification-buttons__count 4
+                        button <i class="fas fa-message"></i>
                 .main-nav__dropdown
                     a.main-nav__button.main-nav__user-button(role='button')
                         img.user-photo.main-nav__user-photo(src=`/images/users/${user.profilePhoto}`)

@@ -228,10 +228,10 @@ exports.getMessages = catchAsync(async (req, res, next) => {
     if (!selectedConversation)
         return next(new AppError('No conversation found.', 404));
 
-    if (selectedConversation.unreadBy?.toString() === req.user._id.toString())
+    if (selectedConversation.unreadBy?.toString() === req.user._id.toString()) {
         selectedConversation.unreadBy = undefined;
-
-    await selectedConversation.save();
+        await selectedConversation.save();
+    }
 
     const conversations = await getConversations(req.user);
 

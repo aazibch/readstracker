@@ -220,6 +220,40 @@ main {
     }
 }
 
+.notification-buttons {
+    margin-right: 1rem;
+
+    button {
+        background: none;
+        border: 0;
+        font-size: 1.75rem;
+        color: $primary-color;
+    }
+
+    &__container {
+        position: relative;
+        // border: 1px solid black;
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+    
+    &__count {
+        height: 1.25rem;
+        width: 1.25rem;
+        font-size: 0.75rem;
+        text-align: center;
+        line-height: 1.25rem;
+        color: $light-color;
+        background: $notifier-color;
+        border-radius: 50%;
+        position: absolute;
+        top: -0.25rem;
+        left: -0.6rem;
+    }
+}
+
 // End of Header
 
 // Footer

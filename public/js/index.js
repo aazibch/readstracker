@@ -227,13 +227,18 @@ if (userId) {
                         selectedConversationButton.dataset.userId
                 );
 
+                console.log('onlineUser', onlineUser);
+
                 const data = {
                     content,
                     unread:
-                        onlineUser &&
-                        onlineUser.activeConversation !==
+                        !onlineUser ||
+                        onlineUser?.activeConversation !==
                             selectedConversationButton.dataset.conversationId
                 };
+
+                // if (!onlineUser)
+                //     data.unread = true;
 
                 console.log('[index.js] data passed to storeMessage()', data);
 
