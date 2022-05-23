@@ -3,6 +3,8 @@ include mixins/_conversation.pug
 include mixins/_message.pug
 
 block content
+    -
+        console.log('newConversation', newConversation);
     .page-container.messages-page
         .messages__sidebar
             .messages__header

@@ -3,6 +3,8 @@ include mixins/_bookCard
 
 block content
     -
+        console.log('isOwn', isOwn);
+        console.log('relation', relation);
         let conversationLink;
 
         if (!isOwn) {
@@ -32,7 +34,7 @@ block content
                         else
                             button(type='button' data-state='follow').connect-buttons__follow-button.connect-buttons__toggle <i class="fas fa-plus"></i> Follow
                         if relation.following.status && relation.followed.status
-                            a(href= relation.convoId ? conversationLink : `/messages/?newId=${profile._id}`).button-light.connect-buttons__message-button <i class="fas fa-message"></i> Message
+                            a(href= relation.conversation.id ? conversationLink : `/messages/?newId=${profile._id}`).button-light.connect-buttons__message-button <i class="fas fa-message"></i> Message
 
     .books
         .books__buttons-container

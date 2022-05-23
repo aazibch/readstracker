@@ -5,6 +5,7 @@ const Connection = require('../models/connectionModel');
 const catchAsync = require('../middleware/catchAsync');
 const AppError = require('../utils/appError');
 const timeago = require('timeago.js');
+const { request } = require('express');
 
 exports.getHome = (req, res) => {
     res.status(200).render('home', { title: 'Home | ReadsTracker' });
@@ -230,6 +231,15 @@ exports.getMessages = catchAsync(async (req, res, next) => {
 
     if (selectedConversation.unreadBy?.toString() === req.user._id.toString()) {
         selectedConversation.unreadBy = undefined;
+        await selectedConversation.save();
+    }
+
+    if (
+        selectedConversation?.deletedBy?.toString() ===
+            req.user._id.toString() &&
+        req.query.toRestore === 'true'
+    ) {
+        selectedConversation.deletedBy = undefined;
         await selectedConversation.save();
     }
 
