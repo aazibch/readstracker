@@ -223,6 +223,13 @@ main {
 .main-buttons {
     margin-right: 1rem;
 
+    a {
+        &:link, &:visited, &:hover {
+            font-size: 1.75rem;
+            color: $primary-color;
+        }
+    }
+
     button {
         background: none;
         border: 0;

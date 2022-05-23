@@ -709,6 +709,10 @@ main {
 .main-buttons {
   margin-right: 1rem;
 }
+.main-buttons a:link, .main-buttons a:visited, .main-buttons a:hover {
+  font-size: 1.75rem;
+  color: #4a4a4a;
+}
 .main-buttons button {
   background: none;
   border: 0;

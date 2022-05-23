@@ -16,15 +16,15 @@ header.header
             if user
                 .main-buttons
                     .main-buttons__button-container
-                        button.main-buttons__home <i class="fa-solid fa-house"></i>
+                        a(href='/').main-buttons__home <i class="fa-solid fa-house"></i>
                     .main-buttons__button-container
                         button.main-buttons__notifications <i class="fa-solid fa-bell"></i>
                     .main-buttons__button-container
                         if user.unreadConversationsCount > 0
-                            .main-buttons__count.main-buttons__count--active.main-buttons__conversations-count= user.unreadConversationsCount
+                            a(href='/messages').main-buttons__count.main-buttons__count--active.main-buttons__conversations-count= user.unreadConversationsCount
                         else
                             .main-buttons__count.main-buttons__conversations-count 0
-                        button.main-buttons__messages <i class="fas fa-message"></i>
+                        a(href='/messages').main-buttons__messages <i class="fas fa-message"></i>
 
                 .main-nav__dropdown
                     a.main-nav__button.main-nav__user-button(role='button')
