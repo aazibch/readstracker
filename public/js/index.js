@@ -33,6 +33,7 @@ import {
     followUser,
     unfollowUser
 } from './connections';
+import { displayAlert } from './alerts';
 
 const loginForm = document.querySelector('.login-form');
 const signupForm = document.querySelector('.signup-form');
@@ -57,6 +58,7 @@ const followButton = document.querySelector('.connect-buttons__follow-button');
 const unfollowButton = document.querySelector(
     '.connect-buttons__unfollow-button'
 );
+const socket = io();
 
 // General
 const attachHandlersToConfirmationModalCloseButtons = () => {
@@ -75,6 +77,14 @@ attachHandlersToConfirmationModalCloseButtons();
 listModalCloseButton.addEventListener('click', () => {
     hideListModal();
 });
+
+const messagesButtonEl = document.querySelector('.main-buttons__messages');
+
+if (messagesButtonEl) {
+    messagesButtonEl.addEventListener('click', (e) => {
+        location.assign('/messages');
+    });
+}
 
 // Profile
 const connectionsEl = document.querySelector('.connections');
@@ -111,10 +121,27 @@ if (followButton) {
 }
 
 if (unfollowButton) {
-    unfollowButton.addEventListener('click', () => {
+    unfollowButton.addEventListener('click', async () => {
         const followingId = connectionsEl.dataset.followingId;
+        const { userId, conversationId } = connectionsEl.dataset;
 
-        unfollowUser(followingId);
+        const res = await unfollowUser(followingId);
+
+        if (res.status !== 204) return;
+
+        const unfollowedUser = onlineUsers.find(
+            (user) =>
+                user.userId === userId &&
+                user.activeConversation === conversationId
+        );
+
+        if (unfollowedUser && conversationId) {
+            socket.emit('redirectAwayFromConversation', {
+                userId: unfollowedUser.userId
+            });
+        }
+
+        location.reload();
     });
 }
 
@@ -150,13 +177,10 @@ if (deleteConversationButton) {
 
 // working
 // Web sockets
+let onlineUsers;
 
 if (userId) {
-    const socket = io();
-
     socket.on('connect', () => {
-        let onlineUsers;
-
         socket.emit('saveUser', userId);
 
         socket.on('onlineUsers', (users) => {
@@ -177,92 +201,8 @@ if (userId) {
         const newMessageForm = document.querySelector('.new-message__form');
 
         if (newMessageForm) {
-            newMessageForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-
-                const newMessageInput = document.querySelector(
-                    '.new-message__input'
-                );
-
-                if (messagesMainEl.dataset.newConversation === 'true') {
-                    const searchParams = new URLSearchParams(
-                        window.location.search
-                    );
-
-                    const data = {
-                        participants: [searchParams.get('newId')],
-                        message: {
-                            content: newMessageInput.value
-                        }
-                    };
-
-                    newMessageInput.value = '';
-
-                    const newConversationMessage = await createConversation(
-                        data
-                    );
-
-                    console.log(
-                        '[index.js] returned data from createConversation() function',
-                        newConversationMessage
-                    );
-
-                    sendMessageInRealtime(newConversationMessage, socket);
-
-                    return location.assign(
-                        `/messages/${newConversationMessage.conversationId}`
-                    );
-                }
-
-                const selectedConversationButton = document.querySelector(
-                    '.conversation--selected'
-                );
-
-                const content = newMessageInput.value;
-                newMessageInput.value = '';
-
-                const onlineUser = onlineUsers.find(
-                    (user) =>
-                        user.userId ===
-                        selectedConversationButton.dataset.userId
-                );
-
-                console.log('onlineUser', onlineUser);
-
-                const data = {
-                    content,
-                    unread:
-                        !onlineUser ||
-                        onlineUser?.activeConversation !==
-                            selectedConversationButton.dataset.conversationId
-                };
-
-                // if (!onlineUser)
-                //     data.unread = true;
-
-                console.log('[index.js] data passed to storeMessage()', data);
-
-                const message = await storeMessage(
-                    messagesMainEl.dataset.conversationId,
-                    data
-                );
-
-                console.log(
-                    '[index.js] returned data from storeMessage() function',
-                    message
-                );
-
-                renderMessage(message, true);
-
-                updateButton(
-                    document.querySelector(
-                        `.conversation[data-conversation-id='${message.conversationId}']`
-                    ),
-                    message.conversationId,
-                    message.content
-                );
-
-                sendMessageInRealtime(message, socket);
+            newMessageForm.addEventListener('submit', (event) => {
+                messageSubmitHandler(event, socket);
             });
         }
 
@@ -276,27 +216,124 @@ if (userId) {
                 `.conversation[data-conversation-id='${data.conversationId}']`
             );
 
-            console.log('[index.js] chatMessage listener incoming data', data);
-
             // Means the user has the conversation open, render message
             if (messagesMainEl) {
                 renderMessage(data, false);
             }
 
+            const messagesPageEl = document.querySelector('.messages-page');
+
             // Move the conversation button (link) to the top
-            if (conversationButtonEl) {
+            if (messagesPageEl && conversationButtonEl) {
                 updateButton(
                     conversationButtonEl,
                     data.conversationId,
                     data.content
                 );
-            } else {
-                // New conversation, create conversation button.
+            }
+
+            // New conversation, create conversation button.
+            if (messagesPageEl && !conversationButtonEl) {
                 createConversationButton(data);
             }
+
+            // Conversation not open, update notification count in nav bar for messages
+            if (data.notification && !messagesMainEl) {
+                updateMessagesNotification();
+            }
+        });
+
+        socket.on('redirectAwayFromConversation', () => {
+            displayAlert(
+                'error',
+                'You and the correspondent are no longer following each other. This conversation will be deleted.'
+            );
+
+            setTimeout(() => {
+                location.assign('/messages');
+            }, 2500);
         });
     });
 }
+
+const updateMessagesNotification = () => {
+    const conversationsCountEl = document.querySelector(
+        '.main-buttons__conversations-count'
+    );
+
+    conversationsCountEl.classList.add('main-buttons__count--active');
+
+    conversationsCountEl.textContent = ++conversationsCountEl.textContent;
+};
+
+const messageSubmitHandler = async (event, socket) => {
+    event.preventDefault();
+
+    const newMessageInput = document.querySelector('.new-message__input');
+
+    if (messagesMainEl.dataset.newConversation === 'true') {
+        const searchParams = new URLSearchParams(window.location.search);
+
+        const data = {
+            participants: [searchParams.get('newId')],
+            message: {
+                content: newMessageInput.value
+            }
+        };
+
+        newMessageInput.value = '';
+
+        const newConversationMessage = await createConversation(data);
+
+        if (
+            onlineUsers.some(
+                (user) => user.userId === newConversationMessage.recipient
+            )
+        )
+            sendMessageInRealtime(newConversationMessage, socket);
+
+        return location.assign(
+            `/messages/${newConversationMessage.conversationId}`
+        );
+    }
+
+    const selectedConversationButton = document.querySelector(
+        '.conversation--selected'
+    );
+
+    const content = newMessageInput.value;
+    newMessageInput.value = '';
+
+    const onlineUser = onlineUsers.find(
+        (user) => user.userId === selectedConversationButton.dataset.userId
+    );
+
+    const data = {
+        content,
+        unread:
+            !onlineUser ||
+            onlineUser?.activeConversation !==
+                selectedConversationButton.dataset.conversationId
+    };
+
+    const message = await storeMessage(
+        messagesMainEl.dataset.conversationId,
+        data
+    );
+
+    renderMessage(message, true);
+
+    updateButton(
+        document.querySelector(
+            `.conversation[data-conversation-id='${message.conversationId}']`
+        ),
+        message.conversationId,
+        message.content
+    );
+
+    if (onlineUsers.some((user) => user.userId === message.recipient))
+        sendMessageInRealtime(message, socket);
+};
 
 // auth
 if (signupForm) {

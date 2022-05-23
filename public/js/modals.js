@@ -38,7 +38,6 @@ const renderListData = (data) => {
 };
 
 export function hideConfirmationModal() {
-    console.log('[hideConfirmationModal] hiding confirmation modal');
     const modalEl = document.querySelector('.confirmation-modal');
     modalEl.classList.remove('confirmation-modal--active');
 }

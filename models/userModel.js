@@ -88,7 +88,7 @@ const userSchema = new mongoose.Schema(
             type: Number,
             default: 0
         },
-        unreadConversations: {
+        unreadConversationsCount: {
             type: Number,
             default: 0,
             select: false
@@ -105,6 +105,12 @@ userSchema.virtual('books', {
     localField: '_id',
     foreignField: 'user'
 });
+
+// userSchema.virtual('unreadConversations', {
+//     ref: 'Conversation',
+//     localField: '_id',
+//     foreignField: 'unreadBy'
+// });
 
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();

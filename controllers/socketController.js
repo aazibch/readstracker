@@ -37,18 +37,23 @@ exports.onConnection = (io) => {
             io.emit('onlineUsers', onlineUsers);
         });
 
+        socket.on('redirectAwayFromConversation', (data) => {
+            const user = getUser(data.userId);
+
+            socket.to(user.socketId).emit('redirectAwayFromConversation');
+        });
+
         socket.on('sendMessage', (data) => {
             const user = getUser(data.recipient);
 
             console.log('[socketsController.js sendMessage] data', data);
 
-            if (user) {
-                io.to(user.socketId).emit('chatMessage', {
-                    content: data.content,
-                    sender: data.sender,
-                    conversationId: data.conversationId
-                });
-            }
+            io.to(user.socketId).emit('chatMessage', {
+                content: data.content,
+                sender: data.sender,
+                conversationId: data.conversationId,
+                notification: data.notification
+            });
         });
 
         socket.on('disconnect', () => {

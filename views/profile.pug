@@ -14,7 +14,7 @@ block content
         .profile-header__content
             img.user-photo(src=`/images/users/${profile.profilePhoto}`)
             h1.heading-1= profile.username
-            .connections(data-user-id=profile._id data-following-id=!isOwn ? relation.following.connId : false)
+            .connections(data-user-id=profile._id data-following-id=!isOwn ? relation.following.connId : false data-conversation-id = relation.conversation.id ? relation.conversation.id : false)
                 .users-list-triggers
                     if profile.followersCount > 0
                         button.users-list-triggers__followers.button-plain <span class='followers-count'>#{profile.followersCount}</span> Follower#{profile.followersCount === 1 ? '' : 's'}

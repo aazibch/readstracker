@@ -59,7 +59,8 @@ exports.createConversation = catchAsync(async (req, res, next) => {
         sender,
         recipient: conversation.participants.find(
             (user) => user._id.toString() !== sender._id.toString()
-        )
+        ),
+        notification: true
     };
 
     res.status(201).json({

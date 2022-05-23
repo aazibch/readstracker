@@ -99,19 +99,19 @@ conversationSchema.statics.calcUnreadConversations = async function (userId) {
         {
             $group: {
                 _id: '$unreadBy',
-                unreadConversations: { $sum: 1 }
+                unreadConversationsCount: { $sum: 1 }
             }
         }
     ]);
 
     if (stats.length > 0) {
         return await User.findByIdAndUpdate(userId, {
-            unreadConversations: stats[0].unreadConversations
+            unreadConversationsCount: stats[0].unreadConversationsCount
         });
     }
 
     await User.findByIdAndUpdate(userId, {
-        unreadConversations: 0
+        unreadConversationsCount: 0
     });
 };
 
@@ -126,6 +126,16 @@ conversationSchema.post('save', function () {
     this.constructor.calcUnreadConversations(this.participants[0]);
     this.constructor.calcUnreadConversations(this.participants[1]);
 });
+
+// conversationSchema.pre('findOneAndDelete', async function (next) {
+//     this.c = await this.findOne();
+//     next();
+// });
+
+// conversationSchema.post('findOneAndDelete', async function () {
+//     this.c.constructor.calcUnreadConversations(this.c.participants[0]);
+//     this.c.constructor.calcUnreadConversations(this.c.participants[1]);
+// });
 
 const Conversation = mongoose.model('Conversation', conversationSchema);
 

@@ -60,6 +60,7 @@
 
     &__unfollow-button {
         @extend .button-light;
+        margin-right: 0.5rem;
     }
 
     &__follow-button {

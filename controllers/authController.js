@@ -61,9 +61,7 @@ exports.login = catchAsync(async (req, res, next) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-        return next(
-            new AppError('Please an email address and password.', 400)
-        );
+        return next(new AppError('Please an email address and password.', 400));
     }
 
     const user = await User.findOne({ email }).select('+password');
@@ -112,9 +110,9 @@ exports.protect = catchAsync(async (req, res, next) => {
         return next(new AppError("You're not logged in.", 401));
     }
 
-    const user = await User.findById(decodedToken.id).populate({
-        path: 'books'
-    });
+    const user = await User.findById(decodedToken.id)
+        .populate('books')
+        .select('+unreadConversationsCount');
 
     if (!user || user.changedPasswordAfterToken(decodedToken.iat)) {
         sendLogoutCookie(res);
@@ -131,15 +129,15 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
 
     try {
         let token = req.cookies.jwt;
-        
+
         decodedToken = await promisify(jwt.verify)(
             token,
             process.env.JWT_SECRET
         );
 
-        const user = await User.findById(decodedToken.id).populate(
-            { path: 'books' }
-        );
+        const user = await User.findById(decodedToken.id)
+            .populate('books')
+            .select('+unreadConversationsCount');
 
         if (!user) return next();
 
@@ -148,7 +146,7 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
         req.user = user;
         res.locals.user = user;
     } catch (err) {
-        next()
+        next();
     }
 
     next();

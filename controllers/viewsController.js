@@ -239,10 +239,16 @@ exports.getMessages = catchAsync(async (req, res, next) => {
         (convo) => convo._id.toString() === req.params.convoId
     );
 
+    // Get user again to render updated data.
+    let user = await User.findById(req.user._id).select(
+        '+unreadConversationsCount'
+    );
+
     res.status(200).render('messages', {
         title: 'Messages | ReadsTracker',
         conversations,
         selectedConversation,
-        timeago
+        timeago,
+        user
     });
 });

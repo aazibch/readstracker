@@ -134,12 +134,14 @@ export const updateButton = (buttonEl, conversationId, extract) => {
 };
 
 export const sendMessageInRealtime = (message, socket) => {
-    const { recipient, sender, conversationId, content } = message;
+    const { recipient, sender, conversationId, content, notification } =
+        message;
 
     socket.emit('sendMessage', {
         recipient,
         sender,
         conversationId,
-        content
+        content,
+        notification
     });
 };

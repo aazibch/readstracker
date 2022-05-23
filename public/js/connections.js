@@ -31,7 +31,9 @@ export const getAccountsFollowing = catchAsync(async (userId) => {
 const disableConnectToggle = (state) => {
     const buttonEl = document.querySelector('.connect-buttons__toggle');
 
-    buttonEl.setAttribute('disabled', state);
+    if (state) buttonEl.setAttribute('disabled', '');
+
+    if (!state) buttonEl.removeAttribute('disabled');
 };
 
 export const followUser = catchAsync(
@@ -57,12 +59,10 @@ export const unfollowUser = catchAsync(
     async (connId) => {
         disableConnectToggle(true);
 
-        const response = await axios({
+        return await axios({
             url: `/api/v1/connections/${connId}`,
             method: 'DELETE'
         });
-
-        location.reload();
     },
     () => {
         disableConnectToggle(false);

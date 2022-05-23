@@ -1,6 +1,7 @@
 const catchAsync = require('../middleware/catchAsync');
 const Connection = require('../models/connectionModel');
 const User = require('../models/userModel');
+const Conversation = require('../models/conversationModel');
 const AppError = require('../utils/appError');
 
 exports.getFollowers = catchAsync(async (req, res, next) => {
@@ -48,6 +49,19 @@ exports.deleteConnection = catchAsync(async (req, res, next) => {
     });
 
     if (!conn) return next(new AppError('Connection not found.', 404));
+
+    const conversation = await Conversation.findOneAndDelete({
+        participants: { $all: [conn.follower, conn.following] }
+    });
+
+    if (conversation?.unreadBy) {
+        const user = await User.findById(conversation.unreadBy).select(
+            'unreadConversationsCount'
+        );
+
+        user.unreadConversationsCount = --user.unreadConversationsCount;
+        await user.save();
+    }
 
     res.status(204).json({
         status: 'success',

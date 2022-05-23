@@ -11,11 +11,6 @@ const connectionSchema = new mongoose.Schema({
         ],
         validate: {
             validator: function (val) {
-                console.log(
-                    '[connectionSchema] validate',
-                    typeof val,
-                    typeof this.following
-                );
                 return val.toString() !== this.following.toString();
             },
             message:

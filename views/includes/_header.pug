@@ -14,10 +14,18 @@ header.header
 
         nav.main-nav
             if user
-                .notification-buttons
-                    .notification-buttons__container
-                        .notification-buttons__count 4
-                        button <i class="fas fa-message"></i>
+                .main-buttons
+                    .main-buttons__button-container
+                        button.main-buttons__home <i class="fa-solid fa-house"></i>
+                    .main-buttons__button-container
+                        button.main-buttons__notifications <i class="fa-solid fa-bell"></i>
+                    .main-buttons__button-container
+                        if user.unreadConversationsCount > 0
+                            .main-buttons__count.main-buttons__count--active.main-buttons__conversations-count= user.unreadConversationsCount
+                        else
+                            .main-buttons__count.main-buttons__conversations-count 0
+                        button.main-buttons__messages <i class="fas fa-message"></i>
+
                 .main-nav__dropdown
                     a.main-nav__button.main-nav__user-button(role='button')
                         img.user-photo.main-nav__user-photo(src=`/images/users/${user.profilePhoto}`)
