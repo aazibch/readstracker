@@ -155,50 +155,11 @@ main {
     &__user-button {
         display: flex;
         align-items: center;
-    }
-    
-    &__dropdown {
-        position: relative;
+        margin-left: 0.75rem;
 
         &--active {
             .main-nav__button {
                 opacity: 0.8;
-            }
-
-            .main-nav__dropdown-menu-container {
-                display: block;
-            }
-        }
-
-        &-menu-container {
-            position: absolute;
-            top: 3.25rem;
-            right: 0;
-            box-shadow: $shadow-light;
-            box-sizing: border-box;
-            display: none;
-            border-radius: 5px;
-        }
-
-        &-menu-arrow {
-            top: -0.2rem;
-            right: 0.2rem;
-            border: 1px solid $generic-border-color;
-        }
-
-        &-menu {
-            font-size: 0.9rem;
-            width: 7rem;
-
-            li {
-                p {
-                    display: inline-block;
-                    margin-left: 0.2rem;
-                }
-            }
-
-            li:hover {
-                background-color: darken(#fff, 5%);;
             }
         }
     }
@@ -208,11 +169,85 @@ main {
         height: auto;
         margin-right: 0.5rem;
     }
+}
 
-    &__button {
-        margin-left: 0.75rem;
+.main-nav__dropdown {
+    position: absolute;
+    width: 20rem;
+    right: 1rem;
+    list-style: none;
+    top: 5rem;
+    box-shadow: $shadow-light;
+    border-radius: 5px;
+    background: #fff;
+
+    li {
+        border-bottom: 1px solid $generic-border-color;
+        background: #fff;
+        padding: 1rem;
+
+        &:hover {
+            background-color: darken(#fff, 5%);
+        }
+    
+        &:first-child {
+            border-radius: 5px 5px 0 0;
+        }
+    
+        &:last-child {
+            border-radius: 0 0 5px 5px;
+            border-bottom-style: none;
+        }
+
+        a {
+            &:link {
+                color: $body-text-color;
+                text-decoration: none;
+            }
+        
+            &:visited {
+                color: $body-text-color;
+            }
+        }
     }
 }
+
+.user-menu {
+    display: none;
+
+    li {
+        a {
+            display: flex;
+            align-items: center;
+        }
+
+        i {
+            margin-right: 0.5rem;
+            font-size: 1.5rem;
+        }
+    }
+}
+
+.notification {
+    // display: none;
+    a {
+        display: flex;
+        align-items: center;
+    }
+
+    &__profile-photo {
+        width: 55px;
+        height: auto;
+        margin-right: 1rem;
+    }
+
+    &__date {
+        font-size: 0.8rem;
+        color: $secondary-color;
+    }
+}
+
+
 
 @media (hover: hover) {
     .main-nav__button:hover {

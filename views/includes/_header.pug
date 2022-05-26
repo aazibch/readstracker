@@ -18,30 +18,41 @@ header.header
                     .main-buttons__button-container
                         a(href='/').main-buttons__home <i class="fa-solid fa-house"></i>
                     .main-buttons__button-container
-                        button.main-buttons__notifications <i class="fa-solid fa-bell"></i>
-                    .main-buttons__button-container
                         if user.unreadConversationsCount > 0
                             a(href='/messages').main-buttons__count.main-buttons__count--active.main-buttons__conversations-count= user.unreadConversationsCount
                         else
                             .main-buttons__count.main-buttons__conversations-count 0
                         a(href='/messages').main-buttons__messages <i class="fas fa-message"></i>
+                    .main-buttons__button-container
+                        button.main-buttons__notifications <i class="fa-solid fa-bell"></i>
+                ul.main-nav__dropdown.notifications
+                    li.notification
+                        a(href='/jamie')
+                            img.user-photo.notification__profile-photo(src='/images/users/default.jpg')
+                            .notification__data
+                                p.notification__desc <strong>Jamie</strong> followed you.
+                                p.notification__date 12 - 2- 2021
+                    li.notification
+                        a(href='/jamie')
+                            img.user-photo.notification__profile-photo(src='/images/users/default.jpg')
+                            .notification__data
+                                p.notification__desc <strong>Jamie</strong> followed you.
+                                p.notification__date 12 - 2- 2021
+                ul.main-nav__dropdown.user-menu
+                        li
+                            a(href=`/${user.username}`) <i class="fas fa-user"></i> <p>Profile</p>
+                        li
+                            a(href='/') <i class="fas fa-plus"></i> <p>Add Book</p>
+                        li
+                            a(href='/messages') <i class="fas fa-message"></i> <p>Messages</p>
+                        li
+                            a(href='/user/settings') <i class="fas fa-cog"></i> <p>Settings</p>
+                        li
+                            a(href='#').logout-list-item <i class="fas fa-sign-out-alt"></i> <p>Logout</p>
 
-                .main-nav__dropdown
-                    a.main-nav__button.main-nav__user-button(role='button')
-                        img.user-photo.main-nav__user-photo(src=`/images/users/${user.profilePhoto}`)
-                        span.main-nav__username #{user.username}
-                    .main-nav__dropdown-menu-container
-                        i.dropdown-menu__arrow.main-nav__dropdown-menu-arrow
-                        ul.dropdown-menu.main-nav__dropdown-menu
-                            li
-                                a(href=`/${user.username}`) <i class="fas fa-user"></i> <p>Profile</p>
-                            li
-                                a(href='/') <i class="fas fa-plus"></i> <p>Add Book</p>
-                            li
-                                a(href='/messages') <i class="fas fa-message"></i> <p>Messages</p>
-                            li
-                                a(href='/user/settings') <i class="fas fa-cog"></i> <p>Settings</p>
-                            li
-                                a(href='#').logout-list-item <i class="fas fa-sign-out-alt"></i> <p>Logout</p>
+                a.main-nav__button.main-nav__user-button(role='button')
+                    img.user-photo.main-nav__user-photo(src=`/images/users/${user.profilePhoto}`)
+                    span.main-nav__username #{user.username}
+
             else
                 a.button-outline-primary.main-nav__button(href='/login' role='button') Login

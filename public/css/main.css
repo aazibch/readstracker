@@ -657,48 +657,74 @@ main {
 .main-nav__user-button {
   display: flex;
   align-items: center;
+  margin-left: 0.75rem;
 }
-.main-nav__dropdown {
-  position: relative;
-}
-.main-nav__dropdown--active .main-nav__button {
+.main-nav__user-button--active .main-nav__button {
   opacity: 0.8;
-}
-.main-nav__dropdown--active .main-nav__dropdown-menu-container {
-  display: block;
-}
-.main-nav__dropdown-menu-container {
-  position: absolute;
-  top: 3.25rem;
-  right: 0;
-  box-shadow: 0px 2px 7px 0px rgba(191, 189, 191, 0.63);
-  box-sizing: border-box;
-  display: none;
-  border-radius: 5px;
-}
-.main-nav__dropdown-menu-arrow {
-  top: -0.2rem;
-  right: 0.2rem;
-  border: 1px solid #e0e0e0;
-}
-.main-nav__dropdown-menu {
-  font-size: 0.9rem;
-  width: 7rem;
-}
-.main-nav__dropdown-menu li p {
-  display: inline-block;
-  margin-left: 0.2rem;
-}
-.main-nav__dropdown-menu li:hover {
-  background-color: #f2f2f2;
 }
 .main-nav__user-photo {
   width: 32px;
   height: auto;
   margin-right: 0.5rem;
 }
-.main-nav__button {
-  margin-left: 0.75rem;
+
+.main-nav__dropdown {
+  position: absolute;
+  width: 20rem;
+  right: 1rem;
+  list-style: none;
+  top: 5rem;
+  box-shadow: 0px 2px 7px 0px rgba(191, 189, 191, 0.63);
+  border-radius: 5px;
+  background: #fff;
+}
+.main-nav__dropdown li {
+  border-bottom: 1px solid #e0e0e0;
+  background: #fff;
+  padding: 1rem;
+}
+.main-nav__dropdown li:hover {
+  background-color: #f2f2f2;
+}
+.main-nav__dropdown li:first-child {
+  border-radius: 5px 5px 0 0;
+}
+.main-nav__dropdown li:last-child {
+  border-radius: 0 0 5px 5px;
+  border-bottom-style: none;
+}
+.main-nav__dropdown li a:link {
+  color: #212529;
+  text-decoration: none;
+}
+.main-nav__dropdown li a:visited {
+  color: #212529;
+}
+
+.user-menu {
+  display: none;
+}
+.user-menu li a {
+  display: flex;
+  align-items: center;
+}
+.user-menu li i {
+  margin-right: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.notification a {
+  display: flex;
+  align-items: center;
+}
+.notification__profile-photo {
+  width: 55px;
+  height: auto;
+  margin-right: 1rem;
+}
+.notification__date {
+  font-size: 0.8rem;
+  color: #4d5156;
 }
 
 @media (hover: hover) {
