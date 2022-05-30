@@ -158,9 +158,7 @@ main {
         margin-left: 0.75rem;
 
         &--active {
-            .main-nav__button {
-                opacity: 0.8;
-            }
+            opacity: 0.8;
         }
     }
 
@@ -184,7 +182,6 @@ main {
     li {
         border-bottom: 1px solid $generic-border-color;
         background: #fff;
-        padding: 1rem;
 
         &:hover {
             background-color: darken(#fff, 5%);
@@ -200,6 +197,8 @@ main {
         }
 
         a {
+            padding: 1rem;
+
             &:link {
                 color: $body-text-color;
                 text-decoration: none;
@@ -226,10 +225,21 @@ main {
             font-size: 1.5rem;
         }
     }
+
+    &--active {
+        display: block;
+    }
+}
+
+.notifications {
+    display: none;
+
+    &--active {
+        display: block;
+    }
 }
 
 .notification {
-    // display: none;
     a {
         display: flex;
         align-items: center;
@@ -300,6 +310,10 @@ main {
             display: block;
         }
     }
+}
+
+.main-buttons__button-container-notifications--active {
+    opacity: 0.8;
 }
 
 // End of Header

@@ -127,6 +127,10 @@ conversationSchema.post('save', function () {
     this.constructor.calcUnreadConversations(this.participants[1]);
 });
 
+// Not creating hooks to calculate unread conversations on deleting
+// because one must open a conversation before deleting it,
+// and upon opening it, the unreadConversationsCount property is decremented.
+
 // conversationSchema.pre('findOneAndDelete', async function (next) {
 //     this.c = await this.findOne();
 //     next();

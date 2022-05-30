@@ -659,7 +659,7 @@ main {
   align-items: center;
   margin-left: 0.75rem;
 }
-.main-nav__user-button--active .main-nav__button {
+.main-nav__user-button--active {
   opacity: 0.8;
 }
 .main-nav__user-photo {
@@ -681,7 +681,6 @@ main {
 .main-nav__dropdown li {
   border-bottom: 1px solid #e0e0e0;
   background: #fff;
-  padding: 1rem;
 }
 .main-nav__dropdown li:hover {
   background-color: #f2f2f2;
@@ -692,6 +691,9 @@ main {
 .main-nav__dropdown li:last-child {
   border-radius: 0 0 5px 5px;
   border-bottom-style: none;
+}
+.main-nav__dropdown li a {
+  padding: 1rem;
 }
 .main-nav__dropdown li a:link {
   color: #212529;
@@ -711,6 +713,16 @@ main {
 .user-menu li i {
   margin-right: 0.5rem;
   font-size: 1.5rem;
+}
+.user-menu--active {
+  display: block;
+}
+
+.notifications {
+  display: none;
+}
+.notifications--active {
+  display: block;
 }
 
 .notification a {
@@ -769,6 +781,10 @@ main {
 }
 .main-buttons__count--active {
   display: block;
+}
+
+.main-buttons__button-container-notifications--active {
+  opacity: 0.8;
 }
 
 .footer {

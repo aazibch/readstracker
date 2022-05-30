@@ -59,6 +59,7 @@ exports.deleteConnection = catchAsync(async (req, res, next) => {
             'unreadConversationsCount'
         );
 
+        // Not decrementing in mongoDB hooks because then UI renders old state.
         user.unreadConversationsCount = --user.unreadConversationsCount;
         await user.save();
     }

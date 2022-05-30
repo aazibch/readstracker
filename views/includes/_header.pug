@@ -23,8 +23,8 @@ header.header
                         else
                             .main-buttons__count.main-buttons__conversations-count 0
                         a(href='/messages').main-buttons__messages <i class="fas fa-message"></i>
-                    .main-buttons__button-container
-                        button.main-buttons__notifications <i class="fa-solid fa-bell"></i>
+                    .main-buttons__button-container.main-buttons__button-container-notifications
+                        button(type='button').main-buttons__notifications <i class="fa-solid fa-bell"></i>
                 ul.main-nav__dropdown.notifications
                     li.notification
                         a(href='/jamie')
@@ -43,8 +43,6 @@ header.header
                             a(href=`/${user.username}`) <i class="fas fa-user"></i> <p>Profile</p>
                         li
                             a(href='/') <i class="fas fa-plus"></i> <p>Add Book</p>
-                        li
-                            a(href='/messages') <i class="fas fa-message"></i> <p>Messages</p>
                         li
                             a(href='/user/settings') <i class="fas fa-cog"></i> <p>Settings</p>
                         li

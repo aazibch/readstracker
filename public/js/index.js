@@ -35,6 +35,8 @@ import {
 } from './connections';
 import { displayAlert } from './alerts';
 
+import { removeActiveClasses } from './utils';
+
 const loginForm = document.querySelector('.login-form');
 const signupForm = document.querySelector('.signup-form');
 const bookForm = document.querySelector('.book-form');
@@ -42,7 +44,6 @@ const logoutListItem = document.querySelector('.logout-list-item');
 const ratingInput = document.querySelector('.form__stars');
 const fullBook = document.querySelector('.full-book');
 const editBookForm = document.querySelector('.edit-book-form');
-const userDropdownButton = document.querySelector('.main-nav__user-button');
 const settingsDetailsForm = document.querySelector('.settings-details-form');
 const settingsPasswordForm = document.querySelector('.settings-password-form');
 const settingsDeleteButton = document.querySelector('.settings-delete-button');
@@ -515,32 +516,46 @@ if (settingsDetailsForm) {
 
 // general
 
-if (userDropdownButton) {
-    userDropdownButton.addEventListener('click', (e) => {
-        const el = document.querySelector('.main-nav__dropdown');
-        const activeClass = 'main-nav__dropdown--active';
+const userButtonEl = document.querySelector('.main-nav__user-button');
+const userMenuEl = document.querySelector('.user-menu');
 
-        if (el.classList.contains(activeClass)) {
-            el.classList.remove(activeClass);
-        } else {
-            el.classList.add(activeClass);
-        }
+if (userButtonEl) {
+    userButtonEl.addEventListener('click', (e) => {
+        removeActiveClasses([
+            '.notifications',
+            '.main-buttons__button-container-notifications'
+        ]);
+
+        userMenuEl.classList.toggle('user-menu--active');
+        userButtonEl.classList.toggle('main-nav__user-button--active');
+    });
+}
+
+const notificationsButtonEl = document.querySelector(
+    '.main-buttons__button-container-notifications'
+);
+
+if (notificationsButtonEl) {
+    notificationsButtonEl.addEventListener('click', (e) => {
+        const notificationsDropdownEl =
+            document.querySelector('.notifications');
+
+        removeActiveClasses(['.user-menu', '.main-nav__user-button']);
+
+        notificationsButtonEl.classList.toggle(
+            'main-buttons__button-container-notifications--active'
+        );
+        notificationsDropdownEl.classList.toggle('notifications--active');
     });
 }
 
 window.addEventListener('click', function (e) {
-    const dropdownMenuContainer = document.querySelector(
-        '.main-nav__dropdown-menu-container'
-    );
-
     if (
-        dropdownMenuContainer &&
-        !dropdownMenuContainer.contains(e.target) &&
-        !userDropdownButton.contains(e.target)
+        userMenuEl &&
+        !userMenuEl.contains(e.target) &&
+        !userButtonEl.contains(e.target)
     ) {
-        document
-            .querySelector('.main-nav__dropdown')
-            .classList.remove('main-nav__dropdown--active');
+        removeActiveClasses(['.user-menu', '.main-nav__user-button']);
     }
 
     if (
