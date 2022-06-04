@@ -1,12 +1,26 @@
 extends base
+include mixins/_usersListItem
 
 block content
     -
+        console.log('book', book);
         let loggedInUsersBook = false;
 
         if (user) {
             loggedInUsersBook = user.username === book.user.username;
         }
+    
+    .modal.list-modal.likes-list-modal
+        .modal__dialog
+            .modal__content.list-modal__content
+                .modal__header
+                    h3.list-modal__heading Likes
+                    button.modal__close-button.list-modal__close-button &#10005;
+                .list-modal__list
+                    each item in book.likedBy
+                        +usersListItem(item)
+                    
+
     .page-container
         .book-card.full-book(data-id=book._id)
             section.full-book__header
@@ -33,9 +47,9 @@ block content
                     .book-card__secondary-data-content-1
                         p.book-card__genre= book.genre
                         p.book-card__date-added= book.dateCreated.toLocaleString('en-us', {day: '2-digit', weekday: 'short', month: 'long', year: 'numeric'})
-                    //- .book-card__secondary-data-content-2
-                    //-     const noteQuantity = book.notes.length;
-                    //-     p.book-card__notes-quantity= `${noteQuantity} Note${noteQuantity > 1 || noteQuantity === 0 ? 's' : ''}`
+                    .book-card__secondary-data-content-2
+                        - const likesQuantity = book.likedBy.length;
+                        p.book-card__likes-quantity= `${likesQuantity} Like${likesQuantity > 1 || likesQuantity === 0 ? 's' : ''}`
             
             //- section.full-book__notes
             //-     each note in book.notes

@@ -106,6 +106,12 @@ userSchema.virtual('books', {
     foreignField: 'user'
 });
 
+userSchema.virtual('notifications', {
+    ref: 'Notification',
+    localField: '_id',
+    foreignField: 'recipient'
+});
+
 // userSchema.virtual('unreadConversations', {
 //     ref: 'Conversation',
 //     localField: '_id',

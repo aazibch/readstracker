@@ -71,3 +71,16 @@ exports.deleteMyBook = catchAsync(async (req, res, next) => {
         data: book
     });
 });
+
+exports.likeBook = catchAsync(async (req, res, next) => {
+    const book = await Book.findByIdAndUpdate(
+        req.params.id,
+        { $push: { likedBy: req.user._id } },
+        { new: true }
+    );
+
+    res.status(200).json({
+        status: 'success',
+        data: book
+    });
+});

@@ -171,7 +171,7 @@ main {
 
 .main-nav__dropdown {
     position: absolute;
-    width: 20rem;
+    width: 21.5rem;
     right: 1rem;
     list-style: none;
     top: 5rem;
@@ -193,7 +193,7 @@ main {
     
         &:last-child {
             border-radius: 0 0 5px 5px;
-            border-bottom-style: none;
+            // border-bottom-style: none;
         }
 
         a {
@@ -237,12 +237,20 @@ main {
     &--active {
         display: block;
     }
+
+    height: 30rem;
+    background: #fff;
+    overflow-y: auto;
 }
 
 .notification {
     a {
         display: flex;
         align-items: center;
+    }
+
+    &__data {
+        flex: 1 0 auto;
     }
 
     &__profile-photo {
@@ -252,6 +260,7 @@ main {
     }
 
     &__date {
+        margin-top: 0.2rem;
         font-size: 0.8rem;
         color: $secondary-color;
     }
@@ -290,6 +299,10 @@ main {
         &:hover {
             opacity: 0.8;
         }
+
+        &--active {
+            opacity: 0.8;
+        }
     }
 
     &__count {
@@ -314,6 +327,13 @@ main {
 
 .main-buttons__button-container-notifications--active {
     opacity: 0.8;
+}
+
+.notification-indicator {
+    height: 0.7rem;
+    width: 0.7rem;
+    border-radius: 50%;
+    background: $notifier-color;
 }
 
 // End of Header

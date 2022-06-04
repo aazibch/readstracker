@@ -1,16 +1,38 @@
 extends base
 include mixins/_bookCard
+include mixins/_usersListItem
 
 block content
     -
-        console.log('isOwn', isOwn);
-        console.log('relation', relation);
+        console.log('[profile.pug] following', following);
+        console.log('[profile.pug] followers', followers);
+
         let conversationLink;
 
         if (!isOwn) {
             conversationLink = `/messages/${relation.conversation.id}`;
             if (relation.conversation.toRestore) conversationLink = `/messages/${relation.conversation.id}?toRestore=true`;
         }
+    
+    .modal.list-modal.followers-list-modal
+        .modal__dialog
+            .modal__content.list-modal__content
+                .modal__header
+                    h3.list-modal__heading Followers
+                    button.modal__close-button.list-modal__close-button &#10005;
+                .list-modal__list
+                    each item in followers
+                        +usersListItem(item.follower)
+
+    .modal.list-modal.following-list-modal
+        .modal__dialog
+            .modal__content.list-modal__content
+                .modal__header
+                    h3.list-modal__heading Following
+                    button.modal__close-button.list-modal__close-button &#10005;
+                .list-modal__list
+                    each item in following
+                        +usersListItem(item.following)
         
     .profile-header
         .profile-header__content

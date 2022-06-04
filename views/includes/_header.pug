@@ -1,4 +1,8 @@
+include ../mixins/_notification
+
 header.header
+    -
+        console.log('[_header.pug] user.notifications', user.notifications);
     .header__container
         .header__site-title
             a(href='/')
@@ -15,29 +19,38 @@ header.header
         nav.main-nav
             if user
                 .main-buttons
-                    .main-buttons__button-container
+                    -
+                        const messagesButtonClasses = ['main-buttons__button-container'];
+                        const homeButtonClasses = ['main-buttons__button-container'];
+
+                        if (title.split(' | ')[0] === 'Messages') messagesButtonClasses.push('main-buttons__button-container--active');
+
+                        if (title.split(' | ')[0] === 'Home') homeButtonClasses.push('main-buttons__button-container--active');
+                    div(class= homeButtonClasses.join(' '))
                         a(href='/').main-buttons__home <i class="fa-solid fa-house"></i>
-                    .main-buttons__button-container
+                    div(class= messagesButtonClasses.join(' '))
                         if user.unreadConversationsCount > 0
                             a(href='/messages').main-buttons__count.main-buttons__count--active.main-buttons__conversations-count= user.unreadConversationsCount
                         else
                             .main-buttons__count.main-buttons__conversations-count 0
                         a(href='/messages').main-buttons__messages <i class="fas fa-message"></i>
                     .main-buttons__button-container.main-buttons__button-container-notifications
+                        -
+                            let unreadCount = 0;
+
+                            user.notifications.forEach(notif => {
+                                if (notif.unread) ++unreadCount;
+                            });
+
+                            const classes = ['main-buttons__count', 'main-buttons__conversations-count'];
+
+                            if (unreadCount > 0) classes.push('main-buttons__count--active');
+
+                        div(class= classes.join(' '))= unreadCount
                         button(type='button').main-buttons__notifications <i class="fa-solid fa-bell"></i>
                 ul.main-nav__dropdown.notifications
-                    li.notification
-                        a(href='/jamie')
-                            img.user-photo.notification__profile-photo(src='/images/users/default.jpg')
-                            .notification__data
-                                p.notification__desc <strong>Jamie</strong> followed you.
-                                p.notification__date 12 - 2- 2021
-                    li.notification
-                        a(href='/jamie')
-                            img.user-photo.notification__profile-photo(src='/images/users/default.jpg')
-                            .notification__data
-                                p.notification__desc <strong>Jamie</strong> followed you.
-                                p.notification__date 12 - 2- 2021
+                    each notification in user.notifications
+                        +notification(notification)
                 ul.main-nav__dropdown.user-menu
                         li
                             a(href=`/${user.username}`) <i class="fas fa-user"></i> <p>Profile</p>

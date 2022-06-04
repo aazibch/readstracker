@@ -3,6 +3,7 @@ const router = express.Router();
 
 const authController = require('../controllers/authController');
 const viewsController = require('../controllers/viewsController');
+const userController = require('../controllers/usersController');
 
 router.get('/', authController.isLoggedIn, viewsController.getHome);
 // router.get('/login', authController.isLoggedIn, viewsController.getLoginForm);
@@ -33,7 +34,7 @@ router.get(
     authController.protect,
     viewsController.getMessages
 );
-    
+
 // Routes related to all users.
 
 router.get(
@@ -45,6 +46,7 @@ router.get(
 router.get(
     '/:username',
     authController.isLoggedIn,
+    userController.updateNotifications,
     viewsController.getProfile
 );
 

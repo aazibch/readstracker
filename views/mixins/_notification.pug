@@ -1,0 +1,14 @@
+mixin notification(data)
+    li.notification
+        -
+            let anchorTagLink = `/${data.sender.username}`;
+
+            if (data.unread) anchorTagLink += `?notifId=${data._id}`;
+        a(href= anchorTagLink)
+            img.user-photo.notification__profile-photo(src=`/images/users/${data.sender.profilePhoto}`)
+            .notification__data
+                p.notification__desc !{data.content.replace('[username]', `<strong>${data.sender.username}</strong>`)}
+                p.notification__date= data.dateSent.toLocaleString('en-us', {day: '2-digit', weekday: 'short', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'})
+            if (data.unread)
+                .notification-indicator-container
+                    .notification-indicator

@@ -15,4 +15,8 @@ router
     .delete(authController.protect, booksController.deleteMyBook)
     .patch(authController.protect, booksController.updateMyBook);
 
+router
+    .route('/:id/likes')
+    .post(authController.protect, booksController.likeBook);
+
 module.exports = router;

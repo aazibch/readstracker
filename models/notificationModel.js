@@ -12,14 +12,18 @@ const notificationSchema = new mongoose.Schema({
         required: true
     },
     content: {
+        type: String,
         minLength: 5,
         maxLength: 75,
         required: true
     },
     dateSent: {
         type: Date,
-        default: Date.now,
-        required: true
+        default: Date.now
+    },
+    unread: {
+        type: Boolean,
+        default: true
     }
 });
 

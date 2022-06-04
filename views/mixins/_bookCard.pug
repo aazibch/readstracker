@@ -1,7 +1,7 @@
 mixin bookCard(book, username)
     .books-grid-item
         .book-card.profile-book-card
-            a.profile-book-card__link(href=`/users/${username}/books/${book._id}`)
+            a.profile-book-card__link(href=`/${username}/books/${book._id}`)
                 .book-card__info
                     p.book-card__title= book.title
                     p.book-card__author-line
@@ -14,3 +14,5 @@ mixin bookCard(book, username)
                         .book-card__secondary-data-content-1
                             p.book-card__genre= book.genre
                             p.book-card__date-added= book.dateCreated.toLocaleString('en-us', {day: '2-digit', weekday: 'short', month: 'long', year: 'numeric'})
+                        //- .book-card__secondary-data-content-2
+                        //-     p.book-card__likes= book.likedBy.length

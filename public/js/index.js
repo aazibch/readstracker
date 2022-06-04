@@ -52,7 +52,7 @@ const bookDropdown = document.querySelector('.full-book__dropdown');
 const bookDropdownButton = document.querySelector(
     '.full-book__dropdown-button'
 );
-const listModalCloseButton = document.querySelector(
+const listModalCloseButtons = document.querySelectorAll(
     '.list-modal__close-button'
 );
 const followButton = document.querySelector('.connect-buttons__follow-button');
@@ -75,17 +75,22 @@ const attachHandlersToConfirmationModalCloseButtons = () => {
 
 attachHandlersToConfirmationModalCloseButtons();
 
-listModalCloseButton.addEventListener('click', () => {
-    hideListModal();
-});
+const listModalCloseButtonHandler = () => {
+    console.log('listModalCloseButton clicked');
 
-const messagesButtonEl = document.querySelector('.main-buttons__messages');
+    const listModals = document.querySelectorAll('.list-modal');
 
-if (messagesButtonEl) {
-    messagesButtonEl.addEventListener('click', (e) => {
-        location.assign('/messages');
+    listModals.forEach((elem) => {
+        if (elem.classList.contains('list-modal--active'))
+            elem.classList.remove('list-modal--active');
     });
-}
+
+    // hideListModal();
+};
+
+listModalCloseButtons.forEach((elem) =>
+    elem.addEventListener('click', listModalCloseButtonHandler)
+);
 
 // Profile
 const connectionsEl = document.querySelector('.connections');
@@ -97,19 +102,26 @@ const followingButton = document.querySelector(
     '.users-list-triggers__following'
 );
 
+const followingListModalEl = document.querySelector('.following-list-modal');
+const followersListModalEl = document.querySelector('.followers-list-modal');
+
 if (followersButton) {
     followersButton.addEventListener('click', (e) => {
-        displayListModal('Followers', async () => {
-            return await getFollowers(connectionsEl.dataset.userId);
-        });
+        followersListModalEl.classList.add('list-modal--active');
+
+        // displayListModal('Followers', async () => {
+        //     return await getFollowers(connectionsEl.dataset.userId);
+        // });
     });
 }
 
 if (followingButton) {
     followingButton.addEventListener('click', () => {
-        displayListModal('Following', async () => {
-            return await getAccountsFollowing(connectionsEl.dataset.userId);
-        });
+        followingListModalEl.classList.add('list-modal--active');
+
+        // displayListModal('Following', async () => {
+        //     return await getAccountsFollowing(connectionsEl.dataset.userId);
+        // });
     });
 }
 
@@ -453,6 +465,15 @@ if (fullBook) {
                 }
             );
         });
+}
+
+const likesQuantityEl = document.querySelector('.book-card__likes-quantity');
+const likesListModal = document.querySelector('.likes-list-modal');
+
+if (likesQuantityEl) {
+    likesQuantityEl.addEventListener('click', (e) => {
+        likesListModal.classList.add('list-modal--active');
+    });
 }
 
 // end of books

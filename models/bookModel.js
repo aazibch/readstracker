@@ -65,7 +65,13 @@ const bookSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: [true, 'Please provide a user.']
-    }
+    },
+    likedBy: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    ]
 });
 
 const Book = mongoose.model('Book', bookSchema);

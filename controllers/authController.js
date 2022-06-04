@@ -3,6 +3,7 @@ const { promisify } = require('util');
 const AppError = require('../utils/appError');
 const catchAsync = require('../middleware/catchAsync');
 const User = require('../models/userModel');
+const getLoggedInUserDoc = require('./usersController').getLoggedInUserDoc;
 const filterObject = require('../utils/filterObject');
 
 const signToken = (id) => {
@@ -61,7 +62,9 @@ exports.login = catchAsync(async (req, res, next) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-        return next(new AppError('Please an email address and password.', 400));
+        return next(
+            new AppError('Please provide an email address and password.', 400)
+        );
     }
 
     const user = await User.findOne({ email }).select('+password');
@@ -110,9 +113,7 @@ exports.protect = catchAsync(async (req, res, next) => {
         return next(new AppError("You're not logged in.", 401));
     }
 
-    const user = await User.findById(decodedToken.id)
-        .populate('books')
-        .select('+unreadConversationsCount');
+    const user = await getLoggedInUserDoc(decodedToken.id);
 
     if (!user || user.changedPasswordAfterToken(decodedToken.iat)) {
         sendLogoutCookie(res);
@@ -135,9 +136,7 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
             process.env.JWT_SECRET
         );
 
-        const user = await User.findById(decodedToken.id)
-            .populate('books')
-            .select('+unreadConversationsCount');
+        const user = await getLoggedInUserDoc(decodedToken.id);
 
         if (!user) return next();
 

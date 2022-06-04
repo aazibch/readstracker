@@ -254,6 +254,12 @@
 .book-card__secondary-data, .book-card__note-date {
   color: #4d5156;
 }
+.book-card__likes-quantity {
+  cursor: pointer;
+}
+.book-card__likes-quantity:hover {
+  text-decoration: underline;
+}
 
 .modal {
   position: fixed;
@@ -263,6 +269,8 @@
   background-color: rgba(0, 0, 0, 0.4);
   box-sizing: border-box;
   padding: 1rem;
+  top: 0;
+  bottom: 0;
 }
 .modal__dialog {
   max-width: 35rem;
@@ -670,7 +678,7 @@ main {
 
 .main-nav__dropdown {
   position: absolute;
-  width: 20rem;
+  width: 21.5rem;
   right: 1rem;
   list-style: none;
   top: 5rem;
@@ -690,7 +698,6 @@ main {
 }
 .main-nav__dropdown li:last-child {
   border-radius: 0 0 5px 5px;
-  border-bottom-style: none;
 }
 .main-nav__dropdown li a {
   padding: 1rem;
@@ -720,6 +727,9 @@ main {
 
 .notifications {
   display: none;
+  height: 30rem;
+  background: #fff;
+  overflow-y: auto;
 }
 .notifications--active {
   display: block;
@@ -729,12 +739,16 @@ main {
   display: flex;
   align-items: center;
 }
+.notification__data {
+  flex: 1 0 auto;
+}
 .notification__profile-photo {
   width: 55px;
   height: auto;
   margin-right: 1rem;
 }
 .notification__date {
+  margin-top: 0.2rem;
   font-size: 0.8rem;
   color: #4d5156;
 }
@@ -765,6 +779,9 @@ main {
 .main-buttons__button-container:hover {
   opacity: 0.8;
 }
+.main-buttons__button-container--active {
+  opacity: 0.8;
+}
 .main-buttons__count {
   height: 1.25rem;
   width: 1.25rem;
@@ -785,6 +802,13 @@ main {
 
 .main-buttons__button-container-notifications--active {
   opacity: 0.8;
+}
+
+.notification-indicator {
+  height: 0.7rem;
+  width: 0.7rem;
+  border-radius: 50%;
+  background: #0793f8;
 }
 
 .footer {
@@ -823,7 +847,6 @@ main {
   .main-nav__username {
     display: none;
   }
-
   .header__site-title {
     flex: 0 0 40px;
   }
@@ -833,7 +856,6 @@ main {
   .header__logo-icon {
     display: block;
   }
-
   .footer__container {
     flex-direction: column;
     align-items: center;
@@ -842,7 +864,6 @@ main {
   .footer__nav {
     margin-bottom: 1rem;
   }
-
   .copyright {
     margin-left: 0;
   }
@@ -897,7 +918,6 @@ main {
   .jumbotron__icon {
     display: none;
   }
-
   .services__container .column:last-child {
     flex-grow: 0;
     margin: 0 auto;

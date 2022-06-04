@@ -22,6 +22,22 @@ exports.getSignupForm = (req, res) => {
     });
 };
 
+const getFollowers = async (userId) => {
+    const followers = await Connection.find({ following: userId })
+        .select('follower')
+        .populate({ path: 'follower', select: 'username profilePhoto' });
+
+    return followers;
+};
+
+const getFollowing = async (userId) => {
+    const following = await Connection.find({ follower: userId })
+        .select('following')
+        .populate({ path: 'following', select: 'username profilePhoto' });
+
+    return following;
+};
+
 exports.getProfile = catchAsync(async (req, res, next) => {
     const viewData = {
         title: `${req.params.username}'s Profile | ReadsTracker`,
@@ -29,8 +45,15 @@ exports.getProfile = catchAsync(async (req, res, next) => {
         isOwn: true
     };
 
-    if (req.user?.username === req.params.username)
+    if (req.user?.username === req.params.username) {
+        const followers = await getFollowers(req.user._id);
+        const following = await getFollowing(req.user._id);
+
+        viewData.following = following;
+        viewData.followers = followers;
+
         return res.status(200).render('profile', viewData);
+    }
 
     const user = await User.findOne({ username: req.params.username }).populate(
         { path: 'books' }
@@ -91,14 +114,25 @@ exports.getProfile = catchAsync(async (req, res, next) => {
 
     viewData.isOwn = false;
 
+    const followers = await getFollowers(user._id);
+    const following = await getFollowing(user._id);
+
+    viewData.following = following;
+    viewData.followers = followers;
+
     res.status(200).render('profile', viewData);
 });
 
 exports.getBook = catchAsync(async (req, res, next) => {
-    const book = await Book.findById(req.params.id).populate({
-        path: 'user',
-        select: 'username profilePhoto'
-    });
+    const book = await Book.findById(req.params.id)
+        .populate({
+            path: 'user',
+            select: 'username profilePhoto'
+        })
+        .populate({
+            path: 'likedBy',
+            select: 'profilePhoto username'
+        });
 
     if (!book || book.user.username !== req.params.username)
         return next(new AppError('Book not found.', 404));

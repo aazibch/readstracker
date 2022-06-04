@@ -2,6 +2,7 @@ const catchAsync = require('../middleware/catchAsync');
 const Connection = require('../models/connectionModel');
 const User = require('../models/userModel');
 const Conversation = require('../models/conversationModel');
+const Notification = require('../models/notificationModel');
 const AppError = require('../utils/appError');
 
 exports.getFollowers = catchAsync(async (req, res, next) => {
@@ -34,6 +35,13 @@ exports.createConnection = catchAsync(async (req, res, next) => {
     const conn = await Connection.create({
         follower: req.user._id,
         following: req.body.following
+    });
+
+    // @todo add as part of mongoose hook
+    await Notification.create({
+        sender: req.user._id,
+        recipient: req.body.following,
+        content: '[username] started following you.'
     });
 
     res.status(201).json({
