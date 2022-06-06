@@ -81,6 +81,21 @@ exports.likeBook = catchAsync(async (req, res, next) => {
 
     res.status(200).json({
         status: 'success',
+        message: 'Book was liked successfully.',
+        data: book
+    });
+});
+
+exports.unlikeBook = catchAsync(async (req, res, next) => {
+    const book = await Book.findByIdAndUpdate(
+        req.params.id,
+        { $pull: { likedBy: req.user._id } },
+        { new: true }
+    );
+
+    res.status(204).json({
+        status: 'success',
+        message: 'Book was unliked successfully.',
         data: book
     });
 });

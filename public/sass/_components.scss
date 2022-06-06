@@ -63,6 +63,12 @@
     border-radius: .3rem;
 }
 
+.button-small {
+    padding: .25rem .5rem;
+    font-size: .875rem;
+    border-radius: .2rem;
+}
+
 .button-primary {
     @extend %button;
     background: $primary-color;
@@ -321,10 +327,27 @@
 
     &__likes-quantity {
         cursor: pointer;
+        color: $secondary-color;
+        font-size: .875rem;
+        margin-left: auto;
 
         &:hover {
             text-decoration: underline;
         }
+    }
+
+    &__likes {
+        border-top: 1px solid $generic-border-color;
+        padding: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+}
+
+.like-button {
+    &--selected {
+        color: $primary-color;
     }
 }
 

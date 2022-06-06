@@ -43,3 +43,30 @@ export const deleteBook = catchAsync(async (bookId) => {
         location.assign('/user');
     }, 1500);
 });
+
+export const likeBook = catchAsync(async (bookId) => {
+    const response = await axios({
+        url: `/api/v1/books/${bookId}/likes`,
+        method: 'POST'
+    });
+
+    displayAlert(response.data.status, response.data.message);
+
+    setTimeout(() => {
+        location.reload();
+    });
+});
+
+export const unlikeBook = catchAsync(async (bookId) => {
+    const response = await axios({
+        url: `/api/v1/books/${bookId}/likes`,
+        method: 'DELETE'
+    });
+
+    // Response with status code 204 don't return a response, therefore I'm hardcoding it.
+    displayAlert('success', 'Book was unliked successfully.');
+
+    setTimeout(() => {
+        location.reload();
+    });
+});

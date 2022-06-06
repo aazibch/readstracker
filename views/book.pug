@@ -47,9 +47,25 @@ block content
                     .book-card__secondary-data-content-1
                         p.book-card__genre= book.genre
                         p.book-card__date-added= book.dateCreated.toLocaleString('en-us', {day: '2-digit', weekday: 'short', month: 'long', year: 'numeric'})
-                    .book-card__secondary-data-content-2
-                        - const likesQuantity = book.likedBy.length;
-                        p.book-card__likes-quantity= `${likesQuantity} Like${likesQuantity > 1 || likesQuantity === 0 ? 's' : ''}`
+            section.book-card__likes
+                    -
+                        const bookLiked = book.likedBy.some(u => u._id.toString() === user._id.toString());
+                        console.log('[book.pug]', { bookLiked })
+                        
+                        const buttonClasses = ['button-light', 'button-small', 'like-button'];
+                        let buttonValue = 'Like';
+                        let buttonAction = 'like';
+
+                        if (bookLiked) {
+                            buttonClasses.push('like-button--selected');
+                            buttonValue = 'Liked'
+                            buttonAction = 'unlike';
+                        }
+
+                    if (user)
+                        button(data-action=buttonAction class=buttonClasses.join(' ')).button-light.button-small.like-button <i class="fa-solid fa-thumbs-up"></i> #{buttonValue}
+                    - const likesQuantity = book.likedBy.length;
+                    p.book-card__likes-quantity= `${likesQuantity} Like${likesQuantity > 1 || likesQuantity === 0 ? 's' : ''}`
             
             //- section.full-book__notes
             //-     each note in book.notes

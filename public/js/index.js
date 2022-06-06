@@ -8,7 +8,13 @@ import {
 } from './ratingInput';
 
 import { auth, logout } from './auth';
-import { createBook, updateBook, deleteBook } from './books';
+import {
+    createBook,
+    updateBook,
+    deleteBook,
+    likeBook,
+    unlikeBook
+} from './books';
 import { updateUser, deleteUser, updatePassword } from './users';
 import { displayConfirmationModal } from './modals';
 import {
@@ -473,6 +479,20 @@ const likesListModal = document.querySelector('.likes-list-modal');
 if (likesQuantityEl) {
     likesQuantityEl.addEventListener('click', (e) => {
         likesListModal.classList.add('list-modal--active');
+    });
+}
+
+const likeButtonEl = document.querySelector('.like-button');
+
+if (likeButtonEl) {
+    likeButtonEl.addEventListener('click', (e) => {
+        if (e.target.dataset.action === 'like') {
+            likeBook(fullBook.dataset.id);
+        }
+
+        if (e.target.dataset.action === 'unlike') {
+            unlikeBook(fullBook.dataset.id);
+        }
     });
 }
 

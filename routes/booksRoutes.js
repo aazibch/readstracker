@@ -17,6 +17,7 @@ router
 
 router
     .route('/:id/likes')
-    .post(authController.protect, booksController.likeBook);
+    .post(authController.protect, booksController.likeBook)
+    .delete(authController.protect, booksController.unlikeBook);
 
 module.exports = router;
