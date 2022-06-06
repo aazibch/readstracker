@@ -6,3 +6,10 @@ export const removeActiveClasses = (classes) => {
         elem.classList.remove(activeClass);
     });
 };
+
+export const disableButton = (selector, bool) => {
+    const el = document.querySelector(selector);
+
+    if (bool) el.setAttribute('disabled', '');
+    else el.removeAttribute('disabled');
+};

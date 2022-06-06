@@ -16,9 +16,12 @@ block content
                 .modal__header
                     h3.list-modal__heading Likes
                     button.modal__close-button.list-modal__close-button &#10005;
-                .list-modal__list
-                    each item in book.likedBy
-                        +usersListItem(item)
+                if (book.likedBy.length > 0)
+                    .list-modal__list
+                        each item in book.likedBy
+                            +usersListItem(item)
+                else
+                    p.list-modal__message Nothing to show.
                     
 
     .page-container

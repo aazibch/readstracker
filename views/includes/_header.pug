@@ -2,7 +2,7 @@ include ../mixins/_notification
 
 header.header
     -
-        console.log('[_header.pug] user.notifications', user.notifications);
+        //- console.log('[_header.pug] user.notifications', user.notifications);
     .header__container
         .header__site-title
             a(href='/')
@@ -66,4 +66,4 @@ header.header
                     span.main-nav__username #{user.username}
 
             else
-                a.button-outline-primary.main-nav__button(href='/login' role='button') Login
+                a.button-outline-primary.main-nav__button(href='/' role='button') Login

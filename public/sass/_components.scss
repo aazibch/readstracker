@@ -509,6 +509,11 @@
     &__list {
         overflow-y: auto;
     }
+
+    &__message {
+        text-align: center;
+        margin-top: 5rem;
+    }
 }
 
 .list-modal--active {

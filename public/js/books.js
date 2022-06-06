@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { displayAlert } from './alerts';
+import { disableButton } from './utils';
 import catchAsync from './catchAsync';
 
 export const createBook = catchAsync(async (data) => {
@@ -44,29 +45,43 @@ export const deleteBook = catchAsync(async (bookId) => {
     }, 1500);
 });
 
-export const likeBook = catchAsync(async (bookId) => {
-    const response = await axios({
-        url: `/api/v1/books/${bookId}/likes`,
-        method: 'POST'
-    });
+export const likeBook = catchAsync(
+    async (bookId) => {
+        disableButton('.like-button', true);
 
-    displayAlert(response.data.status, response.data.message);
+        const response = await axios({
+            url: `/api/v1/books/${bookId}/likes`,
+            method: 'POST'
+        });
 
-    setTimeout(() => {
-        location.reload();
-    });
-});
+        displayAlert(response.data.status, response.data.message);
 
-export const unlikeBook = catchAsync(async (bookId) => {
-    const response = await axios({
-        url: `/api/v1/books/${bookId}/likes`,
-        method: 'DELETE'
-    });
+        setTimeout(() => {
+            location.reload();
+        });
+    },
+    () => {
+        disableButton('.like-button', false);
+    }
+);
 
-    // Response with status code 204 don't return a response, therefore I'm hardcoding it.
-    displayAlert('success', 'Book was unliked successfully.');
+export const unlikeBook = catchAsync(
+    async (bookId) => {
+        disableButton('.like-button', true);
 
-    setTimeout(() => {
-        location.reload();
-    });
-});
+        const response = await axios({
+            url: `/api/v1/books/${bookId}/likes`,
+            method: 'DELETE'
+        });
+
+        // Response with status code 204 don't return a response, therefore I'm hardcoding it.
+        displayAlert('success', 'Book was unliked successfully.');
+
+        setTimeout(() => {
+            location.reload();
+        });
+    },
+    () => {
+        disableButton('.like-button', false);
+    }
+);

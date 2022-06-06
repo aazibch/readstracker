@@ -412,6 +412,10 @@
 .list-modal__list {
   overflow-y: auto;
 }
+.list-modal__message {
+  text-align: center;
+  margin-top: 5rem;
+}
 
 .list-modal--active {
   display: flex;

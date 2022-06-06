@@ -35,8 +35,7 @@ html
         //-             .list-modal__list
 
 
-
-        if user && title !== 'Error'
+        if (title.split(' ')[0] === 'Home' && user || title.split(' ')[0] !== 'Error' && title.split(' ')[0] !== 'Home')
             include includes/_header
         
         main

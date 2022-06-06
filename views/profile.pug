@@ -20,9 +20,12 @@ block content
                 .modal__header
                     h3.list-modal__heading Followers
                     button.modal__close-button.list-modal__close-button &#10005;
-                .list-modal__list
-                    each item in followers
-                        +usersListItem(item.follower)
+                if (followers.length > 0)
+                    .list-modal__list
+                        each item in followers
+                            +usersListItem(item.follower)
+                else
+                    p.list-modal__message Nothing to show.
 
     .modal.list-modal.following-list-modal
         .modal__dialog
@@ -30,9 +33,12 @@ block content
                 .modal__header
                     h3.list-modal__heading Following
                     button.modal__close-button.list-modal__close-button &#10005;
-                .list-modal__list
-                    each item in following
-                        +usersListItem(item.following)
+                if (following.length > 0)
+                    .list-modal__list
+                        each item in following
+                            +usersListItem(item.following)
+                else
+                    p.list-modal__message Nothing to show.
         
     .profile-header
         .profile-header__content
@@ -40,15 +46,15 @@ block content
             h1.heading-1= profile.username
             .connections(data-user-id=profile._id data-following-id=!isOwn ? relation.following.connId : false data-conversation-id = relation && relation.conversation.id ? relation.conversation.id : false)
                 .users-list-triggers
-                    if profile.followersCount > 0
-                        button.users-list-triggers__followers.button-plain <span class='followers-count'>#{profile.followersCount}</span> Follower#{profile.followersCount === 1 ? '' : 's'}
-                    else
-                        p <span class='followers-count'>0</span> Followers
+                    //- if profile.followersCount > 0
+                    button.users-list-triggers__followers.button-plain <span class='followers-count'>#{profile.followersCount}</span> Follower#{profile.followersCount === 1 ? '' : 's'}
+                    //- else
+                    //-     p <span class='followers-count'>0</span> Followers
 
-                    if profile.followingCount > 0
-                        button.users-list-triggers__following.button-plain <span class='following-count'>#{profile.followingCount}</span> Following
-                    else
-                        p <span class='following-count'>0</span> Following
+                    //- if profile.followingCount > 0
+                    button.users-list-triggers__following.button-plain <span class='following-count'>#{profile.followingCount}</span> Following
+                    //- else
+                    //-     p <span class='following-count'>0</span> Following
                 if !isOwn    
                     .connect-buttons
                         if relation.following.status
