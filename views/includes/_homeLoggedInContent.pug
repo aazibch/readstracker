@@ -1,28 +1,34 @@
 .page-container
-    .form-container
-        form.book-form.form
-            h1.heading-1.form__heading Add a new book
-            label.form__label Title
-            input.book-form__title-field.form__input-field(type='text')
-            label.form__label Author
-            input.book-form__author-field.form__input-field(type='text')
-
-            label.form__label Rating
-            .form__stars
-
-                i.fas.fa-star(data-index='0')
-                i.fas.fa-star(data-index='1')
-                i.fas.fa-star(data-index='2')
-                i.fas.fa-star(data-index='3')
-                i.fas.fa-star(data-index='4')
-
-            label.form__label Genre
-
-            - const genres = ['Action and Adventure', 'Biography or Autobiography', 'Coming-of-age', 'Crime', 'Drama', 'Dystopian Fiction', 'Fantasy', 'History', 'Mystery', 'Pop-sci', 'Poetry', 'Romance', 'Self help', 'Sci-fi', 'Satire', 'Spirituality', 'Thriller', 'Philosophical Fiction'];
-            select.book-form__genre-field.form__input-field
-                option Select a Genre
-                each genre in genres
-                    option= genre
-
-            input.button-primary(type='submit' value='Submit')
-            .loading-spinner.book-form__loading-spinner
+    .feed
+        .feed__books
+            //- .book-card.full-book.feed__book
+            //- section.full-book__header
+            //-     a(href='/').full-book__user
+            //-         img.user-photo.full-book__user-photo(src=`/images/users/default.jpg`)
+            //-         | John Doe
+            //-     .full-book__dropdown
+            //-         button.book-card__button.full-book__dropdown-button <i class="fas fa-ellipsis-h"></i>
+            //-         ul.dropdown-menu.full-book__dropdown-menu
+            //-             li
+            //-                 a(href=`/books/edit`) Edit
+            //-             li
+            //-                 a.full-book__book-delete-button(role='button') Delete
+            //- section.book-card__info
+            //-     p.book-card__title Sample Book
+            //-     p.book-card__author-line
+            //-         | by 
+            //-         span.book__author J. K. Rowling
+            //-     .book-card__rating
+            //-         i(class='far fa-star star-highlighted')
+            //-         i(class='far fa-star')
+            //-         i(class='far fa-star')
+            //-         i(class='far fa-star')
+            //-         i(class='far fa-star')
+            //-     .book-card__secondary-data
+            //-         .book-card__secondary-data-content-1
+            //-             p.book-card__genre Sci fi
+            //-             p.book-card__date-added June, 9, 1999
+            //- section.book-card__likes
+            //-         button.button-light.button-small.like-button <i class="fa-solid fa-thumbs-up"></i> Like
+            //-         p.book-card__likes-quantity 3 Likes
+        .feed__loading-spinner.loading-spinner

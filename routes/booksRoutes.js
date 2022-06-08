@@ -10,6 +10,10 @@ router
     .post(authController.protect, booksController.createMyBook);
 
 router
+    .route('/following')
+    .get(authController.protect, booksController.getBooksFeed);
+
+router
     .route('/:id')
     .get(authController.protect, booksController.getMyBook)
     .delete(authController.protect, booksController.deleteMyBook)

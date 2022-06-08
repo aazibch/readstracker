@@ -66,7 +66,7 @@ block content
                         }
 
                     if (user)
-                        button(data-action=buttonAction class=buttonClasses.join(' ')).button-light.button-small.like-button <i class="fa-solid fa-thumbs-up"></i> #{buttonValue}
+                        button(data-action=buttonAction class=buttonClasses.join(' ')) <i class="fa-solid fa-thumbs-up"></i> #{buttonValue}
                     - const likesQuantity = book.likedBy.length;
                     p.book-card__likes-quantity= `${likesQuantity} Like${likesQuantity > 1 || likesQuantity === 0 ? 's' : ''}`
             

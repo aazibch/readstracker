@@ -1,6 +1,8 @@
 const Book = require('../models/bookModel');
+const Connection = require('../models/connectionModel');
 const catchAsync = require('../middleware/catchAsync');
 const AppError = require('../utils/appError');
+const ApiFeatures = require('../utils/apiFeatures');
 
 exports.getAllMyBooks = catchAsync(async (req, res, next) => {
     const books = await Book.find({ user: req.user._id });
@@ -97,5 +99,44 @@ exports.unlikeBook = catchAsync(async (req, res, next) => {
         status: 'success',
         message: 'Book was unliked successfully.',
         data: book
+    });
+});
+
+exports.getBooksFeed = catchAsync(async (req, res, next) => {
+    const following = await Connection.find({
+        follower: req.user._id
+    });
+
+    const usersFollowing = [req.user._id];
+
+    following.forEach((conn) => usersFollowing.push(conn.following));
+
+    // const books = await Book.find({
+    //     user: {
+    //         $in: usersFollowing
+    //     }
+    // });
+
+    console.log({ usersFollowing });
+
+    const features = new ApiFeatures(
+        Book.find({
+            user: {
+                $in: usersFollowing
+            }
+        }),
+        req.query
+    )
+        .paginate()
+        .sort();
+
+    const books = await features.query.populate({
+        path: 'user',
+        select: 'profilePhoto username'
+    });
+
+    res.status(200).json({
+        status: 'success',
+        data: books
     });
 });
