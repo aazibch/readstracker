@@ -1,18 +1,39 @@
-mixin fullBookCard(book, username)
-    .books-grid-item
-        .book-card.profile-book-card
-            a.profile-book-card__link(href=`/${username}/books/${book._id}`)
-                .book-card__info
-                    p.book-card__title= book.title
-                    p.book-card__author-line
-                        | by 
-                        span.book__author= book.author
-                    .book-card__rating
-                        each star in [1, 2, 3, 4, 5]
-                            i(class=`far fa-star ${star <= book.rating ? 'star-highlighted' : '' }`)
-                    .book-card__secondary-data
-                        .book-card__secondary-data-content-1
-                            p.book-card__genre= book.genre
-                            p.book-card__date-added= book.dateCreated.toLocaleString('en-us', {day: '2-digit', weekday: 'short', month: 'long', year: 'numeric'})
-                        .book-card__secondary-data-content-2
-                            p.book-card__like-count= `${book.likedBy.length} Like${book.likedBy.length > 1 || book.likedBy.length === 0 ? 's' : ''}`
+mixin fullBookCard(book, profile)
+    div(id=`full-book:${book._id}` class='book-card full-book feed__book')
+        section.full-book__header
+            a.full-book__user(href=`/${profile.username}`)
+                img.user-photo.full-book__user-photo(src=`/images/users/${profile.profilePhoto}`)
+                | #{profile.username}
+            if (book.user.toString() === user._id.toString())
+                .full-book__dropdown(id='full-book__dropdown:${book._id}')
+                    button.book-card__button.full-book__dropdown-button(id=`full-book__dropdown-button:${book._id}`)
+                        i.fas.fa-ellipsis-h
+                    ul.dropdown-menu.full-book__dropdown-menu
+                        li
+                            a(href=`${book.user.username}/books/${book._id}/edit`) Edit
+                        li
+                            a.full-book__book-delete-button(id=`full-book__book-delete-button:${book._id}` role='button') Delete
+        section.book-card__info
+            p.book-card__title= book.title
+            p.book-card__author-line
+                | by 
+                span.book__author= book.author
+            .book-card__rating
+                each star in [1, 2, 3, 4, 5]
+                    i(class=`far fa-star ${star <= book.rating ? 'star-highlighted' : '' }`)
+            .book-card__secondary-data
+                .book-card__secondary-data-content-1
+                    p.book-card__genre= book.genre
+                    p.book-card__date-added= book.dateCreated.toLocaleString('en-us', {day: '2-digit', weekday: 'short', month: 'long', year: 'numeric'})
+        section.book-card__likes
+            -
+                const likedBook = book.likedBy.some((u) => {
+                    return u.toString() === user._id.toString();
+                });
+
+            button(id=`like-button:${book._id}`
+                class=`button-light button-small like-button ${likedBook ? 'like-button--selected' : ''}`
+                data-action=`${likedBook ? 'unlike' : 'like'}`)
+                    i.fa-solid.fa-thumbs-up
+                    |  #{likedBook ? 'Liked' : 'Like'}
+            p.book-card__likes-quantity(id=`book-card__likes-quantity:${book._id}`)= `${book.likedBy.length} Like${book.likedBy.length > 1 || book.likedBy.length === 0 ? 's' : ''}`

@@ -267,7 +267,7 @@ export const renderFeedBooks = (books) => {
         html +=
             `
             <div id="full-book:${book._id}" class="book-card full-book feed__book">
-                <section class="full-book__header"><a class="full-book__user" href="/">
+                <section class="full-book__header">
                     <a class="full-book__user" href="/${book.user.username}">
                         <img class="user-photo full-book__user-photo" src="/images/users/${book.user.profilePhoto}"/>
                         ${book.user.username}

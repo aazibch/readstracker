@@ -1,12 +1,9 @@
 extends base
-include mixins/_bookCard
+include mixins/_fullBookCard
 include mixins/_usersListItem
 
 block content
     -
-        console.log('[profile.pug] following', following);
-        console.log('[profile.pug] followers', followers);
-
         let conversationLink;
 
         if (!isOwn) {
@@ -75,4 +72,4 @@ block content
             .books__container.books-grid
                 .books-grid-sizer
                 each book in profile.books
-                    +bookCard(book, profile.username)
+                    +fullBookCard(book, profile)
