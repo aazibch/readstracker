@@ -1,13 +1,15 @@
 extends base
 
 block content
+    -
+        console.log('user', user);
     .page-container
         .form-container
             h1.heading-1.form__heading Settings
             form.form.settings-details-form
                 h2.heading-3.form__heading Update details
                 label.form__label Name
-                input.settings-details-form__name-field.form__input-field(type='text' value=user.name)
+                input.settings-details-form__name-field.form__input-field(type='text' value=user.username)
                 label.form__label Email
                 input.settings-details-form__email-field.form__input-field(type='email' value=user.email)
                 label.form__label Profile Photo

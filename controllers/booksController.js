@@ -48,7 +48,7 @@ exports.updateMyBook = catchAsync(async (req, res, next) => {
         },
         req.body,
         { new: true, runValidators: true }
-    );
+    ).populate({ path: 'user', select: 'username' });
 
     if (!book) return next(new AppError('Book not found.', 404));
 
@@ -138,5 +138,17 @@ exports.getBooksFeed = catchAsync(async (req, res, next) => {
     res.status(200).json({
         status: 'success',
         data: books
+    });
+});
+
+exports.getBookLikes = catchAsync(async (req, res, next) => {
+    const book = await Book.findById(req.params.id).populate({
+        path: 'likedBy',
+        select: 'profilePhoto username'
+    });
+
+    res.status(200).json({
+        status: 'success',
+        data: book.likedBy
     });
 });

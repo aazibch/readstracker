@@ -1,7 +1,6 @@
 import axios from 'axios';
 import catchAsync from './catchAsync';
 import { displayAlert } from './alerts';
-import { hideAllSpinners } from './loadingSpinners';
 
 export const auth = catchAsync(async (action, data) => {
     const response = await axios({
@@ -10,14 +9,10 @@ export const auth = catchAsync(async (action, data) => {
         data
     });
 
-    hideAllSpinners();
     displayAlert(response.data.status, response.data.message);
-
     localStorage.setItem('userId', response.data.data.userId);
 
-    setTimeout(() => {
-        location.assign('/');
-    }, 1500);
+    return response;
 });
 
 export const logout = catchAsync(async () => {
@@ -27,6 +22,4 @@ export const logout = catchAsync(async () => {
     });
 
     localStorage.removeItem('userId');
-
-    location.assign('/');
 });

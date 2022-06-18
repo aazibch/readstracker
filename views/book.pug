@@ -31,13 +31,13 @@ block content
                     img.user-photo.full-book__user-photo(src=`/images/users/${book.user.profilePhoto}`)
                     | #{book.user.username}
                 if (loggedInUsersBook)
-                    .full-book__dropdown
-                        button.book-card__button.full-book__dropdown-button <i class="fas fa-ellipsis-h"></i>
+                    div(id=`full-book__dropdown:${book._id}`).full-book__dropdown
+                        button(id=`full-book__dropdown-button:${book._id}`).book-card__button.full-book__dropdown-button <i class="fas fa-ellipsis-h"></i>
                         ul.dropdown-menu.full-book__dropdown-menu
                             li
-                                a(href=`/books/${book._id}/edit`) Edit
+                                a(href=`/${book.user.username}/books/${book._id}/edit`) Edit
                             li
-                                a.full-book__book-delete-button(role='button') Delete
+                                a(id=`full-book__book-delete-button:${book._id}` role='button').full-book__book-delete-button Delete
             section.book-card__info
                 p.book-card__title=book.title
                 p.book-card__author-line
@@ -66,9 +66,9 @@ block content
                         }
 
                     if (user)
-                        button(data-action=buttonAction class=buttonClasses.join(' ')) <i class="fa-solid fa-thumbs-up"></i> #{buttonValue}
+                        button(id=`like-button:${book._id}` data-action=buttonAction class=buttonClasses.join(' ')) <i class="fa-solid fa-thumbs-up"></i> #{buttonValue}
                     - const likesQuantity = book.likedBy.length;
-                    p.book-card__likes-quantity= `${likesQuantity} Like${likesQuantity > 1 || likesQuantity === 0 ? 's' : ''}`
+                    p(id=`book-card__likes-quantity:${book._id}`).book-card__likes-quantity= `${likesQuantity} Like${likesQuantity > 1 || likesQuantity === 0 ? 's' : ''}`
             
             //- section.full-book__notes
             //-     each note in book.notes

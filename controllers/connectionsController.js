@@ -46,6 +46,7 @@ exports.createConnection = catchAsync(async (req, res, next) => {
 
     res.status(201).json({
         status: 'success',
+        message: 'User was followed successfully.',
         data: conn
     });
 });
@@ -74,7 +75,7 @@ exports.deleteConnection = catchAsync(async (req, res, next) => {
 
     res.status(204).json({
         status: 'success',
-        message: 'Unfollowed successfully.',
+        message: 'User was unfollowed successfully.',
         data: conn
     });
 });

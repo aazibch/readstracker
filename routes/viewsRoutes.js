@@ -12,15 +12,15 @@ router.get('/signup', authController.isLoggedIn, viewsController.getSignupForm);
 // Routes related to the logged in user.
 
 router.get(
-    '/settings',
+    '/profile',
     authController.protect,
-    viewsController.getSettingsPage
+    viewsController.redirectToProfile
 );
 
 router.get(
-    '/:username/books/:id/edit',
+    '/settings',
     authController.protect,
-    viewsController.getBookEditPage
+    viewsController.getSettingsPage
 );
 
 router.get(
@@ -35,13 +35,19 @@ router.get(
     viewsController.getMessages
 );
 
-// Routes related to all users.
+router.get(
+    '/:username/books/:id/edit',
+    authController.protect,
+    viewsController.getBookEditPage
+);
 
 router.get(
-    '/search-results',
-    authController.isLoggedIn,
-    viewsController.getSearchResults
+    '/:username/books/add',
+    authController.protect,
+    viewsController.getAddBookPage
 );
+
+// Routes related to all users.
 
 router.get(
     '/:username',
@@ -54,6 +60,12 @@ router.get(
     '/:username/books/:id',
     authController.isLoggedIn,
     viewsController.getBook
+);
+
+router.get(
+    '/search-results',
+    authController.isLoggedIn,
+    viewsController.getSearchResults
 );
 
 module.exports = router;

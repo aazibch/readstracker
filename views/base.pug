@@ -25,14 +25,14 @@ html
                             | 
                             button.confirmation-modal__yes-button(data-value='true') Yes
 
-        //- .modal.list-modal
-        //-     .modal__dialog
-        //-         .modal__content.list-modal__content
-        //-             .modal__header
-        //-                 h3.list-modal__heading Followers
-        //-                 button.modal__close-button.list-modal__close-button &#10005;
-        //-             .loading-spinner.list-modal__loading-spinner
-        //-             .list-modal__list
+        .modal.list-modal
+            .modal__dialog
+                .modal__content.list-modal__content
+                    .modal__header
+                        h3.list-modal__heading Followers
+                        button.modal__close-button.list-modal__close-button &#10005;
+                    .loading-spinner.list-modal__loading-spinner
+                    .list-modal__list
 
 
         if (title.split(' ')[0] === 'Home' && user || title.split(' ')[0] !== 'Error' && title.split(' ')[0] !== 'Home')

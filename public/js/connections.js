@@ -1,6 +1,6 @@
 import axios from 'axios';
 import catchAsync from './catchAsync';
-import { hideListModal } from './modals';
+import { displayAlert } from './alerts';
 
 export const getFollowers = catchAsync(async (userId) => {
     let response = await axios({
@@ -13,7 +13,7 @@ export const getFollowers = catchAsync(async (userId) => {
     });
 
     return response;
-}, hideListModal);
+});
 
 export const getAccountsFollowing = catchAsync(async (userId) => {
     let response = await axios({
@@ -26,45 +26,29 @@ export const getAccountsFollowing = catchAsync(async (userId) => {
     });
 
     return response;
-}, hideListModal);
+});
 
-const disableConnectToggle = (state) => {
-    const buttonEl = document.querySelector('.connect-buttons__toggle');
+export const followUser = catchAsync(async (userId) => {
+    const response = await axios({
+        url: '/api/v1/connections',
+        method: 'POST',
+        data: {
+            following: userId
+        }
+    });
 
-    if (state) buttonEl.setAttribute('disabled', '');
+    displayAlert(response.data.status, response.data.message);
 
-    if (!state) buttonEl.removeAttribute('disabled');
-};
+    return response;
+});
 
-export const followUser = catchAsync(
-    async (userId) => {
-        disableConnectToggle(true);
+export const unfollowUser = catchAsync(async (connId) => {
+    const response = await axios({
+        url: `/api/v1/connections/${connId}`,
+        method: 'DELETE'
+    });
 
-        const response = await axios({
-            url: '/api/v1/connections',
-            method: 'POST',
-            data: {
-                following: userId
-            }
-        });
+    displayAlert('success', 'User was unfollowed successfully.');
 
-        location.reload();
-    },
-    () => {
-        disableConnectToggle(false);
-    }
-);
-
-export const unfollowUser = catchAsync(
-    async (connId) => {
-        disableConnectToggle(true);
-
-        return await axios({
-            url: `/api/v1/connections/${connId}`,
-            method: 'DELETE'
-        });
-    },
-    () => {
-        disableConnectToggle(false);
-    }
-);
+    return response;
+});

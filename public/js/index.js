@@ -16,10 +16,19 @@ import {
     unlikeBook,
     getFeedBooks,
     renderFeedBooks,
-    bookDropdownButtonClickHandler
+    bookDropdownButtonClickHandler,
+    bookDeleteButtonClickHandler,
+    likeButtonClickHandler,
+    unlikeButtonClickHandler,
+    likesQuantityButtonClickHandler
 } from './books';
-import { updateUser, deleteUser, updatePassword } from './users';
-import { displayConfirmationModal } from './modals';
+import {
+    updateUser,
+    deleteUser,
+    updatePassword,
+    clearPasswordInputFields
+} from './users';
+import { displayConfirmationModal, renderListData } from './modals';
 import {
     displayListModal,
     hideListModal,
@@ -46,64 +55,132 @@ import { displayAlert } from './alerts';
 
 import { removeActiveClasses } from './utils';
 
-const loginForm = document.querySelector('.login-form');
-const signupForm = document.querySelector('.signup-form');
-const bookForm = document.querySelector('.book-form');
-const logoutListItem = document.querySelector('.logout-list-item');
-const ratingInput = document.querySelector('.form__stars');
-const fullBook = document.querySelector('.full-book');
-const editBookForm = document.querySelector('.edit-book-form');
 const settingsDetailsForm = document.querySelector('.settings-details-form');
 const settingsPasswordForm = document.querySelector('.settings-password-form');
 const settingsDeleteButton = document.querySelector('.settings-delete-button');
 const searchUsersField = document.querySelector('.search-users__input-field');
-const bookDropdown = document.querySelector('.full-book__dropdown');
-const bookDropdownButton = document.querySelector(
-    '.full-book__dropdown-button'
+const confirmationModalNoButtonEl = document.querySelector(
+    '.confirmation-modal__no-button'
 );
-const listModalCloseButtons = document.querySelectorAll(
+const confirmationModalCloseButtonEl = document.querySelector(
+    '.confirmation-modal__close-button'
+);
+const listModalCloseButtonEl = document.querySelector(
     '.list-modal__close-button'
 );
-const followButton = document.querySelector('.connect-buttons__follow-button');
-const unfollowButton = document.querySelector(
-    '.connect-buttons__unfollow-button'
-);
+
+const feedBooksEl = document.querySelector('.feed__books');
+
+const userId = localStorage.getItem('userId');
+
 const socket = io();
 
 // General
 const attachHandlersToConfirmationModalCloseButtons = () => {
     const elements = [
-        document.querySelector('.confirmation-modal__no-button'),
-        document.querySelector('.confirmation-modal__close-button')
+        confirmationModalCloseButtonEl,
+        confirmationModalNoButtonEl
     ];
 
-    for (let i in elements) {
-        elements[i].addEventListener('click', hideConfirmationModal);
-    }
+    elements.forEach((elem) =>
+        elem.addEventListener('click', hideConfirmationModal)
+    );
 };
 
 attachHandlersToConfirmationModalCloseButtons();
 
-const listModalCloseButtonHandler = () => {
-    console.log('listModalCloseButton clicked');
+listModalCloseButtonEl.addEventListener('click', hideListModal);
 
-    const listModals = document.querySelectorAll('.list-modal');
+const userButtonEl = document.querySelector('.main-nav__user-button');
 
-    listModals.forEach((elem) => {
-        if (elem.classList.contains('list-modal--active'))
-            elem.classList.remove('list-modal--active');
+if (userButtonEl) {
+    userButtonEl.addEventListener('click', (e) => {
+        const userMenuEl = document.querySelector('.user-menu');
+
+        removeActiveClasses([
+            '.notifications',
+            '.main-buttons__button-container-notifications'
+        ]);
+
+        userMenuEl.classList.toggle('user-menu--active');
+        userButtonEl.classList.toggle('main-nav__user-button--active');
     });
+}
 
-    // hideListModal();
-};
-
-listModalCloseButtons.forEach((elem) =>
-    elem.addEventListener('click', listModalCloseButtonHandler)
+const notificationsButtonEl = document.querySelector(
+    '.main-buttons__button-container-notifications'
 );
 
-// Home
+if (notificationsButtonEl) {
+    notificationsButtonEl.addEventListener('click', (e) => {
+        const notificationsDropdownEl =
+            document.querySelector('.notifications');
 
-const feedBooksEl = document.querySelector('.feed__books');
+        removeActiveClasses(['.user-menu', '.main-nav__user-button']);
+
+        notificationsButtonEl.classList.toggle(
+            'main-buttons__button-container-notifications--active'
+        );
+        notificationsDropdownEl.classList.toggle('notifications--active');
+    });
+}
+
+window.addEventListener('click', function (e) {
+    const activeUserMenu = document.querySelector('.user-menu--active');
+
+    if (
+        !e.target.closest('.user-menu--active') &&
+        !e.target.closest('.main-nav__user-button') &&
+        activeUserMenu
+    ) {
+        removeActiveClasses(['.user-menu', '.main-nav__user-button']);
+    }
+
+    const activeNotificationsMenu = document.querySelector(
+        '.notifications--active'
+    );
+
+    if (
+        !e.target.closest('.main-buttons__button-container-notifications') &&
+        !e.target.closest('.notifications') &&
+        activeNotificationsMenu
+    ) {
+        removeActiveClasses([
+            '.notifications',
+            '.main-buttons__button-container-notifications'
+        ]);
+    }
+
+    const activeBookDropdownEl = document.querySelector(
+        '.full-book__dropdown--active'
+    );
+
+    if (
+        !e.target.closest('.full-book__dropdown-menu') &&
+        !e.target.closest('.full-book__dropdown-button') &&
+        activeBookDropdownEl
+    ) {
+        activeBookDropdownEl.classList.remove('full-book__dropdown--active');
+    }
+});
+
+if (searchUsersField) {
+    let inputLength = 0;
+
+    searchUsersField.addEventListener('keydown', (e) => {
+        inputLength = e.target.value.length;
+    });
+
+    searchUsersField.addEventListener('keyup', (e) => {
+        if (e.target.value.length !== inputLength) {
+            if (e.target.value.length === 0) return hideSearchDropdown();
+
+            search(e.target.value);
+        }
+    });
+}
+
+// Home
 
 if (feedBooksEl) {
     const feedLoadingSpinnerEl = document.querySelector(
@@ -121,59 +198,112 @@ if (feedBooksEl) {
                 el.addEventListener('click', bookDropdownButtonClickHandler)
             );
 
+        document
+            .querySelectorAll('.full-book__book-delete-button')
+            .forEach((el) => {
+                el.addEventListener('click', bookDeleteButtonClickHandler);
+            });
+
+        document
+            .querySelectorAll('.like-button[data-action="like"]')
+            .forEach((el) => {
+                el.addEventListener('click', likeButtonClickHandler);
+            });
+
+        document
+            .querySelectorAll('.like-button[data-action="unlike"]')
+            .forEach((el) => {
+                el.addEventListener('click', unlikeButtonClickHandler);
+            });
+
+        document
+            .querySelectorAll('.book-card__likes-quantity')
+            .forEach((el) => {
+                el.addEventListener('click', likesQuantityButtonClickHandler);
+            });
+
         feedLoadingSpinnerEl.classList.remove('loading-spinner--active');
     });
 }
 
 // Profile
 const connectionsEl = document.querySelector('.connections');
-
-const followersButton = document.querySelector(
+const followersButtonEl = document.querySelector(
     '.users-list-triggers__followers'
 );
-const followingButton = document.querySelector(
+const followingButtonEl = document.querySelector(
     '.users-list-triggers__following'
 );
 
-const followingListModalEl = document.querySelector('.following-list-modal');
-const followersListModalEl = document.querySelector('.followers-list-modal');
+const followButtonEl = document.querySelector(
+    '.connect-buttons__follow-button'
+);
+const unfollowButtonEl = document.querySelector(
+    '.connect-buttons__unfollow-button'
+);
 
-if (followersButton) {
-    followersButton.addEventListener('click', (e) => {
-        followersListModalEl.classList.add('list-modal--active');
+if (followersButtonEl) {
+    followersButtonEl.addEventListener('click', async (e) => {
+        displayListModal('Followers');
 
-        // displayListModal('Followers', async () => {
-        //     return await getFollowers(connectionsEl.dataset.userId);
-        // });
+        const followers = await getFollowers(connectionsEl.dataset.userId);
+
+        if (!followers) {
+            return hideListModal();
+        }
+
+        document.querySelector('.followers-count').textContent =
+            followers.length;
+        renderListData(followers);
     });
 }
 
-if (followingButton) {
-    followingButton.addEventListener('click', () => {
-        followingListModalEl.classList.add('list-modal--active');
+if (followingButtonEl) {
+    followingButtonEl.addEventListener('click', async () => {
+        displayListModal('Following');
 
-        // displayListModal('Following', async () => {
-        //     return await getAccountsFollowing(connectionsEl.dataset.userId);
-        // });
+        const accountsFollowing = await getAccountsFollowing(
+            connectionsEl.dataset.userId
+        );
+
+        if (!accountsFollowing) {
+            return hideListModal();
+        }
+
+        document.querySelector('.following-count').textContent =
+            accountsFollowing.length;
+        renderListData(accountsFollowing);
     });
 }
 
-if (followButton) {
-    followButton.addEventListener('click', () => {
+if (followButtonEl) {
+    followButtonEl.addEventListener('click', async () => {
         const userId = connectionsEl.dataset.userId;
+        followButtonEl.setAttribute('disabled', '');
 
-        followUser(userId);
+        const res = await followUser(userId);
+
+        if (!res) {
+            return followButtonEl.removeAttribute('disabled');
+        }
+
+        setTimeout(() => {
+            location.reload();
+        }, 1500);
     });
 }
 
-if (unfollowButton) {
-    unfollowButton.addEventListener('click', async () => {
-        const followingId = connectionsEl.dataset.followingId;
-        const { userId, conversationId } = connectionsEl.dataset;
+if (unfollowButtonEl) {
+    unfollowButtonEl.addEventListener('click', async () => {
+        const { userId, conversationId, followingId } = connectionsEl.dataset;
 
+        unfollowButtonEl.setAttribute('disabled', '');
         const res = await unfollowUser(followingId);
 
-        if (res.status !== 204) return;
+        console.log('res[click handler]', res);
+        if (res.status !== 204) {
+            return unfollowButtonEl.removeAttribute('disabled');
+        }
 
         const unfollowedUser = onlineUsers.find(
             (user) =>
@@ -187,11 +317,11 @@ if (unfollowButton) {
             });
         }
 
-        location.reload();
+        setTimeout(() => {
+            location.reload();
+        }, 1500);
     });
 }
-
-const userId = localStorage.getItem('userId');
 
 // Messages
 const conversationContentEl = document.querySelector('.conversation-content');
@@ -221,7 +351,6 @@ if (deleteConversationButton) {
     });
 }
 
-// working
 // Web sockets
 let onlineUsers;
 
@@ -382,9 +511,18 @@ const messageSubmitHandler = async (event, socket) => {
 };
 
 // auth
-if (signupForm) {
-    signupForm.addEventListener('submit', (e) => {
+const loginFormEl = document.querySelector('.login-form');
+const signupFormEl = document.querySelector('.signup-form');
+const logoutListItemEl = document.querySelector('.logout-list-item');
+
+if (signupFormEl) {
+    signupFormEl.addEventListener('submit', async (e) => {
         e.preventDefault();
+        const authFormButtonEl = document.querySelector(
+            '.auth-form__proceed-button'
+        );
+
+        authFormButtonEl.setAttribute('disabled', '');
 
         const username = document.querySelector(
             '.signup-form__name-field'
@@ -397,36 +535,75 @@ if (signupForm) {
             '.signup-form__confirm-password-field'
         ).value;
 
-        auth('signup', { username, email, password, confirmPassword });
+        const res = await auth('signup', {
+            username,
+            email,
+            password,
+            confirmPassword
+        });
+
+        if (!res) {
+            return authFormButtonEl.removeAttribute('disabled');
+        }
+
+        setTimeout(() => {
+            location.assign('/');
+        }, 1500);
     });
 }
 
-if (loginForm) {
-    loginForm.addEventListener('submit', (e) => {
+if (loginFormEl) {
+    loginFormEl.addEventListener('submit', async (e) => {
         e.preventDefault();
+
+        const authFormButtonEl = document.querySelector(
+            '.auth-form__proceed-button'
+        );
+        authFormButtonEl.setAttribute('disabled', '');
 
         const email = document.querySelector('.login-form__email-field').value;
         const password = document.querySelector(
             '.login-form__password-field'
         ).value;
 
-        auth('login', { email, password });
+        const res = await auth('login', { email, password });
+
+        if (!res) {
+            return authFormButtonEl.removeAttribute('disabled');
+        }
+
+        setTimeout(() => {
+            location.assign('/');
+        }, 1500);
     });
 }
 
-if (logoutListItem) {
-    logoutListItem.addEventListener('click', function () {
-        logout();
+if (logoutListItemEl) {
+    logoutListItemEl.addEventListener('click', async () => {
+        await logout();
+        location.assign('/');
     });
 }
 
 // end of auth
 
 // books
+const bookFormEl = document.querySelector('.book-form');
+const fullBookEl = document.querySelector('.full-book');
+const editBookFormEl = document.querySelector('.edit-book-form');
+const likesQuantityEl = document.querySelector('.book-card__likes-quantity');
+const likeButtonEl = document.querySelector('.like-button');
+const ratingInput = document.querySelector('.form__stars');
+const bookDropdownButton = document.querySelector(
+    '.full-book__dropdown-button'
+);
 
-if (bookForm) {
-    bookForm.addEventListener('submit', (e) => {
+if (bookFormEl) {
+    bookFormEl.addEventListener('submit', async (e) => {
         e.preventDefault();
+        const submitButtonEl = document.querySelector(
+            '.book-form .button-primary'
+        );
 
         const title = document.querySelector('.book-form__title-field').value;
         const author = document.querySelector('.book-form__author-field').value;
@@ -440,16 +617,27 @@ if (bookForm) {
             rating = +selectedStarElement.getAttribute('data-index') + 1;
 
         const genre = document.querySelector('.book-form__genre-field').value;
+        submitButtonEl.setAttribute('disabled', '');
 
-        createBook({ title, author, rating, genre });
+        const response = await createBook({ title, author, rating, genre });
+
+        if (!response) {
+            return submitButtonEl.removeAttribute('disabled');
+        }
+
+        setTimeout(() => {
+            location.assign('/profile');
+        }, 1500);
     });
 }
 
-if (editBookForm) {
-    editBookForm.addEventListener('submit', (e) => {
+if (editBookFormEl) {
+    editBookFormEl.addEventListener('submit', async (e) => {
         e.preventDefault();
-
-        const id = editBookForm.getAttribute('data-id');
+        const submitButtonEl = document.querySelector(
+            '.edit-book-form .button-primary'
+        );
+        const id = editBookFormEl.dataset.id;
         const title = document.querySelector(
             '.edit-book-form__title-field'
         ).value;
@@ -467,8 +655,19 @@ if (editBookForm) {
         const genre = document.querySelector(
             '.edit-book-form__genre-field'
         ).value;
+        submitButtonEl.setAttribute('disabled', '');
 
-        updateBook(id, { title, author, rating, genre });
+        const response = await updateBook(id, { title, author, rating, genre });
+
+        if (!response) {
+            return submitButtonEl.removeAttribute('disabled');
+        }
+
+        setTimeout(() => {
+            location.assign(
+                `/${response.data.data.user.username}/books/${response.data.data._id}`
+            );
+        }, 1500);
     });
 }
 
@@ -478,7 +677,7 @@ if (ratingInput) {
     ratingInput.addEventListener('click', ratingClickHandler);
 }
 
-if (fullBook) {
+if (fullBookEl) {
     bookDropdownButton.addEventListener(
         'click',
         bookDropdownButtonClickHandler
@@ -486,38 +685,15 @@ if (fullBook) {
 
     document
         .querySelector('.full-book__book-delete-button')
-        .addEventListener('click', (e) => {
-            displayConfirmationModal(
-                'Are you sure you want to delete the book?',
-                () => {
-                    const bookId = fullBook.getAttribute('data-id');
-                    deleteBook(bookId);
-                }
-            );
-        });
+        .addEventListener('click', bookDeleteButtonClickHandler);
 }
-
-const likesQuantityEl = document.querySelector('.book-card__likes-quantity');
-const likesListModal = document.querySelector('.likes-list-modal');
 
 if (likesQuantityEl) {
-    likesQuantityEl.addEventListener('click', (e) => {
-        likesListModal.classList.add('list-modal--active');
-    });
+    likesQuantityEl.addEventListener('click', likesQuantityButtonClickHandler);
 }
 
-const likeButtonEl = document.querySelector('.like-button');
-
 if (likeButtonEl) {
-    likeButtonEl.addEventListener('click', (e) => {
-        if (e.target.dataset.action === 'like') {
-            likeBook(fullBook.dataset.id);
-        }
-
-        if (e.target.dataset.action === 'unlike') {
-            unlikeBook(fullBook.dataset.id);
-        }
-    });
+    likeButtonEl.addEventListener('click', likeButtonClickHandler);
 }
 
 // end of books
@@ -525,8 +701,13 @@ if (likeButtonEl) {
 // settings
 
 if (settingsDetailsForm) {
-    settingsDetailsForm.addEventListener('submit', (e) => {
+    settingsDetailsForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+
+        const submitButtonEl = document.querySelector(
+            '.settings-details-form .button-primary'
+        );
+        submitButtonEl.setAttribute('disabled', '');
 
         const formData = new FormData();
 
@@ -544,11 +725,23 @@ if (settingsDetailsForm) {
                 .files[0]
         );
 
-        updateUser(formData);
+        const response = await updateUser(formData);
+
+        if (!response) {
+            return submitButtonEl.removeAttribute('disabled');
+        }
+
+        setTimeout(() => {
+            location.reload();
+        }, 1500);
     });
 
-    settingsPasswordForm.addEventListener('submit', (e) => {
+    settingsPasswordForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+
+        const submitButtonEl = document.querySelector(
+            '.settings-password-form .button-primary'
+        );
 
         const currentPassword = document.querySelector(
             '.settings-password-form__current-password-field'
@@ -560,18 +753,32 @@ if (settingsDetailsForm) {
             '.settings-password-form__confirm-password-field'
         ).value;
 
-        updatePassword({
+        submitButtonEl.setAttribute('disabled', '');
+
+        await updatePassword({
             currentPassword,
             password,
             confirmPassword
         });
+
+        clearPasswordInputFields();
+        submitButtonEl.removeAttribute('disabled');
     });
 
     settingsDeleteButton.addEventListener('click', (e) => {
         displayConfirmationModal(
             'Are you sure you want to delete your account?',
-            () => {
-                deleteUser();
+            async () => {
+                settingsDeleteButton.setAttribute('disabled', '');
+                const response = await deleteUser();
+
+                if (!response) {
+                    return settingsDeleteButton.removeAttribute('disabled');
+                }
+
+                setTimeout(() => {
+                    location.assign('/');
+                }, 1500);
             }
         );
     });
@@ -579,116 +786,22 @@ if (settingsDetailsForm) {
 
 // end of settings
 
-// general
+// // Masonry.js
+// const initializeMasonry = () => {
+//     const booksGrid = document.querySelector('.books-grid');
 
-const userButtonEl = document.querySelector('.main-nav__user-button');
-const userMenuEl = document.querySelector('.user-menu');
+//     if (booksGrid) {
+//         new Masonry(booksGrid, {
+//             itemSelector: '.books-grid-item',
+//             columnWidth: '.books-grid-sizer',
+//             percentPosition: true
+//         });
+//     }
+// };
 
-if (userButtonEl) {
-    userButtonEl.addEventListener('click', (e) => {
-        removeActiveClasses([
-            '.notifications',
-            '.main-buttons__button-container-notifications'
-        ]);
+// initializeMasonry();
 
-        userMenuEl.classList.toggle('user-menu--active');
-        userButtonEl.classList.toggle('main-nav__user-button--active');
-    });
-}
+// // Reinitializing because the delay in loading font awesome messes up the layout.
+// setTimeout(initializeMasonry, 2000);
 
-const notificationsButtonEl = document.querySelector(
-    '.main-buttons__button-container-notifications'
-);
-
-if (notificationsButtonEl) {
-    notificationsButtonEl.addEventListener('click', (e) => {
-        const notificationsDropdownEl =
-            document.querySelector('.notifications');
-
-        removeActiveClasses(['.user-menu', '.main-nav__user-button']);
-
-        notificationsButtonEl.classList.toggle(
-            'main-buttons__button-container-notifications--active'
-        );
-        notificationsDropdownEl.classList.toggle('notifications--active');
-    });
-}
-
-window.addEventListener('click', function (e) {
-    const activeUserMenu = document.querySelector('.user-menu--active');
-
-    console.log({ activeUserMenu });
-
-    if (
-        !e.target.closest('.user-menu--active') &&
-        !e.target.closest('.main-nav__user-button') &&
-        activeUserMenu
-    ) {
-        removeActiveClasses(['.user-menu', '.main-nav__user-button']);
-    }
-
-    const activeNotificationsMenu = document.querySelector(
-        '.notifications--active'
-    );
-
-    if (
-        !e.target.closest('.main-buttons__button-container-notifications') &&
-        !e.target.closest('.notifications') &&
-        activeNotificationsMenu
-    ) {
-        removeActiveClasses([
-            '.notifications',
-            '.main-buttons__button-container-notifications'
-        ]);
-    }
-
-    const activeBookDropdownEl = document.querySelector(
-        '.full-book__dropdown--active'
-    );
-
-    if (
-        !e.target.closest('.full-book__dropdown-menu') &&
-        !e.target.closest('.full-book__dropdown-button') &&
-        activeBookDropdownEl
-    ) {
-        activeBookDropdownEl.classList.remove('full-book__dropdown--active');
-    }
-});
-
-if (searchUsersField) {
-    let inputLength = 0;
-
-    searchUsersField.addEventListener('keydown', (e) => {
-        inputLength = e.target.value.length;
-    });
-
-    searchUsersField.addEventListener('keyup', (e) => {
-        if (e.target.value.length !== inputLength) {
-            if (e.target.value.length === 0) return hideSearchDropdown();
-
-            search(e.target.value);
-        }
-    });
-}
-
-// end of general
-
-// Masonry.js
-const initializeMasonry = () => {
-    const booksGrid = document.querySelector('.books-grid');
-
-    if (booksGrid) {
-        new Masonry(booksGrid, {
-            itemSelector: '.books-grid-item',
-            columnWidth: '.books-grid-sizer',
-            percentPosition: true
-        });
-    }
-};
-
-initializeMasonry();
-
-// Reinitializing because the delay in loading font awesome messes up the layout.
-setTimeout(initializeMasonry, 2000);
-
-// End of Masonry.js config
+// // End of Masonry.js config

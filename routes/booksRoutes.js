@@ -21,6 +21,7 @@ router
 
 router
     .route('/:id/likes')
+    .get(booksController.getBookLikes)
     .post(authController.protect, booksController.likeBook)
     .delete(authController.protect, booksController.unlikeBook);
 

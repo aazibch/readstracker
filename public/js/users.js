@@ -2,7 +2,7 @@ import axios from 'axios';
 import { displayAlert } from './alerts';
 import catchAsync from './catchAsync';
 
-const clearPasswordInputFields = () => {
+export const clearPasswordInputFields = () => {
     document.querySelector(
         '.settings-password-form__current-password-field'
     ).value = '';
@@ -19,33 +19,32 @@ export const updateUser = catchAsync(async (data) => {
         method: 'PATCH',
         data
     });
-    
+
     displayAlert(response.data.status, response.data.message);
+
+    return response;
 });
 
 export const deleteUser = catchAsync(async () => {
     const response = await axios({
         url: 'api/v1/users/me',
-        method: 'Delete' 
+        method: 'Delete'
     });
 
     // Response with status code 204 don't return a response, therefore I'm hardcoding it.
     displayAlert('success', 'User was deleted successfully.');
 
-    setTimeout(() => {
-        location.assign('/');
-    }, 1500);
+    return response;
 });
-
 
 export const updatePassword = catchAsync(async (data) => {
     const response = await axios({
         url: 'api/v1/users/updateMyPassword',
         method: 'PATCH',
-        data 
+        data
     });
 
     displayAlert(response.data.status, response.data.message);
 
-    clearPasswordInputFields();
+    return response;
 });

@@ -7,9 +7,12 @@ export const removeActiveClasses = (classes) => {
     });
 };
 
-export const disableButton = (selector, bool) => {
-    const el = document.querySelector(selector);
+export const clearActiveClassOnAllElements = (className, exceptionId) => {
+    const elems = document.querySelectorAll('.' + className);
 
-    if (bool) el.setAttribute('disabled', '');
-    else el.removeAttribute('disabled');
+    elems.forEach((el) => {
+        if (el.id !== exceptionId) {
+            el.classList.remove(`${className}--active`);
+        }
+    });
 };

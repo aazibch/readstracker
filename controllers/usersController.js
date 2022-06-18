@@ -15,7 +15,7 @@ exports.getLoggedInUserDoc = async (userId) => {
                 path: 'sender'
             }
         })
-        .select('+unreadConversationsCount');
+        .select('+unreadConversationsCount +email');
 
     return user;
 };

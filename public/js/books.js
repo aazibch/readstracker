@@ -1,6 +1,12 @@
 import axios from 'axios';
 import { displayAlert } from './alerts';
-import { disableButton } from './utils';
+import {
+    displayConfirmationModal,
+    displayListModal,
+    hideListModal,
+    renderListData
+} from './modals';
+import { clearActiveClassOnAllElements } from './utils';
 import catchAsync from './catchAsync';
 
 export const createBook = catchAsync(async (data) => {
@@ -12,9 +18,7 @@ export const createBook = catchAsync(async (data) => {
 
     displayAlert(response.data.status, response.data.message);
 
-    setTimeout(() => {
-        location.assign('/profile');
-    }, 1500);
+    return response;
 });
 
 export const updateBook = catchAsync(async (bookId, data) => {
@@ -26,86 +30,58 @@ export const updateBook = catchAsync(async (bookId, data) => {
 
     displayAlert(response.data.status, response.data.message);
 
-    setTimeout(() => {
-        location.assign(`/books/${response.data.data._id}`);
-    }, 1500);
+    return response;
 });
 
-export const deleteBook = catchAsync(async (bookId) => {
+export const deleteBook = catchAsync(async (bookId, bookEl) => {
     const response = await axios({
         url: `/api/v1/books/${bookId}`,
         method: 'DELETE'
     });
 
+    if (bookEl) bookEl.remove();
+
     // Response with status code 204 don't return a response, therefore I'm hardcoding it.
     displayAlert('success', 'Book was deleted successfully.');
 
-    setTimeout(() => {
-        location.assign('/user');
-    }, 1500);
+    if (!bookEl) {
+        setTimeout(() => {
+            location.assign('/');
+        }, 1500);
+    }
 });
 
-export const likeBook = catchAsync(
-    async (bookId) => {
-        disableButton('.like-button', true);
+export const likeBook = catchAsync(async (bookId) => {
+    const response = await axios({
+        url: `/api/v1/books/${bookId}/likes`,
+        method: 'POST'
+    });
 
-        const response = await axios({
-            url: `/api/v1/books/${bookId}/likes`,
-            method: 'POST'
-        });
+    displayAlert(response.data.status, response.data.message);
 
-        displayAlert(response.data.status, response.data.message);
+    return response;
+});
 
-        setTimeout(() => {
-            location.reload();
-        });
-    },
-    () => {
-        disableButton('.like-button', false);
-    }
-);
+export const unlikeBook = catchAsync(async (bookId) => {
+    const response = await axios({
+        url: `/api/v1/books/${bookId}/likes`,
+        method: 'DELETE'
+    });
 
-export const unlikeBook = catchAsync(
-    async (bookId) => {
-        disableButton('.like-button', true);
+    // Response with status code 204 doesn't return a response, therefore I'm hardcoding it.
+    displayAlert('success', 'Book was unliked successfully.');
 
-        const response = await axios({
-            url: `/api/v1/books/${bookId}/likes`,
-            method: 'DELETE'
-        });
+    return response;
+});
 
-        // Response with status code 204 doesn't return a response, therefore I'm hardcoding it.
-        displayAlert('success', 'Book was unliked successfully.');
+const getLikes = catchAsync(async (bookId) => {
+    const response = await axios({
+        url: `/api/v1/books/${bookId}/likes`,
+        method: 'GET'
+    });
 
-        setTimeout(() => {
-            location.reload();
-        });
-    },
-    () => {
-        disableButton('.like-button', false);
-    }
-);
-
-const closeAllBookDropdowns = () => {
-    const bookDropdownEls = document.querySelectorAll('.full-book__dropdown');
-
-    bookDropdownEls.forEach((el) =>
-        el.classList.remove('full-book__dropdown--active')
-    );
-};
-
-export const bookDropdownButtonClickHandler = (e) => {
-    const id = e.currentTarget.id.split(':')[1];
-    const bookDropdown = document.querySelector(`#full-book__dropdown\\:${id}`);
-
-    closeAllBookDropdowns();
-
-    if (!bookDropdown.classList.contains('full-book__dropdown--active')) {
-        return bookDropdown.classList.add('full-book__dropdown--active');
-    }
-
-    bookDropdown.classList.remove('full-book__dropdown--active');
-};
+    return response.data.data;
+});
 
 export const getFeedBooks = catchAsync(async () => {
     const response = await axios({
@@ -115,6 +91,129 @@ export const getFeedBooks = catchAsync(async () => {
 
     return response.data.data;
 });
+
+export const bookDropdownButtonClickHandler = (e) => {
+    const id = e.currentTarget.id.split(':')[1];
+    console.log('e.currentTarget.id', e.currentTarget);
+    const bookDropdown = document.querySelector(`#full-book__dropdown\\:${id}`);
+
+    clearActiveClassOnAllElements(
+        'full-book__dropdown',
+        `full-book__dropdown:${id}`
+    );
+
+    bookDropdown.classList.toggle('full-book__dropdown--active');
+};
+
+export const bookDeleteButtonClickHandler = (e) => {
+    const id = e.currentTarget.id.split(':')[1];
+    const bookEl = document.querySelector(`#full-book\\:${id}`);
+
+    displayConfirmationModal(
+        'Are you sure you want to delete the book?',
+        () => {
+            deleteBook(id, bookEl);
+        }
+    );
+};
+
+export const likeButtonClickHandler = async (e) => {
+    const id = e.currentTarget.id.split(':')[1];
+    const buttonEl = document.querySelector(`#like-button\\:${id}`);
+
+    buttonEl.setAttribute('disabled', '');
+
+    const res = await likeBook(id);
+
+    if (res) {
+        changeLikeButtonState(`#like-button\\:${id}`, 'liked');
+        updateLikesQuantityButton(
+            `#book-card__likes-quantity\\:${id}`,
+            'increment'
+        );
+    }
+
+    buttonEl.removeAttribute('disabled');
+};
+
+export const unlikeButtonClickHandler = async (e) => {
+    const id = e.currentTarget.id.split(':')[1];
+    const buttonEl = document.querySelector(`#like-button\\:${id}`);
+
+    buttonEl.setAttribute('disabled', '');
+
+    const res = await unlikeBook(id);
+
+    if (res) {
+        changeLikeButtonState(`#like-button\\:${id}`, 'like');
+        updateLikesQuantityButton(
+            `#book-card__likes-quantity\\:${id}`,
+            'decrement'
+        );
+    }
+
+    buttonEl.removeAttribute('disabled');
+};
+
+export const likesQuantityButtonClickHandler = async (e) => {
+    const id = e.currentTarget.id.split(':')[1];
+
+    displayListModal('Likes');
+
+    const likes = await getLikes(id);
+
+    if (!likes) {
+        return hideListModal();
+    }
+
+    updateLikesQuantityButton(
+        `#book-card__likes-quantity\\:${id}`,
+        null,
+        likes.length
+    );
+    renderListData(likes);
+};
+
+const updateLikesQuantityButton = (buttonSelector, action, value) => {
+    const buttonEl = document.querySelector(buttonSelector);
+    let likesQuantity = +buttonEl.textContent.split(' ')[0];
+
+    if (!value) {
+        if (action === 'increment') {
+            ++likesQuantity;
+        }
+
+        if (action === 'decrement') {
+            --likesQuantity;
+        }
+    } else {
+        likesQuantity === value;
+    }
+
+    buttonEl.textContent = `${likesQuantity} Like${
+        likesQuantity > 1 || likesQuantity === 0 ? 's' : ''
+    }`;
+};
+
+const changeLikeButtonState = (buttonSelector, newState) => {
+    const buttonEl = document.querySelector(buttonSelector);
+
+    if (newState === 'liked') {
+        buttonEl.innerHTML = '<i class="fa-solid fa-thumbs-up"></i> Liked';
+        buttonEl.classList.add('like-button--selected');
+        buttonEl.dataset.action = 'unlike';
+        buttonEl.removeEventListener('click', likeButtonClickHandler);
+        buttonEl.addEventListener('click', unlikeButtonClickHandler);
+    }
+
+    if (newState === 'like') {
+        buttonEl.innerHTML = '<i class="fa-solid fa-thumbs-up"></i> Like';
+        buttonEl.classList.remove('like-button--selected');
+        buttonEl.dataset.action = 'like';
+        buttonEl.removeEventListener('click', unlikeButtonClickHandler);
+        buttonEl.addEventListener('click', likeButtonClickHandler);
+    }
+};
 
 export const renderFeedBooks = (books) => {
     let html = '';
@@ -128,8 +227,8 @@ export const renderFeedBooks = (books) => {
                 <div id="full-book__dropdown:${book._id}" class="full-book__dropdown">
                     <button id="full-book__dropdown-button:${book._id}" class="book-card__button full-book__dropdown-button"><i class="fas fa-ellipsis-h"></i></button>
                     <ul class="dropdown-menu full-book__dropdown-menu">
-                        <li><a href="/books/${book._id}/edit">Edit</a></li>
-                        <li><a class="full-book__book-delete-button" role="button">Delete</a></li>
+                        <li><a href="${book.user.username}/books/${book._id}/edit">Edit</a></li>
+                        <li><a id="full-book__book-delete-button:${book._id}" class="full-book__book-delete-button" role="button">Delete</a></li>
                     </ul>
                 </div>
             `;
@@ -149,15 +248,17 @@ export const renderFeedBooks = (books) => {
             return u.toString() === loggedInUserId;
         });
 
-        const likeButton = `<button data-book-id="${
+        const likeButton = `<button id="like-button:${
             book._id
         }" class="button-light button-small like-button ${
             likedBook ? 'like-button--selected' : ''
+        }" data-action="${
+            likedBook ? 'unlike' : 'like'
         }"><i class="fa-solid fa-thumbs-up"></i> ${
             likedBook ? 'Liked' : 'Like'
         }</button>`;
 
-        const likesQuantity = `<p data-book-id="${
+        const likesQuantity = `<p id="book-card__likes-quantity:${
             book._id
         }" class="book-card__likes-quantity">${book.likedBy.length} Like${
             book.likedBy.length > 1 || book.likedBy.length === 0 ? 's' : ''
@@ -165,7 +266,7 @@ export const renderFeedBooks = (books) => {
 
         html +=
             `
-            <div class="book-card full-book feed__book">
+            <div id="full-book:${book._id}" class="book-card full-book feed__book">
                 <section class="full-book__header"><a class="full-book__user" href="/">
                     <a class="full-book__user" href="/${book.user.username}">
                         <img class="user-photo full-book__user-photo" src="/images/users/${book.user.profilePhoto}"/>
@@ -207,6 +308,4 @@ export const renderFeedBooks = (books) => {
     if (feedBooksEl) {
         feedBooksEl.insertAdjacentHTML('beforeend', html);
     }
-
-    console.log('[renderFeedBooks]', books);
 };

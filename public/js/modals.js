@@ -6,19 +6,15 @@ export const hideListModal = () => {
     document.querySelector('.list-modal__list').innerHTML = '';
 };
 
-export const displayListModal = async (heading, callback) => {
+export const displayListModal = async (heading) => {
     const modalHeading = document.querySelector('.list-modal__heading');
     modalHeading.textContent = heading;
 
     loadingSpinnerEl.classList.add('loading-spinner--active');
     listModalEl.classList.add('list-modal--active');
-
-    const data = await callback();
-
-    renderListData(data);
 };
 
-const renderListData = (data) => {
+export const renderListData = (data) => {
     let html = '';
 
     for (let item of data) {

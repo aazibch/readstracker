@@ -38,6 +38,10 @@ const getFollowing = async (userId) => {
     return following;
 };
 
+exports.redirectToProfile = catchAsync(async (req, res, next) => {
+    res.redirect(302, `/${req.user.username}`);
+});
+
 exports.getProfile = catchAsync(async (req, res, next) => {
     const viewData = {
         title: `${req.params.username}'s Profile | ReadsTracker`,
@@ -140,6 +144,15 @@ exports.getBook = catchAsync(async (req, res, next) => {
     res.status(200).render('book', {
         title: 'ReadsTracker',
         book
+    });
+});
+
+exports.getAddBookPage = catchAsync(async (req, res, next) => {
+    if (req.user.username !== req.params.username)
+        return next(new AppError('Route not found.', 404));
+
+    res.status(200).render('addBook', {
+        title: 'ReadsTracker | Add Book'
     });
 });
 
