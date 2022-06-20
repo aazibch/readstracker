@@ -296,6 +296,15 @@
     }
 
     &__date-added {
+        &:link, &:visited, &:active {
+            color: $secondary-color;
+            text-decoration: none;
+        }
+
+        &:hover {
+            text-decoration: underline;
+        }
+
         margin-bottom: 0;
     }
 
@@ -310,8 +319,9 @@
         margin-top: 1rem;
         display: flex;
         align-items: flex-end;
+
         p {
-            margin: 0.2rem;
+            margin-bottom: 0.25rem;
         }
     }
 
@@ -735,21 +745,6 @@
 @media (max-width: 767.98px) {
     .column {
         flex-basis: 50%;
-    }
-}
-
-@media (max-width: 899.98px) {
-    .books__container {
-        .column {
-            flex-basis: 50%;
-        }
-    }
-}
-
-@media (max-width: 575.98px) {
-    .column,
-    .books__container .column {
-        flex-basis: 100%;
     }
 }
 

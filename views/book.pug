@@ -1,5 +1,5 @@
 extends base
-include mixins/_usersListItem
+include mixins/_fullBookCard
 
 block content
     -
@@ -9,66 +9,53 @@ block content
         if (user) {
             loggedInUsersBook = user.username === book.user.username;
         }
-    
-    .modal.list-modal.likes-list-modal
-        .modal__dialog
-            .modal__content.list-modal__content
-                .modal__header
-                    h3.list-modal__heading Likes
-                    button.modal__close-button.list-modal__close-button &#10005;
-                if (book.likedBy.length > 0)
-                    .list-modal__list
-                        each item in book.likedBy
-                            +usersListItem(item)
-                else
-                    p.list-modal__message Nothing to show.
-                    
-
     .page-container
-        .book-card.full-book(data-id=book._id)
-            section.full-book__header
-                a(href=`/users/${book.user.username}`).full-book__user
-                    img.user-photo.full-book__user-photo(src=`/images/users/${book.user.profilePhoto}`)
-                    | #{book.user.username}
-                if (loggedInUsersBook)
-                    div(id=`full-book__dropdown:${book._id}`).full-book__dropdown
-                        button(id=`full-book__dropdown-button:${book._id}`).book-card__button.full-book__dropdown-button <i class="fas fa-ellipsis-h"></i>
-                        ul.dropdown-menu.full-book__dropdown-menu
-                            li
-                                a(href=`/${book.user.username}/books/${book._id}/edit`) Edit
-                            li
-                                a(id=`full-book__book-delete-button:${book._id}` role='button').full-book__book-delete-button Delete
-            section.book-card__info
-                p.book-card__title=book.title
-                p.book-card__author-line
-                    | by 
-                    span.book__author= book.author
-                .book-card__rating
-                    each star in [1, 2, 3, 4, 5]
-                        i(class=`far fa-star ${star <= book.rating ? 'star-highlighted' : '' }`)
-                .book-card__secondary-data
-                    .book-card__secondary-data-content-1
-                        p.book-card__genre= book.genre
-                        p.book-card__date-added= book.dateCreated.toLocaleString('en-us', {day: '2-digit', weekday: 'short', month: 'long', year: 'numeric'})
-            section.book-card__likes
-                    -
-                        const bookLiked = book.likedBy.some(u => u._id.toString() === user._id.toString());
-                        console.log('[book.pug]', { bookLiked })
+        +fullBookCard(book)
+
+        //- .book-card.full-book(data-id=book._id)
+        //-     section.full-book__header
+        //-         a(href=`/users/${book.user.username}`).full-book__user
+        //-             img.user-photo.full-book__user-photo(src=`/images/users/${book.user.profilePhoto}`)
+        //-             | #{book.user.username}
+        //-         if (loggedInUsersBook)
+        //-             div(id=`full-book__dropdown:${book._id}`).full-book__dropdown
+        //-                 button(id=`full-book__dropdown-button:${book._id}`).book-card__button.full-book__dropdown-button <i class="fas fa-ellipsis-h"></i>
+        //-                 ul.dropdown-menu.full-book__dropdown-menu
+        //-                     li
+        //-                         a(href=`/${book.user.username}/books/${book._id}/edit`) Edit
+        //-                     li
+        //-                         a(id=`full-book__book-delete-button:${book._id}` role='button').full-book__book-delete-button Delete
+        //-     section.book-card__info
+        //-         p.book-card__title=book.title
+        //-         p.book-card__author-line
+        //-             | by 
+        //-             span.book__author= book.author
+        //-         .book-card__rating
+        //-             each star in [1, 2, 3, 4, 5]
+        //-                 i(class=`far fa-star ${star <= book.rating ? 'star-highlighted' : '' }`)
+        //-         .book-card__secondary-data
+        //-             .book-card__secondary-data-content-1
+        //-                 p.book-card__genre= book.genre
+        //-                 p.book-card__date-added= book.dateCreated.toLocaleString('en-us', {day: '2-digit', weekday: 'short', month: 'long', year: 'numeric'})
+        //-     section.book-card__likes
+        //-             -
+        //-                 const bookLiked = book.likedBy.some(u => u._id.toString() === user._id.toString());
+        //-                 console.log('[book.pug]', { bookLiked })
                         
-                        const buttonClasses = ['button-light', 'button-small', 'like-button'];
-                        let buttonValue = 'Like';
-                        let buttonAction = 'like';
+        //-                 const buttonClasses = ['button-light', 'button-small', 'like-button'];
+        //-                 let buttonValue = 'Like';
+        //-                 let buttonAction = 'like';
 
-                        if (bookLiked) {
-                            buttonClasses.push('like-button--selected');
-                            buttonValue = 'Liked'
-                            buttonAction = 'unlike';
-                        }
+        //-                 if (bookLiked) {
+        //-                     buttonClasses.push('like-button--selected');
+        //-                     buttonValue = 'Liked'
+        //-                     buttonAction = 'unlike';
+        //-                 }
 
-                    if (user)
-                        button(id=`like-button:${book._id}` data-action=buttonAction class=buttonClasses.join(' ')) <i class="fa-solid fa-thumbs-up"></i> #{buttonValue}
-                    - const likesQuantity = book.likedBy.length;
-                    p(id=`book-card__likes-quantity:${book._id}`).book-card__likes-quantity= `${likesQuantity} Like${likesQuantity > 1 || likesQuantity === 0 ? 's' : ''}`
+        //-             if (user)
+        //-                 button(id=`like-button:${book._id}` data-action=buttonAction class=buttonClasses.join(' ')) <i class="fa-solid fa-thumbs-up"></i> #{buttonValue}
+        //-             - const likesQuantity = book.likedBy.length;
+        //-             p(id=`book-card__likes-quantity:${book._id}`).book-card__likes-quantity= `${likesQuantity} Like${likesQuantity > 1 || likesQuantity === 0 ? 's' : ''}`
             
             //- section.full-book__notes
             //-     each note in book.notes

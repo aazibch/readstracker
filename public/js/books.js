@@ -39,16 +39,10 @@ export const deleteBook = catchAsync(async (bookId, bookEl) => {
         method: 'DELETE'
     });
 
-    if (bookEl) bookEl.remove();
-
     // Response with status code 204 don't return a response, therefore I'm hardcoding it.
     displayAlert('success', 'Book was deleted successfully.');
 
-    if (!bookEl) {
-        setTimeout(() => {
-            location.assign('/');
-        }, 1500);
-    }
+    return response;
 });
 
 export const likeBook = catchAsync(async (bookId) => {
@@ -111,8 +105,10 @@ export const bookDeleteButtonClickHandler = (e) => {
 
     displayConfirmationModal(
         'Are you sure you want to delete the book?',
-        () => {
-            deleteBook(id, bookEl);
+        async () => {
+            const res = await deleteBook(id);
+
+            if (res && bookEl) bookEl.remove();
         }
     );
 };
@@ -215,6 +211,36 @@ const changeLikeButtonState = (buttonSelector, newState) => {
     }
 };
 
+export const attachBooksEventListeners = () => {
+    document
+        .querySelectorAll('.full-book__dropdown')
+        .forEach((el) =>
+            el.addEventListener('click', bookDropdownButtonClickHandler)
+        );
+
+    document
+        .querySelectorAll('.full-book__book-delete-button')
+        .forEach((el) => {
+            el.addEventListener('click', bookDeleteButtonClickHandler);
+        });
+
+    document
+        .querySelectorAll('.like-button[data-action="like"]')
+        .forEach((el) => {
+            el.addEventListener('click', likeButtonClickHandler);
+        });
+
+    document
+        .querySelectorAll('.like-button[data-action="unlike"]')
+        .forEach((el) => {
+            el.addEventListener('click', unlikeButtonClickHandler);
+        });
+
+    document.querySelectorAll('.book-card__likes-quantity').forEach((el) => {
+        el.addEventListener('click', likesQuantityButtonClickHandler);
+    });
+};
+
 export const renderFeedBooks = (books) => {
     let html = '';
     const loggedInUserId = localStorage.getItem('userId');
@@ -283,14 +309,16 @@ export const renderFeedBooks = (books) => {
                     <div class="book-card__secondary-data">
                         <div class="book-card__secondary-data-content-1">
                             <p class="book-card__genre">${book.genre}</p>
-                            <p class="book-card__date-added">${new Date(
-                                book.dateCreated
-                            ).toLocaleString('en-us', {
-                                day: '2-digit',
-                                weekday: 'short',
-                                month: 'long',
-                                year: 'numeric'
-                            })}</p>
+                            <a href="/${book.user.username}/books/${
+                book._id
+            }}" class="book-card__date-added">${new Date(
+                book.dateCreated
+            ).toLocaleString('en-us', {
+                day: '2-digit',
+                weekday: 'short',
+                month: 'long',
+                year: 'numeric'
+            })}</a>
                         </div>
                     </div>
                 </section>

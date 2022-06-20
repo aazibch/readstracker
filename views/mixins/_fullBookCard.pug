@@ -1,11 +1,11 @@
-mixin fullBookCard(book, profile)
-    div(id=`full-book:${book._id}` class='book-card full-book feed__book')
+mixin fullBookCard(book, bookOwner)
+    div(id=`full-book:${book._id}` class='book-card full-book')
         section.full-book__header
-            a.full-book__user(href=`/${profile.username}`)
-                img.user-photo.full-book__user-photo(src=`/images/users/${profile.profilePhoto}`)
-                | #{profile.username}
-            if (book.user.toString() === user._id.toString())
-                .full-book__dropdown(id='full-book__dropdown:${book._id}')
+            a.full-book__user(href=`/${book.user.username}`)
+                img.user-photo.full-book__user-photo(src=`/images/users/${book.user.profilePhoto}`)
+                | #{book.user.username}
+            if (book.user._id && book.user._id.toString() === user._id.toString())
+                .full-book__dropdown(id=`full-book__dropdown:${book._id}`)
                     button.book-card__button.full-book__dropdown-button(id=`full-book__dropdown-button:${book._id}`)
                         i.fas.fa-ellipsis-h
                     ul.dropdown-menu.full-book__dropdown-menu
@@ -24,7 +24,7 @@ mixin fullBookCard(book, profile)
             .book-card__secondary-data
                 .book-card__secondary-data-content-1
                     p.book-card__genre= book.genre
-                    p.book-card__date-added= book.dateCreated.toLocaleString('en-us', {day: '2-digit', weekday: 'short', month: 'long', year: 'numeric'})
+                    a(href=`/${book.user.username}/books/${book._id}`).book-card__date-added= book.dateCreated.toLocaleString('en-us', {day: '2-digit', weekday: 'short', month: 'long', year: 'numeric'})
         section.book-card__likes
             -
                 const likedBook = book.likedBy.some((u) => {

@@ -24,6 +24,10 @@ const notificationSchema = new mongoose.Schema({
     unread: {
         type: Boolean,
         default: true
+    },
+    link: {
+        type: String,
+        required: true
     }
 });
 

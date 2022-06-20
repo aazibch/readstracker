@@ -20,7 +20,8 @@ import {
     bookDeleteButtonClickHandler,
     likeButtonClickHandler,
     unlikeButtonClickHandler,
-    likesQuantityButtonClickHandler
+    likesQuantityButtonClickHandler,
+    attachBooksEventListeners
 } from './books';
 import {
     updateUser,
@@ -192,35 +193,7 @@ if (feedBooksEl) {
     getFeedBooks().then((books) => {
         renderFeedBooks(books);
 
-        document
-            .querySelectorAll('.full-book__dropdown')
-            .forEach((el) =>
-                el.addEventListener('click', bookDropdownButtonClickHandler)
-            );
-
-        document
-            .querySelectorAll('.full-book__book-delete-button')
-            .forEach((el) => {
-                el.addEventListener('click', bookDeleteButtonClickHandler);
-            });
-
-        document
-            .querySelectorAll('.like-button[data-action="like"]')
-            .forEach((el) => {
-                el.addEventListener('click', likeButtonClickHandler);
-            });
-
-        document
-            .querySelectorAll('.like-button[data-action="unlike"]')
-            .forEach((el) => {
-                el.addEventListener('click', unlikeButtonClickHandler);
-            });
-
-        document
-            .querySelectorAll('.book-card__likes-quantity')
-            .forEach((el) => {
-                el.addEventListener('click', likesQuantityButtonClickHandler);
-            });
+        attachBooksEventListeners();
 
         feedLoadingSpinnerEl.classList.remove('loading-spinner--active');
     });
@@ -241,6 +214,8 @@ const followButtonEl = document.querySelector(
 const unfollowButtonEl = document.querySelector(
     '.connect-buttons__unfollow-button'
 );
+
+attachBooksEventListeners();
 
 if (followersButtonEl) {
     followersButtonEl.addEventListener('click', async (e) => {
@@ -594,9 +569,21 @@ const editBookFormEl = document.querySelector('.edit-book-form');
 const likesQuantityEl = document.querySelector('.book-card__likes-quantity');
 const likeButtonEl = document.querySelector('.like-button');
 const ratingInput = document.querySelector('.form__stars');
-const bookDropdownButton = document.querySelector(
-    '.full-book__dropdown-button'
-);
+// const bookDropdownButtons = document.querySelectorAll(
+//     '.full-book__dropdown-button'
+// );
+
+// const bookDeleteButtons = document.querySelectorAll(
+//     '.full-book__book-delete-button'
+// );
+
+// bookDeleteButtons.forEach((elem) =>
+//     elem.addEventListener('click', bookDeleteButtonClickHandler)
+// );
+
+// bookDropdownButtons.forEach((elem) =>
+//     elem.addEventListener('click', bookDropdownButtonClickHandler)
+// );
 
 if (bookFormEl) {
     bookFormEl.addEventListener('submit', async (e) => {
@@ -675,25 +662,6 @@ if (ratingInput) {
     ratingInput.addEventListener('mouseover', ratingMouseOverHandler);
     ratingInput.addEventListener('mouseleave', ratingMouseLeaveHandler);
     ratingInput.addEventListener('click', ratingClickHandler);
-}
-
-if (fullBookEl) {
-    bookDropdownButton.addEventListener(
-        'click',
-        bookDropdownButtonClickHandler
-    );
-
-    document
-        .querySelector('.full-book__book-delete-button')
-        .addEventListener('click', bookDeleteButtonClickHandler);
-}
-
-if (likesQuantityEl) {
-    likesQuantityEl.addEventListener('click', likesQuantityButtonClickHandler);
-}
-
-if (likeButtonEl) {
-    likeButtonEl.addEventListener('click', likeButtonClickHandler);
 }
 
 // end of books

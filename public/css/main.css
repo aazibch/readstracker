@@ -240,6 +240,13 @@
 .book-card__date-added {
   margin-bottom: 0;
 }
+.book-card__date-added:link, .book-card__date-added:visited, .book-card__date-added:active {
+  color: #4d5156;
+  text-decoration: none;
+}
+.book-card__date-added:hover {
+  text-decoration: underline;
+}
 .book-card__bottom-content {
   display: flex;
   align-items: bottom;
@@ -252,7 +259,7 @@
   align-items: flex-end;
 }
 .book-card__secondary-data p {
-  margin: 0.2rem;
+  margin-bottom: 0.25rem;
 }
 .book-card__secondary-data-content-2 {
   margin-left: auto;
@@ -593,17 +600,6 @@
 @media (max-width: 767.98px) {
   .column {
     flex-basis: 50%;
-  }
-}
-@media (max-width: 899.98px) {
-  .books__container .column {
-    flex-basis: 50%;
-  }
-}
-@media (max-width: 575.98px) {
-  .column,
-.books__container .column {
-    flex-basis: 100%;
   }
 }
 @media (max-width: 994.98px) {

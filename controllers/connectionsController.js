@@ -37,7 +37,6 @@ exports.createConnection = catchAsync(async (req, res, next) => {
         following: req.body.following
     });
 
-    // @todo add as part of mongoose hook
     await Notification.create({
         sender: req.user._id,
         recipient: req.body.following,

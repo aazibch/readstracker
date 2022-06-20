@@ -59,6 +59,7 @@ router.get(
 router.get(
     '/:username/books/:id',
     authController.isLoggedIn,
+    userController.updateNotifications,
     viewsController.getBook
 );
 

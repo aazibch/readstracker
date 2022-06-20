@@ -69,7 +69,6 @@ block content
             .message.no-books-message
                 p No books to show.
         else
-            .books__container.books-grid
-                .books-grid-sizer
+            .profile-books
                 each book in profile.books
-                    +fullBookCard(book, profile)
+                    +fullBookCard(book, user)

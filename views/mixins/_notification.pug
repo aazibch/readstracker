@@ -1,7 +1,7 @@
 mixin notification(data)
     li.notification
         -
-            let anchorTagLink = `/${data.sender.username}`;
+            let anchorTagLink = data.link;
 
             if (data.unread) anchorTagLink += `?notifId=${data._id}`;
         a(href= anchorTagLink)

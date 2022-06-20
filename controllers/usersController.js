@@ -8,7 +8,12 @@ const Notification = require('../models/notificationModel');
 
 exports.getLoggedInUserDoc = async (userId) => {
     const user = await User.findById(userId)
-        .populate('books')
+        .populate({
+            path: 'books',
+            populate: {
+                path: 'user'
+            }
+        })
         .populate({
             path: 'notifications',
             populate: {

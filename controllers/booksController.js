@@ -1,5 +1,6 @@
 const Book = require('../models/bookModel');
 const Connection = require('../models/connectionModel');
+const Notification = require('../models/notificationModel');
 const catchAsync = require('../middleware/catchAsync');
 const AppError = require('../utils/appError');
 const ApiFeatures = require('../utils/apiFeatures');
@@ -79,7 +80,16 @@ exports.likeBook = catchAsync(async (req, res, next) => {
         req.params.id,
         { $push: { likedBy: req.user._id } },
         { new: true }
-    );
+    ).populate({ path: 'user', select: 'username' });
+
+    if (book.user._id.toString() !== req.user._id.toString()) {
+        await Notification.create({
+            sender: req.user._id,
+            recipient: book.user._id,
+            content: `[username] liked the book ${book.title}.`,
+            link: `/${book.user.username}/books/${book._id}`
+        });
+    }
 
     res.status(200).json({
         status: 'success',
