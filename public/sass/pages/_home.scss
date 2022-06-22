@@ -1,4 +1,4 @@
-.home {
+.home-logged-out {
     display: flex;
     height: 100%;
 }
@@ -69,6 +69,7 @@
     }
 }
 
-.feed__book {
-    margin: 1.5rem auto 1.5rem;
+.home-logged-in-content {
+    max-width: 70rem;
+    margin: 0 auto;
 }

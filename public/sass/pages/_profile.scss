@@ -1,8 +1,6 @@
 .profile-header {
     text-align: center;
     padding: 3rem 1rem;
-    margin-bottom: 3rem;
-
     border-bottom: 1px solid $generic-border-color;
 
     .user-photo {
@@ -33,7 +31,6 @@
     p {
         display: inline-block;
         margin-right: 1rem;
-        // cursor: pointer;
     }
 }
 
@@ -68,16 +65,12 @@
     }
 }
 
-.books {
-    margin: 0 auto 4.5rem;
+.profile-body {
     max-width: 70rem;
-    padding: 1rem;
+    margin: 0 auto;
+}
 
-    &__container {
-        margin-left: -0.25rem;
-        margin-right: -0.25rem;
-    }
-
+.profile-books {
     &__buttons-container {
         display: flex;
         margin-bottom: 1rem;
@@ -88,49 +81,6 @@
     }
 }
 
-.books-grid-sizer,
-.books-grid-item {
-    box-sizing: border-box;
-    width: 25%;
-
-}
-
-.books-grid-item {
-    padding: 0.25rem;
-}
-
-.profile-book-card {
-    &__link {
-        text-decoration: none;
-        color: inherit;
-    }
-}
-
-.no-books-message {
-    margin-top: 9rem;
-    margin-bottom: 9rem;
-}
-
-// Medium devices (tablets, less than 992px)
-@media (max-width: 991.98px) {
-    .books-grid-sizer,
-    .books-grid-item {
-        width: 33.33%;
-    }
-}
-
-// Small devices (landscape phones, less than 768px)
-@media (max-width: 767.98px) {
-    .books-grid-sizer,
-    .books-grid-item {
-        width: 50%;    
-    }
-}
-
-// `sm` applies to x-small devices (portrait phones, less than 576px)
-@media (max-width: 575.98px) {
-    .books-grid-sizer,
-    .books-grid-item {
-        width: 100%;    
-    }
+.profile-book {
+    margin: 1.5rem auto 1.5rem;
 }

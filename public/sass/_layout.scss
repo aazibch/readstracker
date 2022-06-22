@@ -127,12 +127,12 @@ main {
     &__dropdown {
         background: #fff;
         border: 1px solid $generic-border-color;
-        border-bottom-left-radius: 5px;
-        border-bottom-right-radius: 5px;
+        border-radius: 5px;
         position: absolute;
         left: 0;
         right: 0;
         display: none;
+        overflow: hidden;
     }
 
     &__spinner {
@@ -187,15 +187,6 @@ main {
         &:hover {
             background-color: darken(#fff, 5%);
         }
-    
-        &:first-child {
-            border-radius: 5px 5px 0 0;
-        }
-    
-        &:last-child {
-            border-radius: 0 0 5px 5px;
-            // border-bottom-style: none;
-        }
 
         a {
             padding: 1rem;
@@ -210,6 +201,8 @@ main {
             }
         }
     }
+
+    overflow: hidden;
 }
 
 .user-menu {
@@ -251,7 +244,7 @@ main {
     }
 
     &__data {
-        flex: 1 0 auto;
+        flex: 0 0 14rem;
     }
 
     &__profile-photo {

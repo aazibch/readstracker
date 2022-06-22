@@ -206,11 +206,62 @@
   color: #ffa500;
 }
 
+.like-button--selected {
+  color: #4a4a4a;
+}
+
 .book-card {
   box-shadow: 0px 2px 7px 0px rgba(191, 189, 191, 0.63);
   background: #fff;
   box-sizing: border-box;
   border-radius: 5px;
+  margin: 1.5rem auto 1.5rem;
+  max-width: 32.5rem;
+  box-shadow: 0px 2px 20px 0px rgba(191, 189, 191, 0.63);
+}
+.book-card__header {
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+}
+.book-card__dropdown {
+  position: relative;
+  margin-left: auto;
+}
+.book-card__dropdown-button {
+  margin-left: auto;
+}
+.book-card__dropdown-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 1.8rem;
+  list-style: none;
+}
+.book-card__dropdown-menu li a {
+  color: #4d5156;
+}
+.book-card__dropdown--active .book-card__dropdown-menu {
+  display: block;
+}
+.book-card__user {
+  display: flex;
+  align-items: center;
+}
+.book-card__user:link, .book-card__user:visited, .book-card__user:hover {
+  color: #212529;
+}
+.book-card__user:link {
+  text-decoration: none;
+}
+.book-card__user:hover {
+  text-decoration: underline;
+}
+.book-card__user img {
+  height: 50px;
+  width: 50px;
+  margin-right: 0.5rem;
 }
 .book-card__button {
   border-radius: 5px;
@@ -284,107 +335,12 @@
   justify-content: space-between;
 }
 
-.like-button--selected {
-  color: #4a4a4a;
-}
-
-.full-book {
-  margin: 4.5rem auto 4.5rem;
-  max-width: 32.5rem;
-  box-shadow: 0px 2px 20px 0px rgba(191, 189, 191, 0.63);
-}
-.full-book__header {
-  border-bottom: 1px solid #e0e0e0;
+.add-book-button-container {
   display: flex;
-  align-items: center;
-  padding: 0.5rem 1rem;
-}
-.full-book__dropdown {
-  position: relative;
-  margin-left: auto;
-}
-.full-book__dropdown-button {
-  margin-left: auto;
-}
-.full-book__dropdown-menu {
-  display: none;
-  position: absolute;
-  right: 0;
-  top: 1.8rem;
-  list-style: none;
-}
-.full-book__dropdown-menu li a {
-  color: #4d5156;
-}
-.full-book__dropdown--active .full-book__dropdown-menu {
-  display: block;
-}
-.full-book__user {
-  display: flex;
-  align-items: center;
-}
-.full-book__user:link, .full-book__user:visited, .full-book__user:hover {
-  color: #212529;
-}
-.full-book__user:link {
-  text-decoration: none;
-}
-.full-book__user:hover {
-  text-decoration: underline;
-}
-.full-book__user img {
-  height: 50px;
-  width: 50px;
-  margin-right: 0.5rem;
-}
-.full-book__note-input {
-  background: #f7f7f7;
-}
-.full-book__note-form {
-  padding: 1rem;
-  display: flex;
-}
-.full-book__new-note-body {
-  flex: 1 1 0;
-  margin-right: 0.5rem;
-  height: 1rem;
-  resize: none;
-  padding: 0.5rem;
-  border: 1px solid #e0e0e0;
-  border-radius: 5px;
-}
-.full-book__notes {
-  border-top: 1px solid #e0e0e0;
-  clear: both;
-  background: #f7f7f7;
-}
-.full-book__note {
-  border-bottom: 1px solid #e0e0e0;
-  padding: 1rem;
-  overflow: auto;
-}
-.full-book__note-content-1 {
-  display: flex;
+  margin-top: 3rem;
   margin-bottom: 1rem;
 }
-.full-book__note-body {
-  font-size: 0.95rem;
-}
-.full-book__note-delete-button {
-  color: #4d5156;
-  margin-left: auto;
-  height: 1.8rem;
-}
-.full-book__note-date {
-  float: right;
-  font-size: 0.75rem;
-  color: #4d5156;
-}
-.full-book .book-card__secondary-data {
-  flex-direction: row;
-  align-items: flex-end;
-}
-.full-book .book-card__secondary-data-content-2 {
+.add-book-button-container a {
   margin-left: auto;
 }
 
@@ -501,10 +457,6 @@
   color: #212529;
   text-decoration: none;
 }
-.users-list__item:last-child {
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-}
 .users-list__item:hover {
   background: #f2f2f2;
 }
@@ -512,10 +464,6 @@
   width: 35px;
   height: auto;
   margin-right: 0.5rem;
-}
-.users-list__books {
-  color: #4d5156;
-  font-size: 0.7rem;
 }
 
 .list-modal {
@@ -770,12 +718,12 @@ main {
 .search-users__dropdown {
   background: #fff;
   border: 1px solid #e0e0e0;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
+  border-radius: 5px;
   position: absolute;
   left: 0;
   right: 0;
   display: none;
+  overflow: hidden;
 }
 .search-users__spinner {
   display: none;
@@ -815,6 +763,7 @@ main {
   border-radius: 5px;
   background: #fff;
   z-index: 100;
+  overflow: hidden;
 }
 .main-nav__dropdown li {
   border-bottom: 1px solid #e0e0e0;
@@ -822,12 +771,6 @@ main {
 }
 .main-nav__dropdown li:hover {
   background-color: #f2f2f2;
-}
-.main-nav__dropdown li:first-child {
-  border-radius: 5px 5px 0 0;
-}
-.main-nav__dropdown li:last-child {
-  border-radius: 0 0 5px 5px;
 }
 .main-nav__dropdown li a {
   padding: 1rem;
@@ -870,7 +813,7 @@ main {
   align-items: center;
 }
 .notification__data {
-  flex: 1 0 auto;
+  flex: 0 0 14rem;
 }
 .notification__profile-photo {
   width: 55px;
@@ -998,7 +941,7 @@ main {
     margin-left: 0;
   }
 }
-.home {
+.home-logged-out {
   display: flex;
   height: 100%;
 }
@@ -1057,8 +1000,9 @@ main {
   display: none;
 }
 
-.feed__book {
-  margin: 1.5rem auto 1.5rem;
+.home-logged-in-content {
+  max-width: 70rem;
+  margin: 0 auto;
 }
 
 .login-form-container {
@@ -1097,7 +1041,6 @@ main {
 .profile-header {
   text-align: center;
   padding: 3rem 1rem;
-  margin-bottom: 3rem;
   border-bottom: 1px solid #e0e0e0;
   background-color: #fff;
 }
@@ -1148,61 +1091,23 @@ main {
 .connect-buttons__unfollow-button {
   margin-right: 0.5rem;
 }
-.books {
-  margin: 0 auto 4.5rem;
+.profile-body {
   max-width: 70rem;
-  padding: 1rem;
+  margin: 0 auto;
 }
-.books__container {
-  margin-left: -0.25rem;
-  margin-right: -0.25rem;
-}
-.books__buttons-container {
+
+.profile-books__buttons-container {
   display: flex;
   margin-bottom: 1rem;
 }
-.books__add-book-button {
+.profile-books__add-book-button {
   margin-left: auto;
 }
 
-.books-grid-sizer,
-.books-grid-item {
-  box-sizing: border-box;
-  width: 25%;
+.profile-book {
+  margin: 1.5rem auto 1.5rem;
 }
 
-.books-grid-item {
-  padding: 0.25rem;
-}
-
-.profile-book-card__link {
-  text-decoration: none;
-  color: inherit;
-}
-
-.no-books-message {
-  margin-top: 9rem;
-  margin-bottom: 9rem;
-}
-
-@media (max-width: 991.98px) {
-  .books-grid-sizer,
-.books-grid-item {
-    width: 33.33%;
-  }
-}
-@media (max-width: 767.98px) {
-  .books-grid-sizer,
-.books-grid-item {
-    width: 50%;
-  }
-}
-@media (max-width: 575.98px) {
-  .books-grid-sizer,
-.books-grid-item {
-    width: 100%;
-  }
-}
 .settings-details-form {
   border-top: 1px solid #e0e0e0;
 }

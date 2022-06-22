@@ -1,34 +1,7 @@
 .page-container
-    .feed
-        .feed__books
-            //- .book-card.full-book.feed__book
-            //- section.full-book__header
-            //-     a(href='/').full-book__user
-            //-         img.user-photo.full-book__user-photo(src=`/images/users/default.jpg`)
-            //-         | John Doe
-            //-     .full-book__dropdown
-            //-         button.book-card__button.full-book__dropdown-button <i class="fas fa-ellipsis-h"></i>
-            //-         ul.dropdown-menu.full-book__dropdown-menu
-            //-             li
-            //-                 a(href=`/books/edit`) Edit
-            //-             li
-            //-                 a.full-book__book-delete-button(role='button') Delete
-            //- section.book-card__info
-            //-     p.book-card__title Sample Book
-            //-     p.book-card__author-line
-            //-         | by 
-            //-         span.book__author J. K. Rowling
-            //-     .book-card__rating
-            //-         i(class='far fa-star star-highlighted')
-            //-         i(class='far fa-star')
-            //-         i(class='far fa-star')
-            //-         i(class='far fa-star')
-            //-         i(class='far fa-star')
-            //-     .book-card__secondary-data
-            //-         .book-card__secondary-data-content-1
-            //-             p.book-card__genre Sci fi
-            //-             p.book-card__date-added June, 9, 1999
-            //- section.book-card__likes
-            //-         button.button-light.button-small.like-button <i class="fa-solid fa-thumbs-up"></i> Like
-            //-         p.book-card__likes-quantity 3 Likes
-        .feed__loading-spinner.loading-spinner
+    .home-logged-in-content
+        .add-book-button-container
+            a(href=`${user.username}/books/add`).button-primary Add Book
+        .feed.home-feed
+            .feed__books
+            .feed__loading-spinner.loading-spinner

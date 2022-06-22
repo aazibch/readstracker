@@ -1,5 +1,5 @@
 extends base
-include mixins/_fullBookCard
+include mixins/_bookCard
 
 block content
     -
@@ -10,7 +10,7 @@ block content
             loggedInUsersBook = user.username === book.user.username;
         }
     .page-container
-        +fullBookCard(book)
+        +bookCard(book)
 
         //- .book-card.full-book(data-id=book._id)
         //-     section.full-book__header

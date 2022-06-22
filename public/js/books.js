@@ -89,19 +89,19 @@ export const getFeedBooks = catchAsync(async () => {
 export const bookDropdownButtonClickHandler = (e) => {
     const id = e.currentTarget.id.split(':')[1];
     console.log('e.currentTarget.id', e.currentTarget);
-    const bookDropdown = document.querySelector(`#full-book__dropdown\\:${id}`);
+    const bookDropdown = document.querySelector(`#book-card__dropdown\\:${id}`);
 
     clearActiveClassOnAllElements(
-        'full-book__dropdown',
-        `full-book__dropdown:${id}`
+        'book-card__dropdown',
+        `book-card__dropdown:${id}`
     );
 
-    bookDropdown.classList.toggle('full-book__dropdown--active');
+    bookDropdown.classList.toggle('book-card__dropdown--active');
 };
 
 export const bookDeleteButtonClickHandler = (e) => {
     const id = e.currentTarget.id.split(':')[1];
-    const bookEl = document.querySelector(`#full-book\\:${id}`);
+    const bookEl = document.querySelector(`#book-card\\:${id}`);
 
     displayConfirmationModal(
         'Are you sure you want to delete the book?',
@@ -213,13 +213,13 @@ const changeLikeButtonState = (buttonSelector, newState) => {
 
 export const attachBooksEventListeners = () => {
     document
-        .querySelectorAll('.full-book__dropdown')
+        .querySelectorAll('.book-card__dropdown')
         .forEach((el) =>
             el.addEventListener('click', bookDropdownButtonClickHandler)
         );
 
     document
-        .querySelectorAll('.full-book__book-delete-button')
+        .querySelectorAll('.book-card__book-delete-button')
         .forEach((el) => {
             el.addEventListener('click', bookDeleteButtonClickHandler);
         });
@@ -250,11 +250,11 @@ export const renderFeedBooks = (books) => {
 
         if (loggedInUserId === book.user._id.toString()) {
             dropdownHtml = `
-                <div id="full-book__dropdown:${book._id}" class="full-book__dropdown">
-                    <button id="full-book__dropdown-button:${book._id}" class="book-card__button full-book__dropdown-button"><i class="fas fa-ellipsis-h"></i></button>
-                    <ul class="dropdown-menu full-book__dropdown-menu">
+                <div id="book-card__dropdown:${book._id}" class="book-card__dropdown">
+                    <button id="book-card__dropdown-button:${book._id}" class="book-card__button book-card__dropdown-button"><i class="fas fa-ellipsis-h"></i></button>
+                    <ul class="dropdown-menu book-card__dropdown-menu">
                         <li><a href="${book.user.username}/books/${book._id}/edit">Edit</a></li>
-                        <li><a id="full-book__book-delete-button:${book._id}" class="full-book__book-delete-button" role="button">Delete</a></li>
+                        <li><a id="book-card__book-delete-button:${book._id}" class="book-card__book-delete-button" role="button">Delete</a></li>
                     </ul>
                 </div>
             `;
@@ -292,10 +292,10 @@ export const renderFeedBooks = (books) => {
 
         html +=
             `
-            <div id="full-book:${book._id}" class="book-card full-book feed__book">
-                <section class="full-book__header">
-                    <a class="full-book__user" href="/${book.user.username}">
-                        <img class="user-photo full-book__user-photo" src="/images/users/${book.user.profilePhoto}"/>
+            <div id="book-card:${book._id}" class="book-card">
+                <section class="book-card__header">
+                    <a class="book-card__user" href="/${book.user.username}">
+                        <img class="user-photo book-card__user-photo" src="/images/users/${book.user.profilePhoto}"/>
                         ${book.user.username}
                     </a>` +
             dropdownHtml +

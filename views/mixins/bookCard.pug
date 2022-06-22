@@ -1,5 +1,5 @@
-mixin fullBookCard(book, bookOwner)
-    div(id=`full-book:${book._id}` class='book-card full-book')
+mixin bookCard(book, bookOwner)
+    div(id=`full-book:${book._id}` class='book-card')
         section.full-book__header
             a.full-book__user(href=`/${book.user.username}`)
                 img.user-photo.full-book__user-photo(src=`/images/users/${book.user.profilePhoto}`)

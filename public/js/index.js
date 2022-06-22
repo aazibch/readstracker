@@ -1,6 +1,5 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
-import Masonry from 'masonry-layout';
 import {
     ratingMouseOverHandler,
     ratingMouseLeaveHandler,
@@ -35,7 +34,7 @@ import {
     hideListModal,
     hideConfirmationModal
 } from './modals';
-import { search, hideSearchDropdown } from './search';
+import { searchUsersKeydownHandler, searchUsersKeyupHandler } from './search';
 import {
     createConversation,
     renderMessage,
@@ -59,7 +58,7 @@ import { removeActiveClasses } from './utils';
 const settingsDetailsForm = document.querySelector('.settings-details-form');
 const settingsPasswordForm = document.querySelector('.settings-password-form');
 const settingsDeleteButton = document.querySelector('.settings-delete-button');
-const searchUsersField = document.querySelector('.search-users__input-field');
+const searchUsersFieldEl = document.querySelector('.search-users__input-field');
 const confirmationModalNoButtonEl = document.querySelector(
     '.confirmation-modal__no-button'
 );
@@ -69,8 +68,6 @@ const confirmationModalCloseButtonEl = document.querySelector(
 const listModalCloseButtonEl = document.querySelector(
     '.list-modal__close-button'
 );
-
-const feedBooksEl = document.querySelector('.feed__books');
 
 const userId = localStorage.getItem('userId');
 
@@ -163,27 +160,28 @@ window.addEventListener('click', function (e) {
     ) {
         activeBookDropdownEl.classList.remove('full-book__dropdown--active');
     }
+
+    const activeSearchUsersEl = document.querySelector('.search-users--active');
+
+    if (
+        !e.target.closest('.search-users__quick-results') &&
+        !e.target.closest('.search-users') &&
+        activeSearchUsersEl
+    ) {
+        activeSearchUsersEl.classList.remove('search-users--active');
+    }
 });
 
-if (searchUsersField) {
-    let inputLength = 0;
-
-    searchUsersField.addEventListener('keydown', (e) => {
-        inputLength = e.target.value.length;
-    });
-
-    searchUsersField.addEventListener('keyup', (e) => {
-        if (e.target.value.length !== inputLength) {
-            if (e.target.value.length === 0) return hideSearchDropdown();
-
-            search(e.target.value);
-        }
-    });
+if (searchUsersFieldEl) {
+    searchUsersFieldEl.addEventListener('keydown', searchUsersKeydownHandler);
+    searchUsersFieldEl.addEventListener('keyup', searchUsersKeyupHandler);
 }
 
 // Home
 
-if (feedBooksEl) {
+const homeFeedEl = document.querySelector('.home-feed');
+
+if (homeFeedEl) {
     const feedLoadingSpinnerEl = document.querySelector(
         '.feed__loading-spinner'
     );
@@ -751,25 +749,3 @@ if (settingsDetailsForm) {
         );
     });
 }
-
-// end of settings
-
-// // Masonry.js
-// const initializeMasonry = () => {
-//     const booksGrid = document.querySelector('.books-grid');
-
-//     if (booksGrid) {
-//         new Masonry(booksGrid, {
-//             itemSelector: '.books-grid-item',
-//             columnWidth: '.books-grid-sizer',
-//             percentPosition: true
-//         });
-//     }
-// };
-
-// initializeMasonry();
-
-// // Reinitializing because the delay in loading font awesome messes up the layout.
-// setTimeout(initializeMasonry, 2000);
-
-// // End of Masonry.js config
