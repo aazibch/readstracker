@@ -4,7 +4,8 @@ import {
     displayConfirmationModal,
     displayListModal,
     hideListModal,
-    renderListData
+    renderListData,
+    renderNoContentMessage
 } from './modals';
 import { clearActiveClassOnAllElements } from './utils';
 import catchAsync from './catchAsync';
@@ -74,16 +75,16 @@ const getLikes = catchAsync(async (bookId) => {
         method: 'GET'
     });
 
-    return response.data.data;
+    return response;
 });
 
-export const getFeedBooks = catchAsync(async () => {
+export const getHomeFeedBooks = catchAsync(async () => {
     const response = await axios({
         url: `/api/v1/books/following/?page=1&limit=10&sort=-dateCreated`,
         method: 'GET'
     });
 
-    return response.data.data;
+    return response;
 });
 
 export const bookDropdownButtonClickHandler = (e) => {
@@ -156,18 +157,23 @@ export const likesQuantityButtonClickHandler = async (e) => {
 
     displayListModal('Likes');
 
-    const likes = await getLikes(id);
+    const response = await getLikes(id);
 
-    if (!likes) {
+    if (!response) {
         return hideListModal();
+    }
+
+    if (response.data.data.length === 0) {
+        renderNoContentMessage();
+    } else {
+        renderListData(likes);
     }
 
     updateLikesQuantityButton(
         `#book-card__likes-quantity\\:${id}`,
         null,
-        likes.length
+        response.data.data.length
     );
-    renderListData(likes);
 };
 
 const updateLikesQuantityButton = (buttonSelector, action, value) => {
@@ -241,7 +247,7 @@ export const attachBooksEventListeners = () => {
     });
 };
 
-export const renderFeedBooks = (books) => {
+export const renderHomeFeedBooks = (books) => {
     let html = '';
     const loggedInUserId = localStorage.getItem('userId');
 

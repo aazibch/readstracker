@@ -8,9 +8,11 @@ export const getFollowers = catchAsync(async (userId) => {
         method: 'GET'
     });
 
-    response = response.data.data.map((item) => {
-        return item[Object.keys(item)[1]];
-    });
+    if (response) {
+        response.data.data = response.data.data.map((item) => {
+            return item[Object.keys(item)[1]];
+        });
+    }
 
     return response;
 });
@@ -21,9 +23,11 @@ export const getAccountsFollowing = catchAsync(async (userId) => {
         method: 'GET'
     });
 
-    response = response.data.data.map((item) => {
-        return item[Object.keys(item)[1]];
-    });
+    if (response) {
+        response.data.data = response.data.data.map((item) => {
+            return item[Object.keys(item)[1]];
+        });
+    }
 
     return response;
 });

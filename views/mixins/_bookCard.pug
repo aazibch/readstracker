@@ -1,18 +1,18 @@
 mixin bookCard(book, bookOwner)
-    div(id=`full-book:${book._id}` class='book-card')
-        section.full-book__header
-            a.full-book__user(href=`/${book.user.username}`)
-                img.user-photo.full-book__user-photo(src=`/images/users/${book.user.profilePhoto}`)
+    div(id=`book-card:${book._id}` class='book-card')
+        section.book-card__header
+            a.book-card__user(href=`/${book.user.username}`)
+                img.user-photo.book-card__user-photo(src=`/images/users/${book.user.profilePhoto}`)
                 | #{book.user.username}
             if (book.user._id && book.user._id.toString() === user._id.toString())
-                .full-book__dropdown(id=`full-book__dropdown:${book._id}`)
-                    button.book-card__button.full-book__dropdown-button(id=`full-book__dropdown-button:${book._id}`)
+                .book-card__dropdown(id=`book-card__dropdown:${book._id}`)
+                    button.book-card__button.book-card__dropdown-button(id=`book-card__dropdown-button:${book._id}`)
                         i.fas.fa-ellipsis-h
-                    ul.dropdown-menu.full-book__dropdown-menu
+                    ul.dropdown-menu.book-card__dropdown-menu
                         li
                             a(href=`${book.user.username}/books/${book._id}/edit`) Edit
                         li
-                            a.full-book__book-delete-button(id=`full-book__book-delete-button:${book._id}` role='button') Delete
+                            a.book-card__book-delete-button(id=`book-card__book-delete-button:${book._id}` role='button') Delete
         section.book-card__info
             p.book-card__title= book.title
             p.book-card__author-line

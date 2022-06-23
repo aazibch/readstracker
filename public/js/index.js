@@ -13,8 +13,8 @@ import {
     deleteBook,
     likeBook,
     unlikeBook,
-    getFeedBooks,
-    renderFeedBooks,
+    getHomeFeedBooks,
+    renderHomeFeedBooks,
     bookDropdownButtonClickHandler,
     bookDeleteButtonClickHandler,
     likeButtonClickHandler,
@@ -28,7 +28,11 @@ import {
     updatePassword,
     clearPasswordInputFields
 } from './users';
-import { displayConfirmationModal, renderListData } from './modals';
+import {
+    displayConfirmationModal,
+    renderListData,
+    renderNoContentMessage
+} from './modals';
 import {
     displayListModal,
     hideListModal,
@@ -188,12 +192,31 @@ if (homeFeedEl) {
 
     feedLoadingSpinnerEl.classList.add('loading-spinner--active');
 
-    getFeedBooks().then((books) => {
-        renderFeedBooks(books);
-
-        attachBooksEventListeners();
-
+    getHomeFeedBooks().then((response) => {
         feedLoadingSpinnerEl.classList.remove('loading-spinner--active');
+
+        if (!response) {
+            return homeFeedEl.insertAdjacentHTML(
+                'afterbegin',
+                `
+                <p class='message-large'>An error occurred. Reload the page to try again.</p>
+            `
+            );
+        }
+
+        console.log('response', response);
+
+        if (response.data.data.length === 0) {
+            return homeFeedEl.insertAdjacentHTML(
+                'afterbegin',
+                `
+                <p class='message-large'>No books to show. Follow people to improve your experience.</p>
+            `
+            );
+        } else {
+            renderHomeFeedBooks(response.data.data);
+            attachBooksEventListeners();
+        }
     });
 }
 
@@ -219,15 +242,19 @@ if (followersButtonEl) {
     followersButtonEl.addEventListener('click', async (e) => {
         displayListModal('Followers');
 
-        const followers = await getFollowers(connectionsEl.dataset.userId);
+        const response = await getFollowers(connectionsEl.dataset.userId);
 
-        if (!followers) {
+        if (!response) {
             return hideListModal();
         }
 
+        if (response.data.data.length === 0) {
+            renderNoContentMessage();
+        }
+
         document.querySelector('.followers-count').textContent =
-            followers.length;
-        renderListData(followers);
+            response.data.data.length;
+        renderListData(response.data.data);
     });
 }
 
@@ -235,17 +262,21 @@ if (followingButtonEl) {
     followingButtonEl.addEventListener('click', async () => {
         displayListModal('Following');
 
-        const accountsFollowing = await getAccountsFollowing(
+        const response = await getAccountsFollowing(
             connectionsEl.dataset.userId
         );
 
-        if (!accountsFollowing) {
+        if (!response) {
             return hideListModal();
         }
 
+        if (response.data.data.length === 0) {
+            renderNoContentMessage();
+        }
+
         document.querySelector('.following-count').textContent =
-            accountsFollowing.length;
-        renderListData(accountsFollowing);
+            response.data.data.length;
+        renderListData(response.data.data);
     });
 }
 

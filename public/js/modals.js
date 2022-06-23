@@ -33,6 +33,20 @@ export const renderListData = (data) => {
     document.querySelector('.list-modal__list').innerHTML = html;
 };
 
+export const renderNoContentMessage = () => {
+    const listModalContentEl = document.querySelector('.list-modal__content');
+    const listModalLoadingSpinnerEl = document.querySelector(
+        '.list-modal__loading-spinner'
+    );
+
+    listModalContentEl.insertAdjacentHTML(
+        'beforeend',
+        '<p class="message"> Nothing to show.</p>'
+    );
+
+    listModalLoadingSpinnerEl.classList.remove('loading-spinner--active');
+};
+
 export function hideConfirmationModal() {
     const modalEl = document.querySelector('.confirmation-modal');
     modalEl.classList.remove('confirmation-modal--active');

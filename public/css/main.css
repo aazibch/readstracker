@@ -535,6 +535,16 @@
   border: 2px solid #999999;
 }
 
+.message, .message-large {
+  text-align: center;
+  margin: 5rem 0;
+  color: #555555;
+}
+
+.message-large {
+  font-size: 1.5rem;
+}
+
 .row {
   display: flex;
   flex-wrap: wrap;
@@ -941,7 +951,7 @@ main {
     margin-left: 0;
   }
 }
-.home-logged-out {
+.home-logged-out-content {
   display: flex;
   height: 100%;
 }
@@ -1287,10 +1297,10 @@ main {
   background: #f2f2f2;
 }
 
-.message {
+.message, .message-large {
   margin-bottom: 1rem;
 }
-.message:last-child {
+.message:last-child, .message-large:last-child {
   margin-bottom: 0;
 }
 .message__main {

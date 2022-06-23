@@ -33,8 +33,7 @@ block content
             if isOwn
                 a(href=`${user.username}/books/add`).button-primary Add Book
         if profile.books.length === 0
-            .message.no-books-message
-                p No books to show.
+            p.message-large No books to show.
         else
             .feed
                 .feed__books
