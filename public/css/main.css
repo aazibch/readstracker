@@ -666,7 +666,7 @@ main {
   text-decoration: none;
 }
 .header__container {
-  padding: 1rem 2rem;
+  padding: 1rem 1rem;
   display: flex;
   align-items: center;
 }
@@ -752,7 +752,6 @@ main {
 .main-nav__user-button {
   display: flex;
   align-items: center;
-  margin-left: 0.75rem;
 }
 .main-nav__user-button--active {
   opacity: 0.8;
@@ -842,7 +841,7 @@ main {
   }
 }
 .main-buttons {
-  margin-right: 1rem;
+  margin: 0 1rem;
 }
 .main-buttons a:link, .main-buttons a:visited, .main-buttons a:hover {
   font-size: 1.75rem;
@@ -854,10 +853,14 @@ main {
   font-size: 1.75rem;
   color: #4a4a4a;
 }
+.main-buttons__standard {
+  display: inline-block;
+  color: red;
+}
 .main-buttons__button-container {
   position: relative;
   display: inline-block;
-  margin-right: 1.5rem;
+  margin: 0 0.5rem;
 }
 .main-buttons__button-container:hover {
   opacity: 0.8;
@@ -885,6 +888,10 @@ main {
 
 .main-buttons__button-container-notifications--active {
   opacity: 0.8;
+}
+
+.main-buttons__button-container-search {
+  display: none;
 }
 
 .notification-indicator {
@@ -926,7 +933,7 @@ main {
   margin-left: auto;
 }
 
-@media (max-width: 767.98px) {
+@media (max-width: 991.98px) {
   .main-nav__username {
     display: none;
   }
@@ -949,6 +956,39 @@ main {
   }
   .copyright {
     margin-left: 0;
+  }
+}
+@media (max-width: 767.98px) {
+  .main-buttons__button-container-search {
+    display: inline-block;
+  }
+  .search-users {
+    display: none;
+  }
+  .search-users--res-active {
+    display: block;
+  }
+  .main-buttons__search .fa-xmark {
+    display: none;
+  }
+  .header--res-search-active .header__site-title {
+    display: none;
+  }
+  .header--res-search-active .main-buttons__standard {
+    display: none;
+  }
+  .header--res-search-active .main-nav__user-button {
+    display: none;
+  }
+  .header--res-search-active .search-users {
+    display: block;
+    margin-left: 0;
+  }
+  .header--res-search-active .fa-magnifying-glass {
+    display: none;
+  }
+  .header--res-search-active .fa-xmark {
+    display: inline;
   }
 }
 .home-logged-out-content {

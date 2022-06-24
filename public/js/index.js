@@ -78,6 +78,13 @@ const userId = localStorage.getItem('userId');
 const socket = io();
 
 // General
+const resSearchToggleEl = document.querySelector('.main-buttons__search');
+const siteHeaderEl = document.querySelector('.header');
+
+resSearchToggleEl.addEventListener('click', (e) => {
+    siteHeaderEl.classList.toggle('header--res-search-active');
+});
+
 const attachHandlersToConfirmationModalCloseButtons = () => {
     const elements = [
         confirmationModalCloseButtonEl,

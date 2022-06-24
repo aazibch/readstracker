@@ -52,10 +52,9 @@ main {
     }
     
     &__container {   
-        padding: 1rem 2rem;
+        padding: 1rem 1rem;
         display: flex;
         align-items: center;
-        // @extend %container;
     }
 
     &__site-title {
@@ -155,7 +154,6 @@ main {
     &__user-button {
         display: flex;
         align-items: center;
-        margin-left: 0.75rem;
 
         &--active {
             opacity: 0.8;
@@ -269,7 +267,7 @@ main {
 }
 
 .main-buttons {
-    margin-right: 1rem;
+    margin: 0 1rem;
 
     a {
         &:link, &:visited, &:hover {
@@ -285,10 +283,15 @@ main {
         color: $primary-color;
     }
 
+    &__standard {
+        display: inline-block;
+        color: red;
+    }
+
     &__button-container {
         position: relative;
         display: inline-block;
-        margin-right: 1.5rem;
+        margin: 0 0.5rem;
 
         &:hover {
             opacity: 0.8;
@@ -321,6 +324,10 @@ main {
 
 .main-buttons__button-container-notifications--active {
     opacity: 0.8;
+}
+
+.main-buttons__button-container-search {
+    display: none;
 }
 
 .notification-indicator {
@@ -374,7 +381,8 @@ main {
 
 // End of Footer
 
-@media (max-width: 767.98px) {
+// Medium devices (tablets, less than 992px)
+@media (max-width: 991.98px) {
     .main-nav {
         &__username {
             display: none;
@@ -410,4 +418,61 @@ main {
     .copyright {
         margin-left: 0;
     }
+}
+
+// Small devices (landscape phones, less than 768px)
+
+@media (max-width: 767.98px) {
+    .main-buttons__button-container-search {
+        display: inline-block;
+    }
+
+    .search-users {
+        display: none;
+    }
+
+    .search-users--res-active {
+        display: block;
+    }
+
+    .main-buttons__search {
+        .fa-xmark {
+            display: none;
+        }
+    }
+
+    .header--res-search-active {
+        .header {
+            &__site-title {
+                display: none;
+            }
+        }
+
+        .main-buttons {
+            &__standard {
+                display: none;
+            }
+        }
+
+        .main-nav {
+            &__user-button {
+                display: none;
+            }
+        }
+
+        .search-users {
+            display: block;
+            margin-left: 0;
+        }
+
+        .fa-magnifying-glass {
+            display: none;
+        }
+
+        .fa-xmark {
+            display: inline;
+        }
+    }
+
+
 }
