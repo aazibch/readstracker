@@ -5,7 +5,15 @@ include mixins/_message.pug
 block content
     -
         console.log('newConversation', newConversation);
-    .page-container.messages-page
+        const pageClasses = ['page-container', 'messages-page'];
+
+        if (pageType === 'conversations') {
+            pageClasses.push('page-type-conversations');
+        } else if (pageType === 'messages') {
+            pageClasses.push('page-type-messages');
+        }
+
+    div(class= pageClasses.join(' '))
         .messages__sidebar
             .messages__header
                 h2.messages__heading Messages
@@ -17,7 +25,7 @@ block content
                     +conversation(conversation, unread, selected)
         .messages__main(data-conversation-id= selectedConversation ? selectedConversation._id : false data-new-conversation= newConversation && newConversation.status ? newConversation.status.toString() : false)
             if (!selectedConversation && !newConversation.status)
-                p.messages__app-message Your selected conversation will appear here.
+                p.message-large Your selected conversation will appear here.
             else
                 .conversation__header
                     if (selectedConversation)

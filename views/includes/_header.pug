@@ -39,6 +39,8 @@ header.header
                             -
                                 let unreadCount = 0;
 
+                                console.log('user.notifications', user.notifications);
+
                                 user.notifications.forEach(notif => {
                                     if (notif.unread) ++unreadCount;
                                 });

@@ -203,3 +203,31 @@
         padding: 0.5rem;
     }
 }
+
+@media (max-width: 767.98px) {
+
+    .page-type-conversations {
+        .messages {
+            &__main {
+                display: none;
+            }
+    
+            &__sidebar {
+                flex-grow: 1;
+            }
+        }
+    }
+
+    .page-type-messages {
+        .messages {
+            &__sidebar {
+                display: none;
+            }
+
+            &__main {
+                flex-grow: 1;
+                border-left: 1px solid $generic-border-color;
+            }
+        }
+    }
+}

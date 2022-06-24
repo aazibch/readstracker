@@ -6,6 +6,7 @@ const catchAsync = require('../middleware/catchAsync');
 const AppError = require('../utils/appError');
 const timeago = require('timeago.js');
 const { request } = require('express');
+const userController = require('./usersController');
 
 exports.getHome = (req, res) => {
     res.status(200).render('home', { title: 'Home | ReadsTracker' });
@@ -188,7 +189,6 @@ exports.getSearchResults = catchAsync(async (req, res, next) => {
     });
 });
 
-// To work on this.
 const getConversations = async (user) => {
     let conversations = await Conversation.find({
         participants: { $in: [user._id] }
@@ -266,7 +266,8 @@ exports.getConversations = catchAsync(async (req, res, next) => {
     res.status(200).render('messages', {
         title: 'Messages | ReadsTracker',
         conversations,
-        newConversation
+        newConversation,
+        pageType: 'conversations'
     });
 });
 
@@ -297,15 +298,14 @@ exports.getMessages = catchAsync(async (req, res, next) => {
     );
 
     // Get user again to render updated data.
-    let user = await User.findById(req.user._id).select(
-        '+unreadConversationsCount'
-    );
+    let user = await userController.getLoggedInUserDoc(req.user._id);
 
     res.status(200).render('messages', {
         title: 'Messages | ReadsTracker',
         conversations,
         selectedConversation,
         timeago,
-        user
+        user,
+        pageType: 'messages'
     });
 });

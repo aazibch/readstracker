@@ -539,6 +539,7 @@
   text-align: center;
   margin: 5rem 0;
   color: #555555;
+  padding: 0 1rem;
 }
 
 .message-large {
@@ -1388,6 +1389,22 @@ main {
   height: 1rem;
   size: 1rem;
   padding: 0.5rem;
+}
+
+@media (max-width: 767.98px) {
+  .page-type-conversations .messages__main {
+    display: none;
+  }
+  .page-type-conversations .messages__sidebar {
+    flex-grow: 1;
+  }
+  .page-type-messages .messages__sidebar {
+    display: none;
+  }
+  .page-type-messages .messages__main {
+    flex-grow: 1;
+    border-left: 1px solid #e0e0e0;
+  }
 }
 
 /*# sourceMappingURL=main.css.map */
