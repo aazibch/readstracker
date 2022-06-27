@@ -154,12 +154,12 @@
 
 .form-container {
   max-width: 32rem;
-  margin: 5rem auto 5rem;
+  margin: 1.5rem auto 1.5rem;
   padding: 3rem 2.5rem;
   box-sizing: border-box;
   background: #fff;
   box-shadow: 0px 2px 20px 0px rgba(191, 189, 191, 0.63);
-  border-radius: 7px;
+  border-radius: 5px;
 }
 .form-container .heading-1 {
   margin: 0 0 1.5rem;
@@ -211,7 +211,7 @@
 }
 
 .book-card {
-  box-shadow: 0px 2px 7px 0px rgba(191, 189, 191, 0.63);
+  box-shadow: 0px 2px 5px 0px rgba(191, 189, 191, 0.5);
   background: #fff;
   box-sizing: border-box;
   border-radius: 5px;
@@ -337,7 +337,7 @@
 
 .add-book-button-container {
   display: flex;
-  margin-top: 3rem;
+  margin-top: 1rem;
   margin-bottom: 1rem;
 }
 .add-book-button-container a {
@@ -365,7 +365,7 @@
   bottom: 0;
 }
 .modal__dialog {
-  max-width: 35rem;
+  flex: 0 1 25rem;
   margin: 1rem;
 }
 .modal__content {
@@ -470,7 +470,7 @@
   display: none;
 }
 .list-modal__content {
-  width: 25rem;
+  width: 100%;
   height: 35rem;
 }
 .list-modal__list {
@@ -490,7 +490,7 @@
 .dropdown-menu {
   list-style: none;
   border: 1px solid #e0e0e0;
-  box-shadow: 0px 2px 7px 0px rgba(191, 189, 191, 0.63);
+  box-shadow: 0px 2px 5px 0px rgba(191, 189, 191, 0.5);
   border-radius: 5px;
 }
 .dropdown-menu__arrow {
@@ -535,14 +535,14 @@
   border: 2px solid #999999;
 }
 
-.message, .message-large {
+.app-message {
   text-align: center;
   margin: 5rem 0;
   color: #555555;
   padding: 0 1rem;
 }
 
-.message-large {
+.app-message__large {
   font-size: 1.5rem;
 }
 
@@ -769,7 +769,7 @@ main {
   right: 1rem;
   list-style: none;
   top: 5rem;
-  box-shadow: 0px 2px 7px 0px rgba(191, 189, 191, 0.63);
+  box-shadow: 0px 2px 5px 0px rgba(191, 189, 191, 0.5);
   border-radius: 5px;
   background: #fff;
   z-index: 100;
@@ -823,7 +823,7 @@ main {
   align-items: center;
 }
 .notification__data {
-  flex: 0 0 14rem;
+  flex: 1 0 14rem;
 }
 .notification__profile-photo {
   width: 55px;
@@ -972,6 +972,11 @@ main {
   .main-buttons__search .fa-xmark {
     display: none;
   }
+  .main-nav__dropdown {
+    width: auto;
+    left: 1rem;
+    right: 1rem;
+  }
   .header--res-search-active .header__site-title {
     display: none;
   }
@@ -1004,6 +1009,7 @@ main {
 }
 
 .services {
+  padding: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1056,10 +1062,30 @@ main {
   margin: 0 auto;
 }
 
-.login-form-container {
-  margin-bottom: 0;
+.auth-form {
+  padding: 1rem;
 }
 
+.logo-standard {
+  width: 18rem;
+  margin: 1rem auto 0;
+  display: none;
+}
+
+@media (max-width: 991.98px) {
+  .home-logged-out-content {
+    flex-direction: column;
+  }
+  .logo-standard {
+    display: block;
+  }
+  .services {
+    display: none;
+  }
+  .auth-form {
+    flex-grow: 1;
+  }
+}
 .form-link {
   text-align: center;
   display: block;
@@ -1081,17 +1107,13 @@ main {
   margin: 0.5rem 0 1.5rem;
 }
 
-.signup-form-container {
-  margin-bottom: 0;
-}
-
 .signup-form__loading-spinner {
   display: none;
 }
 
 .profile-header {
   text-align: center;
-  padding: 3rem 1rem;
+  padding: 2rem 1rem;
   border-bottom: 1px solid #e0e0e0;
   background-color: #fff;
 }
@@ -1100,10 +1122,12 @@ main {
   height: auto;
   margin-bottom: 1rem;
 }
-
 .profile-header__content {
   max-width: 70rem;
   margin: 0 auto;
+}
+.profile-header .heading-1 {
+  margin-bottom: 1rem;
 }
 
 .user-banner__name {
@@ -1121,8 +1145,8 @@ main {
 }
 
 .users-list-triggers {
-  display: inline-block;
-  margin-right: 1rem;
+  display: flex;
+  justify-content: flex-end;
 }
 .users-list-triggers__followers {
   margin-right: 0.5rem;
@@ -1145,6 +1169,7 @@ main {
 .profile-body {
   max-width: 70rem;
   margin: 0 auto;
+  padding: 1rem;
 }
 
 .profile-books__buttons-container {
@@ -1159,6 +1184,11 @@ main {
   margin: 1.5rem auto 1.5rem;
 }
 
+@media (max-width: 991.98px) {
+  .users-list-triggers {
+    justify-content: center;
+  }
+}
 .settings-details-form {
   border-top: 1px solid #e0e0e0;
 }
@@ -1246,18 +1276,12 @@ main {
   flex-direction: column;
 }
 .messages__main {
-  flex: 1 0 auto;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   border: 1px solid #e0e0e0;
   border-left-style: none;
   background-color: #fff;
-}
-.messages__app-message {
-  margin: 5rem 0 5rem;
-  font-size: 1.2rem;
-  text-align: center;
-  color: #4d5156;
 }
 
 .conversations {
@@ -1338,10 +1362,10 @@ main {
   background: #f2f2f2;
 }
 
-.message, .message-large {
+.message {
   margin-bottom: 1rem;
 }
-.message:last-child, .message-large:last-child {
+.message:last-child {
   margin-bottom: 0;
 }
 .message__main {

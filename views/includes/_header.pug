@@ -52,22 +52,6 @@ header.header
                             div(class= classes.join(' '))= unreadCount
                             button(type='button').main-buttons__notifications <i class="fa-solid fa-bell"></i>
                 ul.main-nav__dropdown.notifications
-                    li.notification
-                        a(href='#')
-                            img.user-photo.notification__profile-photo(src=`/images/users/default.jpg`)
-                            .notification__data
-                                p.notification__desc aazibch liked your book The Book.
-                                p.notification__date 12 - June - 1999
-                            .notification-indicator-container
-                                .notification-indicator
-                    li.notification
-                        a(href='#')
-                            img.user-photo.notification__profile-photo(src=`/images/users/default.jpg`)
-                            .notification__data
-                                p.notification__desc aazibch liked your book The Book.
-                                p.notification__date 12 - June - 1999
-                            .notification-indicator-container
-                                .notification-indicator
                     each notification in user.notifications
                         +notification(notification)
                 ul.main-nav__dropdown.user-menu

@@ -242,7 +242,7 @@ main {
     }
 
     &__data {
-        flex: 0 0 14rem;
+        flex: 1 0 14rem;
     }
 
     &__profile-photo {
@@ -438,6 +438,14 @@ main {
     .main-buttons__search {
         .fa-xmark {
             display: none;
+        }
+    }
+
+    .main-nav {
+        &__dropdown {
+            width: auto;
+            left: 1rem;
+            right: 1rem;
         }
     }
 

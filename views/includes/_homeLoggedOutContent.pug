@@ -1,6 +1,7 @@
 include ../mixins/_servicesBox
 
 .home-logged-out-content
+    img.logo-standard(src='/images/logo.png', alt='ReadsTracker Logo')
     section.services
         .services__content
             .services__header
@@ -15,7 +16,7 @@ include ../mixins/_servicesBox
                         +servicesBox('users', 'See what your friends are reading')
     section.auth-form
         if showSignupForm
-            .form-container.signup-form-container
+            .form-container
                     form.signup-form.form
                         h1.heading-1.form__heading Signup
                         label.form__label Username
@@ -31,7 +32,7 @@ include ../mixins/_servicesBox
                         .auth-form__alternative
                             a(href='/').button-outline-primary.button-block Login to Existing Account
         else
-            .form-container.login-form-container
+            .form-container
                 form.login-form.form
                     h1.heading-1.form__heading Login
                     label.form__label Email

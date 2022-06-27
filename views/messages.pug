@@ -25,7 +25,7 @@ block content
                     +conversation(conversation, unread, selected)
         .messages__main(data-conversation-id= selectedConversation ? selectedConversation._id : false data-new-conversation= newConversation && newConversation.status ? newConversation.status.toString() : false)
             if (!selectedConversation && !newConversation.status)
-                p.message-large Your selected conversation will appear here.
+                p.app-message.app-message__large Your selected conversation will appear here.
             else
                 .conversation__header
                     if (selectedConversation)

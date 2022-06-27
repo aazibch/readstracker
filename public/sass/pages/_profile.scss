@@ -1,6 +1,6 @@
 .profile-header {
     text-align: center;
-    padding: 3rem 1rem;
+    padding: 2rem 1rem;
     border-bottom: 1px solid $generic-border-color;
 
     .user-photo {
@@ -10,11 +10,15 @@
     }
 
     background-color: #fff;
-}
 
-.profile-header__content {
-    max-width: 70rem;
-    margin: 0 auto;
+    &__content {
+        max-width: 70rem;
+        margin: 0 auto;
+    }
+
+    .heading-1 {
+        margin-bottom: 1rem;
+    }
 }
 
 .user-banner {
@@ -35,8 +39,8 @@
 }
 
 .users-list-triggers {
-    display: inline-block;
-    margin-right: 1rem;
+    display: flex;
+    justify-content: flex-end;
 
     &__followers {
         margin-right: 0.5rem;
@@ -68,6 +72,8 @@
 .profile-body {
     max-width: 70rem;
     margin: 0 auto;
+
+    padding: 1rem;
 }
 
 .profile-books {
@@ -83,4 +89,11 @@
 
 .profile-book {
     margin: 1.5rem auto 1.5rem;
+}
+
+// Medium devices (tablets, less than 992px)
+@media (max-width: 991.98px) {
+    .users-list-triggers {
+        justify-content: center;
+    }
 }

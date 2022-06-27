@@ -208,18 +208,16 @@ if (homeFeedEl) {
             return homeFeedEl.insertAdjacentHTML(
                 'afterbegin',
                 `
-                <p class='message-large'>An error occurred. Reload the page to try again.</p>
+                <p class='app-message app-message__large'>An error occurred. Reload the page to try again.</p>
             `
             );
         }
-
-        console.log('response', response);
 
         if (response.data.data.length === 0) {
             return homeFeedEl.insertAdjacentHTML(
                 'afterbegin',
                 `
-                <p class='message-large'>No books to show. Follow people to improve your experience.</p>
+                <p class='app-message app-message__large'>No books to show. Follow people to improve your experience.</p>
             `
             );
         } else {

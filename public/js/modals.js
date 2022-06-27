@@ -2,6 +2,9 @@ const listModalEl = document.querySelector('.list-modal');
 const loadingSpinnerEl = document.querySelector('.list-modal__loading-spinner');
 
 export const hideListModal = () => {
+    const listModalMessageEl = document.querySelector('.list-modal .message');
+
+    if (listModalMessageEl) listModalMessageEl.remove();
     listModalEl.classList.remove('list-modal--active');
     document.querySelector('.list-modal__list').innerHTML = '';
 };
@@ -41,7 +44,7 @@ export const renderNoContentMessage = () => {
 
     listModalContentEl.insertAdjacentHTML(
         'beforeend',
-        '<p class="message"> Nothing to show.</p>'
+        '<p class="app-message"> Nothing to show.</p>'
     );
 
     listModalLoadingSpinnerEl.classList.remove('loading-spinner--active');

@@ -29,13 +29,14 @@ block content
                             a(href= relation.conversation.id ? conversationLink : `/messages/?newId=${profile._id}`).button-light.connect-buttons__message-button <i class="fas fa-message"></i> Message
 
     .profile-body
-        .add-book-button-container
-            if isOwn
-                a(href=`${user.username}/books/add`).button-primary Add Book
-        if profile.books.length === 0
-            p.message-large No books to show.
-        else
-            .feed
-                .feed__books
-                    each book in profile.books
-                        +bookCard(book, user)
+        .profile-body__content
+            .add-book-button-container
+                if isOwn
+                    a(href=`${user.username}/books/add`).button-primary Add Book
+            if profile.books.length === 0
+                p.app-message.app-message__large No books to show.
+            else
+                .feed
+                    .feed__books
+                        each book in profile.books
+                            +bookCard(book, user)

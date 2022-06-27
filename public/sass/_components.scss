@@ -197,12 +197,12 @@
 
 .form-container {
     max-width: 32rem;
-    margin: 5rem auto 5rem;
+    margin: 1.5rem auto 1.5rem;
     padding: 3rem 2.5rem;
     box-sizing: border-box;
     background: #fff;
     box-shadow: $shadow-dark;
-    border-radius: 7px;
+    border-radius: 5px;
 
     .heading-1 {
         margin: 0 0 1.5rem;
@@ -423,7 +423,7 @@
 
 .add-book-button-container {
     display: flex;
-    margin-top: 3rem;
+    margin-top: 1rem;
     margin-bottom: 1rem;
 
     a {
@@ -458,7 +458,7 @@
     bottom: 0;
 
     &__dialog {
-        max-width: 35rem;
+        flex: 0 1 25rem;
         margin: 1rem;
     }
 
@@ -587,7 +587,8 @@
     display: none;
 
     &__content {
-        width: 25rem;
+        width: 100%;
+        // max-width: 25rem;
         height: 35rem;
     }
 
@@ -662,15 +663,14 @@
     border: 2px solid #999999;
 }
 
-.message {
+.app-message {
     text-align: center;
     margin: 5rem 0;
     color: #555555;
     padding: 0 1rem;
 }
 
-.message-large {
-    @extend .message;
+.app-message__large {
     font-size: 1.5rem;
 }
 

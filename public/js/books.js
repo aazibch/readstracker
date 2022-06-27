@@ -166,7 +166,7 @@ export const likesQuantityButtonClickHandler = async (e) => {
     if (response.data.data.length === 0) {
         renderNoContentMessage();
     } else {
-        renderListData(likes);
+        renderListData(response.data.data);
     }
 
     updateLikesQuantityButton(

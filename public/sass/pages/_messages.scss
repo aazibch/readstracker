@@ -25,20 +25,12 @@
     }
 
     &__main {
-        flex: 1 0 auto;
+        flex: 1 1 auto;
         display: flex;
         flex-direction: column;
         border: 1px solid $generic-border-color;
         border-left-style: none;
         background-color: #fff;
-    }
-
-
-    &__app-message {
-        margin: 5rem 0 5rem;
-        font-size: 1.2rem;
-        text-align: center;
-        color: $secondary-color;
     }
 }
 
