@@ -558,6 +558,7 @@
 // Used with follows lists and quick search results
 
 .users-list {
+    overflow: hidden;
     &__item {
         display: flex;
         align-items: center;

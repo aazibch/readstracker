@@ -34,7 +34,7 @@ export const updateBook = catchAsync(async (bookId, data) => {
     return response;
 });
 
-export const deleteBook = catchAsync(async (bookId, bookEl) => {
+export const deleteBook = catchAsync(async (bookId) => {
     const response = await axios({
         url: `/api/v1/books/${bookId}`,
         method: 'DELETE'
@@ -89,7 +89,6 @@ export const getHomeFeedBooks = catchAsync(async () => {
 
 export const bookDropdownButtonClickHandler = (e) => {
     const id = e.currentTarget.id.split(':')[1];
-    console.log('e.currentTarget.id', e.currentTarget);
     const bookDropdown = document.querySelector(`#book-card__dropdown\\:${id}`);
 
     clearActiveClassOnAllElements(
@@ -109,7 +108,37 @@ export const bookDeleteButtonClickHandler = (e) => {
         async () => {
             const res = await deleteBook(id);
 
-            if (res && bookEl) bookEl.remove();
+            if (res && bookEl.classList.contains('book-card__full')) {
+                setTimeout(() => {
+                    location.assign('/');
+                }, 1500);
+            }
+
+            if (res && !bookEl.classList.contains('book-card__full')) {
+                bookEl.remove();
+                const bookElements = document.querySelectorAll('.book-card');
+
+                if (bookElements.length === 0) {
+                    const profileBodyContentEl = document.querySelector(
+                        '.profile-body__content'
+                    );
+
+                    if (profileBodyContentEl)
+                        profileBodyContentEl.insertAdjacentHTML(
+                            'beforeend',
+                            '<p class="app-message app-message__large">No books to show.</p>'
+                        );
+
+                    const homeFeedEl = document.querySelector('.home-feed');
+
+                    if (homeFeedEl) {
+                        homeFeedEl.insertAdjacentHTML(
+                            'afterbegin',
+                            '<p class="app-message app-message__large">No books to show. Follow people to improve your experience.</p>'
+                        );
+                    }
+                }
+            }
         }
     );
 };

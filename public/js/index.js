@@ -163,15 +163,15 @@ window.addEventListener('click', function (e) {
     }
 
     const activeBookDropdownEl = document.querySelector(
-        '.full-book__dropdown--active'
+        '.book-card__dropdown--active'
     );
 
     if (
-        !e.target.closest('.full-book__dropdown-menu') &&
-        !e.target.closest('.full-book__dropdown-button') &&
+        !e.target.closest('.book-card__dropdown-menu') &&
+        !e.target.closest('.book-card__dropdown-button') &&
         activeBookDropdownEl
     ) {
-        activeBookDropdownEl.classList.remove('full-book__dropdown--active');
+        activeBookDropdownEl.classList.remove('book-card__dropdown--active');
     }
 
     const activeSearchUsersEl = document.querySelector('.search-users--active');

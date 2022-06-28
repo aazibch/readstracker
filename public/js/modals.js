@@ -50,9 +50,18 @@ export const renderNoContentMessage = () => {
     listModalLoadingSpinnerEl.classList.remove('loading-spinner--active');
 };
 
+let confirmationModalHandlerFunction;
+
 export function hideConfirmationModal() {
     const modalEl = document.querySelector('.confirmation-modal');
     modalEl.classList.remove('confirmation-modal--active');
+
+    if (confirmationModalHandlerFunction) {
+        document
+            .querySelector('.confirmation-modal__yes-button')
+            .removeEventListener('click', confirmationModalHandlerFunction);
+        confirmationModalHandlerFunction = null;
+    }
 }
 
 export const displayConfirmationModal = (query, callback) => {
@@ -63,10 +72,12 @@ export const displayConfirmationModal = (query, callback) => {
         .querySelector('.confirmation-modal')
         .classList.add('confirmation-modal--active');
 
+    confirmationModalHandlerFunction = function () {
+        callback();
+        hideConfirmationModal();
+    };
+
     document
         .querySelector('.confirmation-modal__yes-button')
-        .addEventListener('click', function () {
-            callback();
-            hideConfirmationModal();
-        });
+        .addEventListener('click', confirmationModalHandlerFunction);
 };

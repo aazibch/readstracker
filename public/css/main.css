@@ -445,6 +445,9 @@
   border-color: #cacaca;
 }
 
+.users-list {
+  overflow: hidden;
+}
 .users-list__item {
   display: flex;
   align-items: center;
@@ -733,6 +736,7 @@ main {
   position: absolute;
   left: 0;
   right: 0;
+  top: 3rem;
   display: none;
   overflow: hidden;
 }

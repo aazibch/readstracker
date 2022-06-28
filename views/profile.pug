@@ -32,7 +32,7 @@ block content
         .profile-body__content
             .add-book-button-container
                 if isOwn
-                    a(href=`${user.username}/books/add`).button-primary Add Book
+                    a(href=`/${user.username}/books/add`).button-primary Add Book
             if profile.books.length === 0
                 p.app-message.app-message__large No books to show.
             else
