@@ -39,22 +39,6 @@ const conversationSchema = new mongoose.Schema({
                 ref: 'User'
             }
         ]
-        // ,
-        // validate: [
-        //     {
-        //         validator: function (val) {
-        //             return val.length === 2;
-        //         },
-        //         message: 'There must be two participants in a conversation.'
-        //     },
-        //     {
-        //         validator: function (val) {
-        //             return val[0].toString() !== val[1].toString();
-        //         },
-        //         message: 'Both participants cannot be the same.'
-        //     }
-        // ],
-        // unique: [true, 'A conversation with these participants already exists.']
     },
     messages: {
         type: [messageSchema],
@@ -126,20 +110,6 @@ conversationSchema.post('save', function () {
     this.constructor.calcUnreadConversations(this.participants[0]);
     this.constructor.calcUnreadConversations(this.participants[1]);
 });
-
-// Not creating hooks to calculate unread conversations on deleting
-// because one must open a conversation before deleting it,
-// and upon opening it, the unreadConversationsCount property is decremented.
-
-// conversationSchema.pre('findOneAndDelete', async function (next) {
-//     this.c = await this.findOne();
-//     next();
-// });
-
-// conversationSchema.post('findOneAndDelete', async function () {
-//     this.c.constructor.calcUnreadConversations(this.c.participants[0]);
-//     this.c.constructor.calcUnreadConversations(this.c.participants[1]);
-// });
 
 const Conversation = mongoose.model('Conversation', conversationSchema);
 

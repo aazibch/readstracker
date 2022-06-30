@@ -46,8 +46,6 @@ exports.onConnection = (io) => {
         socket.on('sendMessage', (data) => {
             const user = getUser(data.recipient);
 
-            console.log('[socketsController.js sendMessage] data', data);
-
             io.to(user.socketId).emit('chatMessage', {
                 content: data.content,
                 sender: data.sender,

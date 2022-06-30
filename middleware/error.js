@@ -32,6 +32,8 @@ const getValidationError = (err) => {
 
 const sendError = (err, req, res) => {
     if (req.originalUrl.startsWith('/api')) {
+        console.log('API ERROR', err);
+
         if (err.isOperational) {
             return res.status(err.statusCode).json({
                 status: err.status,
@@ -39,12 +41,13 @@ const sendError = (err, req, res) => {
             });
         }
 
-        console.log('API ERROR', err);
         return res.status(500).json({
             status: 'error',
             message: 'Something went wrong.'
         });
     }
+
+    console.log('WEBPAGE ERROR', err);
 
     if (err.isOperational) {
         return res.status(err.statusCode).render('error', {
@@ -53,7 +56,6 @@ const sendError = (err, req, res) => {
         });
     }
 
-    console.log('WEBPAGE ERROR', err);
     return res.status(500).render('error', {
         title: 'Error',
         message: 'Something went wrong.'

@@ -4,9 +4,7 @@ const mongoose = require('mongoose');
 const socketController = require('./controllers/socketController');
 
 process.on('uncaughtException', (err) => {
-    console.log('UNCAUGHT EXCEPTION');
-    console.log(err.name, err.message);
-    console.log(err);
+    console.log('UNCAUGHT EXCEPTION', err);
     process.exit(1);
 });
 
@@ -40,8 +38,7 @@ mongoose
     });
 
 process.on('unhandledRejection', (err) => {
-    console.log('UNHANDLED REJECTION');
-    console.log(err.name, err.message);
+    console.log('UNHANDLED REJECTION', err);
     exitProcess();
 });
 

@@ -5,7 +5,6 @@ const Connection = require('../models/connectionModel');
 const catchAsync = require('../middleware/catchAsync');
 const AppError = require('../utils/appError');
 const timeago = require('timeago.js');
-const { request } = require('express');
 const userController = require('./usersController');
 
 exports.getHome = (req, res) => {
@@ -148,7 +147,7 @@ exports.getBook = catchAsync(async (req, res, next) => {
         return next(new AppError('Book not found.', 404));
 
     res.status(200).render('book', {
-        title: 'ReadsTracker',
+        title: `${book.title} | ReadsTracker`,
         book
     });
 });
@@ -158,18 +157,18 @@ exports.getAddBookPage = catchAsync(async (req, res, next) => {
         return next(new AppError('Route not found.', 404));
 
     res.status(200).render('addBook', {
-        title: 'ReadsTracker | Add Book'
+        title: 'Add Book | ReadsTracker'
     });
 });
 
-exports.getBookEditPage = catchAsync(async (req, res, next) => {
+exports.getEditBookPage = catchAsync(async (req, res, next) => {
     const book = await Book.findById(req.params.id);
 
     if (!book || book.user.toString() !== req.user._id.toString())
         return next(new AppError('Book not found.', 404));
 
     res.status(200).render('editBook', {
-        title: `Edit Book | ReadsTracker`,
+        title: `Edit ${book.title} | ReadsTracker`,
         book
     });
 });

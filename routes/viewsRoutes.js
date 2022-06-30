@@ -6,10 +6,11 @@ const viewsController = require('../controllers/viewsController');
 const userController = require('../controllers/usersController');
 
 router.get('/', authController.isLoggedIn, viewsController.getHome);
-// router.get('/login', authController.isLoggedIn, viewsController.getLoginForm);
 router.get('/signup', authController.isLoggedIn, viewsController.getSignupForm);
 
-// Routes related to the logged in user.
+// Routes for the logged in user.
+
+// router.use(authController.protect);
 
 router.get(
     '/profile',
@@ -38,7 +39,7 @@ router.get(
 router.get(
     '/:username/books/:id/edit',
     authController.protect,
-    viewsController.getBookEditPage
+    viewsController.getEditBookPage
 );
 
 router.get(
@@ -47,26 +48,20 @@ router.get(
     viewsController.getAddBookPage
 );
 
-// Routes related to all users.
-
 router.get(
     '/:username',
-    authController.isLoggedIn,
+    authController.protect,
     userController.updateNotifications,
     viewsController.getProfile
 );
 
 router.get(
     '/:username/books/:id',
-    authController.isLoggedIn,
+    authController.protect,
     userController.updateNotifications,
     viewsController.getBook
 );
 
-router.get(
-    '/search-results',
-    authController.isLoggedIn,
-    viewsController.getSearchResults
-);
+router.get('/search-results', viewsController.getSearchResults);
 
 module.exports = router;

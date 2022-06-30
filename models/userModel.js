@@ -112,12 +112,6 @@ userSchema.virtual('notifications', {
     foreignField: 'recipient'
 });
 
-// userSchema.virtual('unreadConversations', {
-//     ref: 'Conversation',
-//     localField: '_id',
-//     foreignField: 'unreadBy'
-// });
-
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();
 

@@ -20,9 +20,14 @@ router.use(authController.protect);
 
 router.patch('/updateMyPassword', authController.updateMyPassword);
 
-router.route('/me')
+router
+    .route('/me')
     .get(usersController.getMe)
-    .patch(usersController.uploadProfilePhoto, usersController.resizeProfilePhoto, usersController.updateMe)
+    .patch(
+        usersController.uploadProfilePhoto,
+        usersController.resizeProfilePhoto,
+        usersController.updateMe
+    )
     .delete(usersController.deleteMe);
 
 module.exports = router;

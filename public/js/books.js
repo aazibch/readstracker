@@ -346,7 +346,7 @@ export const renderHomeFeedBooks = (books) => {
                             <p class="book-card__genre">${book.genre}</p>
                             <a href="/${book.user.username}/books/${
                 book._id
-            }}" class="book-card__date-added">${new Date(
+            }" class="book-card__date-added">${new Date(
                 book.dateCreated
             ).toLocaleString('en-us', {
                 day: '2-digit',

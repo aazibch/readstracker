@@ -8,12 +8,10 @@ const messagesRouter = require('./messagesRoutes');
 
 router.use('/:conversationId/messages', messagesRouter);
 
-router
-    .route('/')
-    .post(authController.protect, conversationsController.createConversation);
+router.use(authController.protect);
 
-router
-    .route('/:convoId')
-    .delete(authController.protect, conversationsController.deleteConversation);
+router.route('/').post(conversationsController.createConversation);
+
+router.route('/:convoId').delete(conversationsController.deleteConversation);
 
 module.exports = router;

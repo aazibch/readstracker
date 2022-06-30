@@ -3,7 +3,6 @@ const Connection = require('../models/connectionModel');
 const Notification = require('../models/notificationModel');
 const catchAsync = require('../middleware/catchAsync');
 const AppError = require('../utils/appError');
-const ApiFeatures = require('../utils/apiFeatures');
 
 exports.getAllMyBooks = catchAsync(async (req, res, next) => {
     const books = await Book.find({ user: req.user._id });
@@ -121,29 +120,16 @@ exports.getBooksFeed = catchAsync(async (req, res, next) => {
 
     following.forEach((conn) => usersFollowing.push(conn.following));
 
-    // const books = await Book.find({
-    //     user: {
-    //         $in: usersFollowing
-    //     }
-    // });
-
-    console.log({ usersFollowing });
-
-    const features = new ApiFeatures(
-        Book.find({
-            user: {
-                $in: usersFollowing
-            }
-        }),
-        req.query
-    )
-        .paginate()
-        .sort();
-
-    const books = await features.query.populate({
-        path: 'user',
-        select: 'profilePhoto username'
-    });
+    const books = await Book.find({
+        user: {
+            $in: usersFollowing
+        }
+    })
+        .populate({
+            path: 'user',
+            select: 'profilePhoto username'
+        })
+        .sort('-dateCreated');
 
     res.status(200).json({
         status: 'success',
