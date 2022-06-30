@@ -133,6 +133,10 @@ main {
         top: 3rem;
         display: none;
         overflow: hidden;
+
+        .users-list__item:last-child {
+            border-bottom: 0;
+        }
     }
 
     &__spinner {
@@ -382,6 +386,8 @@ main {
 
 // End of Footer
 
+// Media queries
+
 // Medium devices (tablets, less than 992px)
 @media (max-width: 991.98px) {
     .main-nav {
@@ -412,7 +418,7 @@ main {
         }
 
         &__nav {
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
     }
 
@@ -422,7 +428,6 @@ main {
 }
 
 // Small devices (landscape phones, less than 768px)
-
 @media (max-width: 767.98px) {
     .main-buttons__button-container-search {
         display: inline-block;
@@ -482,6 +487,6 @@ main {
             display: inline;
         }
     }
-
-
 }
+
+// End of media queries

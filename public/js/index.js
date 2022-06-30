@@ -335,7 +335,7 @@ if (unfollowButtonEl) {
 }
 
 // Messages
-const conversationContentEl = document.querySelector('.conversation-content');
+const conversationContentEl = document.querySelector('.conversation__content');
 
 const deleteConversationButton = document.querySelector(
     '.conversation__delete-button'

@@ -30,17 +30,12 @@
 }
 
 .connections {
-    text-align: right;
-
-    p {
-        display: inline-block;
-        margin-right: 1rem;
-    }
+    display: flex;
+    justify-content: flex-end;
 }
 
 .users-list-triggers {
     display: flex;
-    justify-content: flex-end;
 
     &__followers {
         margin-right: 0.5rem;
@@ -53,7 +48,7 @@
 }
 
 .connect-buttons {
-    display: inline-block;
+    margin-left: 1rem;
 
     &__follow-toggle {
         margin-right: 0.5rem;
@@ -91,9 +86,22 @@
     margin: 1.5rem auto 1.5rem;
 }
 
+// Media queries
+
 // Medium devices (tablets, less than 992px)
 @media (max-width: 991.98px) {
+    .connections {
+        flex-direction: column;
+    }
+
+    .connect-buttons {
+        margin-left: 0;
+        margin-top: 1rem;
+    }
+
     .users-list-triggers {
         justify-content: center;
     }
 }
+
+// End of media queries

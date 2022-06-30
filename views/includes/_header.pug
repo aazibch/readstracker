@@ -52,8 +52,11 @@ header.header
                             div(class= classes.join(' '))= unreadCount
                             button(type='button').main-buttons__notifications <i class="fa-solid fa-bell"></i>
                 ul.main-nav__dropdown.notifications
-                    each notification in user.notifications
-                        +notification(notification)
+                    if (user.notifications.length > 0)
+                        each notification in user.notifications
+                            +notification(notification)
+                    else
+                        p.app-message No notifications.
                 ul.main-nav__dropdown.user-menu
                         li
                             a(href=`/${user.username}`) <i class="fas fa-user"></i> <p>Profile</p>

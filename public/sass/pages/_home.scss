@@ -18,6 +18,10 @@
     text-transform: uppercase;
     border-right: 1px solid $generic-border-color;
 
+    &__container {
+        display: flex;
+    }
+
     &__box {
         text-align: center;
         padding: 1.5rem;
@@ -48,28 +52,6 @@
     padding-top: 1rem;
 }
 
-@media (max-width: 767.98px) {
-    .jumbotron {
-        &__icon {
-            display: none;
-        }
-    }
-
-
-    .services__container {
-        .column:last-child {
-            flex-grow: 0;
-            margin: 0 auto;
-        }
-    }
-}
-
-.book-form {
-    &__loading-spinner {
-        display: none;
-    }
-}
-
 .home-logged-in-content {
     max-width: 70rem;
     margin: 0 auto;
@@ -77,8 +59,31 @@
 
 .auth-form {
     padding: 1rem;
+
+    &__alternative {
+        border-top: 1px solid $generic-border-color;
+        padding-top: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    &__proceed-button {
+        margin: 0.5rem 0 1.5rem;
+    }
 }
 
+.form-link {
+    text-align: center;
+    display: block;
+
+    &:link, &:visited {
+        color: $secondary-color;
+        text-decoration: none;
+    }
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
 
 .logo-standard {
     width: 18rem;
@@ -87,6 +92,9 @@
     display: none;
 }
 
+// Media queries
+
+// Medium devices (tablets, less than 992px)
 @media (max-width: 991.98px) {
     .home-logged-out-content {
         flex-direction: column;
@@ -104,3 +112,22 @@
         flex-grow: 1;
     }
 }
+
+// Small devices (landscape phones, less than 768px)
+@media (max-width: 767.98px) {
+    .jumbotron {
+        &__icon {
+            display: none;
+        }
+    }
+
+
+    .services__container {
+        .column:last-child {
+            flex-grow: 0;
+            margin: 0 auto;
+        }
+    }
+}
+
+// End of media queries

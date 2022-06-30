@@ -61,7 +61,12 @@ exports.getProfile = catchAsync(async (req, res, next) => {
     }
 
     const user = await User.findOne({ username: req.params.username }).populate(
-        { path: 'books' }
+        {
+            path: 'books',
+            populate: {
+                path: 'user'
+            }
+        }
     );
 
     if (!user) return next(new AppError('User not found.', 404));

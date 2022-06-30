@@ -7,13 +7,9 @@ include ../mixins/_servicesBox
             .services__header
                 img.services__logo(src='/images/logo.png', alt='ReadsTracker Logo')
             .services__container
-                .row
-                    .column
-                        +servicesBox('book', 'Keep track of all your reads')
-                    .column
-                        +servicesBox('eye', 'Show off how well-read you are')
-                    .column
-                        +servicesBox('users', 'See what your friends are reading')
+                +servicesBox('book', 'Keep track of all your reads')
+                +servicesBox('eye', 'Show off how well-read you are')
+                +servicesBox('users', 'See what your friends are reading')
     section.auth-form
         if showSignupForm
             .form-container
