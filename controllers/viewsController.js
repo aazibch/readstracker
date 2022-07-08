@@ -68,7 +68,7 @@ exports.getProfile = catchAsync(async (req, res, next) => {
         }
     );
 
-    if (!user) return next(new AppError('User not found.', 404));
+    if (!user) return next(new AppError('Route not found.', 404));
 
     viewData.relation = {
         following: {
@@ -144,7 +144,7 @@ exports.getBook = catchAsync(async (req, res, next) => {
         });
 
     if (!book || book.user.username !== req.params.username)
-        return next(new AppError('Book not found.', 404));
+        return next(new AppError('Route not found.', 404));
 
     res.status(200).render('book', {
         title: `${book.title} | ReadsTracker`,
@@ -165,7 +165,7 @@ exports.getEditBookPage = catchAsync(async (req, res, next) => {
     const book = await Book.findById(req.params.id);
 
     if (!book || book.user.toString() !== req.user._id.toString())
-        return next(new AppError('Book not found.', 404));
+        return next(new AppError('Route not found.', 404));
 
     res.status(200).render('editBook', {
         title: `Edit ${book.title} | ReadsTracker`,
@@ -279,7 +279,7 @@ exports.getMessages = catchAsync(async (req, res, next) => {
     let selectedConversation = await Conversation.findById(req.params.convoId);
 
     if (!selectedConversation)
-        return next(new AppError('No conversation found.', 404));
+        return next(new AppError('Route not found.', 404));
 
     if (selectedConversation.unreadBy?.toString() === req.user._id.toString()) {
         selectedConversation.unreadBy = undefined;

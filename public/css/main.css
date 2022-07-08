@@ -1250,6 +1250,12 @@ main {
   border-left-style: none;
   background-color: #fff;
 }
+.messages__app-messages {
+  padding: 5rem 0 5rem;
+}
+.messages__app-messages .app-message {
+  margin: 1rem 0 1rem;
+}
 
 .conversations {
   height: 100%;

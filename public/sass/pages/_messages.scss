@@ -32,6 +32,14 @@
         border-left-style: none;
         background-color: #fff;
     }
+
+    &__app-messages {
+        padding: 5rem 0 5rem;
+    
+        .app-message {
+            margin: 1rem 0 1rem;
+        }
+    }
 }
 
 .conversations {

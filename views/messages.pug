@@ -24,7 +24,10 @@ block content
                     +conversation(conversation, unread, selected)
         .messages__main(data-conversation-id= selectedConversation ? selectedConversation._id : false data-new-conversation= newConversation && newConversation.status ? newConversation.status.toString() : false)
             if (!selectedConversation && !newConversation.status)
-                p.app-message.app-message__large Your selected conversation will appear here.
+                .messages__app-messages
+                    p.app-message.app-message__large Your selected conversation will appear here.
+                    p.app-message Note: You can only message people who are being followed by you as well as following you.
+
             else
                 .conversation__header
                     if (selectedConversation)

@@ -16,6 +16,7 @@ exports.getLoggedInUserDoc = async (userId) => {
         })
         .populate({
             path: 'notifications',
+            options: { sort: '-dateSent' },
             populate: {
                 path: 'sender'
             }
