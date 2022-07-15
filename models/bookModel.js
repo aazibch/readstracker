@@ -66,6 +66,11 @@ const bookSchema = new mongoose.Schema({
         ref: 'User',
         required: [true, 'Please provide a user.']
     },
+    review: {
+        type: String,
+        maxlength: 500,
+        minlength: 50
+    },
     likedBy: [
         {
             type: mongoose.Schema.Types.ObjectId,

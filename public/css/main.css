@@ -1160,6 +1160,18 @@ main {
     justify-content: center;
   }
 }
+.book-form__review-input {
+  width: 100%;
+  height: 10rem;
+  resize: vertical;
+  border-radius: 2px;
+  box-sizing: border-box;
+  margin-bottom: 1.5rem;
+  border-style: none;
+  background: #eeeeee;
+  padding: 0.5rem;
+}
+
 .settings-details-form {
   border-top: 1px solid #e0e0e0;
 }

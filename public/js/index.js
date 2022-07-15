@@ -640,9 +640,20 @@ if (bookFormEl) {
             rating = +selectedStarElement.getAttribute('data-index') + 1;
 
         const genre = document.querySelector('.book-form__genre-field').value;
+        const review =
+            document.querySelector('.book-form__review-input').value.length > 0
+                ? document.querySelector('.book-form__review-input').value
+                : null;
+
         submitButtonEl.setAttribute('disabled', '');
 
-        const response = await createBook({ title, author, rating, genre });
+        const response = await createBook({
+            title,
+            author,
+            rating,
+            genre,
+            review
+        });
 
         if (!response) {
             return submitButtonEl.removeAttribute('disabled');
