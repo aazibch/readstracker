@@ -87,6 +87,15 @@ export const getHomeFeedBooks = catchAsync(async () => {
     return response;
 });
 
+export const getProfileFeedBooks = catchAsync(async (userId) => {
+    const response = await axios({
+        url: `/api/v1/books/user/${userId}`,
+        method: 'GET'
+    });
+
+    return response;
+});
+
 export const bookDropdownButtonClickHandler = (e) => {
     const id = e.currentTarget.id.split(':')[1];
     const bookDropdown = document.querySelector(`#book-card__dropdown\\:${id}`);
@@ -276,7 +285,7 @@ export const attachBooksEventListeners = () => {
     });
 };
 
-export const renderHomeFeedBooks = (books) => {
+export const renderFeedBooks = (feedEl, books) => {
     let html = '';
     const loggedInUserId = localStorage.getItem('userId');
 
@@ -366,9 +375,9 @@ export const renderHomeFeedBooks = (books) => {
         `;
     });
 
-    const feedBooksEl = document.querySelector('.feed__books');
+    const parentEl = document.querySelector(feedEl);
 
-    if (feedBooksEl) {
-        feedBooksEl.insertAdjacentHTML('beforeend', html);
+    if (parentEl) {
+        parentEl.insertAdjacentHTML('beforeend', html);
     }
 };

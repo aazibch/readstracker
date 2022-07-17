@@ -1,15 +1,30 @@
 const Book = require('../models/bookModel');
+const User = require('../models/userModel');
 const Connection = require('../models/connectionModel');
 const Notification = require('../models/notificationModel');
 const catchAsync = require('../middleware/catchAsync');
 const AppError = require('../utils/appError');
 
 exports.getAllMyBooks = catchAsync(async (req, res, next) => {
-    const books = await Book.find({ user: req.user._id });
+    const books = await Book.find({ user: req.user._id }).sort('-dateCreated');
 
     res.status(200).json({
         status: 'success',
         results: books.length,
+        data: books
+    });
+});
+
+exports.getAllBooks = catchAsync(async (req, res, next) => {
+    console.log('[getAllBooks] req.params.userId', req.params.userId);
+
+    const books = await Book.find({ user: req.params.userId }).populate({
+        path: 'user',
+        select: 'profilePhoto username'
+    });
+
+    res.status(200).json({
+        status: 'success',
         data: books
     });
 });

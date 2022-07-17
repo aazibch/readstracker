@@ -26,7 +26,6 @@ export const renderListData = (data) => {
             <img class='user-photo users-list__profile-photo' src='/images/users/${item.profilePhoto}'>
             <div>
                 <p class='users-list__username'>${item.username}</p>
-                <p class='users-list__books'>1 book</p>
             </div>
         </a>
         `;
