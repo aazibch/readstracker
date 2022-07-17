@@ -10,16 +10,8 @@ import { auth, logout } from './auth';
 import {
     createBook,
     updateBook,
-    deleteBook,
-    likeBook,
-    unlikeBook,
     getHomeFeedBooks,
     renderHomeFeedBooks,
-    bookDropdownButtonClickHandler,
-    bookDeleteButtonClickHandler,
-    likeButtonClickHandler,
-    unlikeButtonClickHandler,
-    likesQuantityButtonClickHandler,
     attachBooksEventListeners
 } from './books';
 import {
@@ -600,26 +592,8 @@ if (logoutListItemEl) {
 
 // books
 const bookFormEl = document.querySelector('.book-form');
-const fullBookEl = document.querySelector('.full-book');
 const editBookFormEl = document.querySelector('.edit-book-form');
-const likesQuantityEl = document.querySelector('.book-card__likes-quantity');
-const likeButtonEl = document.querySelector('.like-button');
 const ratingInput = document.querySelector('.form__stars');
-// const bookDropdownButtons = document.querySelectorAll(
-//     '.full-book__dropdown-button'
-// );
-
-// const bookDeleteButtons = document.querySelectorAll(
-//     '.full-book__book-delete-button'
-// );
-
-// bookDeleteButtons.forEach((elem) =>
-//     elem.addEventListener('click', bookDeleteButtonClickHandler)
-// );
-
-// bookDropdownButtons.forEach((elem) =>
-//     elem.addEventListener('click', bookDropdownButtonClickHandler)
-// );
 
 if (bookFormEl) {
     bookFormEl.addEventListener('submit', async (e) => {
