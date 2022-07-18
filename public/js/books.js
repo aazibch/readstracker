@@ -80,7 +80,7 @@ const getLikes = catchAsync(async (bookId) => {
 
 export const getHomeFeedBooks = catchAsync(async () => {
     const response = await axios({
-        url: `/api/v1/books/following/?page=1&limit=10&sort=-dateCreated`,
+        url: `/api/v1/books/following`,
         method: 'GET'
     });
 
@@ -135,7 +135,7 @@ export const bookDeleteButtonClickHandler = (e) => {
                     if (profileBodyContentEl)
                         profileBodyContentEl.insertAdjacentHTML(
                             'beforeend',
-                            '<p class="app-message app-message__large">No books to show.</p>'
+                            '<p class="app-message app-message__large">No books to show. Add books to display them on your profile.</p>'
                         );
 
                     const homeFeedEl = document.querySelector('.home-feed');
