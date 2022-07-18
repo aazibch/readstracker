@@ -33,10 +33,6 @@ block content
             .add-book-button-container
                 if isOwn
                     a(href=`/${user.username}/books/add`).button-primary Add Book
-            if profile.books.length === 0
-                p.app-message.app-message__large No books to show.
-            else
-                .feed
-                    .feed__books
-                        each book in profile.books
-                            +bookCard(book)
+            .feed
+                .feed__books
+                .feed__loading-spinner.loading-spinner.loading-spinner--active

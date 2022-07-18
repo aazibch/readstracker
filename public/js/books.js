@@ -80,7 +80,16 @@ const getLikes = catchAsync(async (bookId) => {
 
 export const getHomeFeedBooks = catchAsync(async () => {
     const response = await axios({
-        url: `/api/v1/books/following/?page=1&limit=10&sort=-dateCreated`,
+        url: `/api/v1/books/following`,
+        method: 'GET'
+    });
+
+    return response;
+});
+
+export const getProfileFeedBooks = catchAsync(async (userId) => {
+    const response = await axios({
+        url: `/api/v1/books/user/${userId}`,
         method: 'GET'
     });
 
@@ -126,7 +135,7 @@ export const bookDeleteButtonClickHandler = (e) => {
                     if (profileBodyContentEl)
                         profileBodyContentEl.insertAdjacentHTML(
                             'beforeend',
-                            '<p class="app-message app-message__large">No books to show.</p>'
+                            '<p class="app-message app-message__large">No books to show. Add books to display them on your profile.</p>'
                         );
 
                     const homeFeedEl = document.querySelector('.home-feed');
@@ -276,7 +285,7 @@ export const attachBooksEventListeners = () => {
     });
 };
 
-export const renderHomeFeedBooks = (books) => {
+export const renderFeedBooks = (feedEl, books) => {
     let html = '';
     const loggedInUserId = localStorage.getItem('userId');
 
@@ -366,9 +375,9 @@ export const renderHomeFeedBooks = (books) => {
         `;
     });
 
-    const feedBooksEl = document.querySelector('.feed__books');
+    const parentEl = document.querySelector(feedEl);
 
-    if (feedBooksEl) {
-        feedBooksEl.insertAdjacentHTML('beforeend', html);
+    if (parentEl) {
+        parentEl.insertAdjacentHTML('beforeend', html);
     }
 };

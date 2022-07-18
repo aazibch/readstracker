@@ -9,12 +9,6 @@ const Notification = require('../models/notificationModel');
 exports.getLoggedInUserDoc = async (userId) => {
     const user = await User.findById(userId)
         .populate({
-            path: 'books',
-            populate: {
-                path: 'user'
-            }
-        })
-        .populate({
             path: 'notifications',
             options: { sort: '-dateSent' },
             populate: {

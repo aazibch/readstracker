@@ -11,7 +11,8 @@ import {
     createBook,
     updateBook,
     getHomeFeedBooks,
-    renderHomeFeedBooks,
+    getProfileFeedBooks,
+    renderFeedBooks,
     attachBooksEventListeners
 } from './books';
 import {
@@ -51,10 +52,6 @@ import { displayAlert } from './alerts';
 
 import { removeActiveClasses } from './utils';
 
-const settingsDetailsForm = document.querySelector('.settings-details-form');
-const settingsPasswordForm = document.querySelector('.settings-password-form');
-const settingsDeleteButton = document.querySelector('.settings-delete-button');
-const searchUsersFieldEl = document.querySelector('.search-users__input-field');
 const confirmationModalNoButtonEl = document.querySelector(
     '.confirmation-modal__no-button'
 );
@@ -183,16 +180,10 @@ if (searchUsersFieldEl) {
 }
 
 // Home
-
+const feedLoadingSpinnerEl = document.querySelector('.feed__loading-spinner');
 const homeFeedEl = document.querySelector('.home-feed');
 
 if (homeFeedEl) {
-    const feedLoadingSpinnerEl = document.querySelector(
-        '.feed__loading-spinner'
-    );
-
-    feedLoadingSpinnerEl.classList.add('loading-spinner--active');
-
     getHomeFeedBooks().then((response) => {
         feedLoadingSpinnerEl.classList.remove('loading-spinner--active');
 
@@ -213,7 +204,7 @@ if (homeFeedEl) {
             `
             );
         } else {
-            renderHomeFeedBooks(response.data.data);
+            renderFeedBooks('.home-feed', response.data.data);
             attachBooksEventListeners();
         }
     });
@@ -234,6 +225,42 @@ const followButtonEl = document.querySelector(
 const unfollowButtonEl = document.querySelector(
     '.connect-buttons__unfollow-button'
 );
+
+const profileFeedEl = document.querySelector(
+    '.profile-body__content .feed__books'
+);
+
+if (profileFeedEl) {
+    getProfileFeedBooks(connectionsEl.dataset.userId).then((response) => {
+        feedLoadingSpinnerEl.classList.remove('loading-spinner--active');
+
+        console.log('getProfileFeedBooks response', response);
+
+        if (!response) {
+            return profileFeedEl.insertAdjacentHTML(
+                'afterbegin',
+                `
+                <p class='app-message app-message__large'>An error occurred. Reload the page to try again.</p>
+            `
+            );
+        }
+
+        if (response.data.data.length === 0) {
+            return profileFeedEl.insertAdjacentHTML(
+                'afterbegin',
+                `
+                <p class='app-message app-message__large'>No books to show. Add books to display them on your profile.</p>
+            `
+            );
+        } else {
+            renderFeedBooks(
+                '.profile-body__content .feed__books',
+                response.data.data
+            );
+            attachBooksEventListeners();
+        }
+    });
+}
 
 attachBooksEventListeners();
 
@@ -688,6 +715,10 @@ if (ratingInput) {
 // end of books
 
 // settings
+const settingsDetailsForm = document.querySelector('.settings-details-form');
+const settingsPasswordForm = document.querySelector('.settings-password-form');
+const settingsDeleteButton = document.querySelector('.settings-delete-button');
+const searchUsersFieldEl = document.querySelector('.search-users__input-field');
 
 if (settingsDetailsForm) {
     settingsDetailsForm.addEventListener('submit', async (e) => {

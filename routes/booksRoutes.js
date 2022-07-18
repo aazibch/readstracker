@@ -13,6 +13,8 @@ router
 
 router.route('/following').get(booksController.getBooksFeed);
 
+router.route('/user/:userId').get(booksController.getAllBooks);
+
 router
     .route('/:id')
     .get(booksController.getMyBook)
