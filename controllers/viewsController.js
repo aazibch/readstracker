@@ -49,24 +49,10 @@ exports.getProfile = catchAsync(async (req, res, next) => {
         isOwn: true
     };
 
-    if (req.user?.username === req.params.username) {
-        const followers = await getFollowers(req.user._id);
-        const following = await getFollowing(req.user._id);
-
-        viewData.following = following;
-        viewData.followers = followers;
-
+    if (req.user?.username === req.params.username)
         return res.status(200).render('profile', viewData);
-    }
 
-    const user = await User.findOne({ username: req.params.username }).populate(
-        {
-            path: 'books',
-            populate: {
-                path: 'user'
-            }
-        }
-    );
+    const user = await User.findOne({ username: req.params.username });
 
     if (!user) return next(new AppError('Route not found.', 404));
 
@@ -122,12 +108,6 @@ exports.getProfile = catchAsync(async (req, res, next) => {
     }
 
     viewData.isOwn = false;
-
-    const followers = await getFollowers(user._id);
-    const following = await getFollowing(user._id);
-
-    viewData.following = following;
-    viewData.followers = followers;
 
     res.status(200).render('profile', viewData);
 });
