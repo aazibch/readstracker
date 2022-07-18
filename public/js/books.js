@@ -334,6 +334,11 @@ export const renderFeedBooks = (feedEl, books) => {
             book.likedBy.length > 1 || book.likedBy.length === 0 ? 's' : ''
         }</p>`;
 
+        let review = '';
+
+        if (book.review)
+            review = `<div class="book-card__review">${book.review}</div>`;
+
         html +=
             `
             <div id="book-card:${book._id}" class="book-card">
@@ -349,8 +354,9 @@ export const renderFeedBooks = (feedEl, books) => {
                     <p class="book-card__author-line">by <span class="book__author">${book.author}</span></p>
                     <div class="book-card__rating">` +
             ratingStars.join(' ') +
-            `</div>
-                    <div class="book-card__secondary-data">
+            `</div>` +
+            review +
+            `<div class="book-card__secondary-data">
                         <div class="book-card__secondary-data-content-1">
                             <p class="book-card__genre">${book.genre}</p>
                             <a href="/${book.user.username}/books/${

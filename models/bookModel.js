@@ -68,8 +68,7 @@ const bookSchema = new mongoose.Schema({
     },
     review: {
         type: String,
-        maxlength: 500,
-        minlength: 50
+        maxlength: 280
     },
     likedBy: [
         {

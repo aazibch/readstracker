@@ -17,7 +17,7 @@ mixin bookCard(book, type)
                         i.fas.fa-ellipsis-h
                     ul.dropdown-menu.book-card__dropdown-menu
                         li
-                            a(href=`${book.user.username}/books/${book._id}/edit`) Edit
+                            a(href=`/${book.user.username}/books/${book._id}/edit`) Edit
                         li
                             a.book-card__book-delete-button(id=`book-card__book-delete-button:${book._id}` role='button') Delete
         section.book-card__info
@@ -28,6 +28,8 @@ mixin bookCard(book, type)
             .book-card__rating
                 each star in [1, 2, 3, 4, 5]
                     i(class=`far fa-star ${star <= book.rating ? 'star-highlighted' : '' }`)
+            if (book.review)
+                .book-card__review= book.review
             .book-card__secondary-data
                 .book-card__secondary-data-content-1
                     p.book-card__genre= book.genre

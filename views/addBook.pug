@@ -28,6 +28,9 @@ block content
                         option= genre
 
                 label.form__label Review (optional)
-                textarea.book-form__review-input
+                textarea(maxlength="280").book-form__review-input.form__review-input
+                p.form__review-message
+                    span.form__review-char-count 0
+                    |  / 280
 
                 input.button-primary(type='submit' value='Submit')
