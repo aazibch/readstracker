@@ -32,9 +32,11 @@
 .connections {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
 }
 
 .users-list-triggers {
+    height: 1.2rem;
     display: flex;
 
     &__followers {
