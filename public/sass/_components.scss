@@ -252,6 +252,24 @@
         margin-bottom: 0.7rem;
         color: $secondary-color;
     }
+
+    &__review-input {
+        width: 100%;
+        height: 7.5rem;
+        resize: none;
+        border-radius: 2px;
+        box-sizing: border-box;
+        // margin-bottom: 1.5rem;
+        border-style: none;
+        background: #eeeeee;
+        padding: 0.5rem;
+    }
+
+    &__review-message {
+        margin: 0.5rem 0 1.5rem;
+        font-size: 0.8rem;
+        text-align: right;
+    }
 }
 
 .star-highlighted {
@@ -359,6 +377,10 @@
 
     &__author-line {
         margin: 0 0 0.4rem;
+    }
+
+    &__rating {
+        margin-bottom: 1rem;
     }
 
     &__date-added {

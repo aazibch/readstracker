@@ -621,6 +621,17 @@ if (logoutListItemEl) {
 const bookFormEl = document.querySelector('.book-form');
 const editBookFormEl = document.querySelector('.edit-book-form');
 const ratingInput = document.querySelector('.form__stars');
+const bookReviewInputEl = document.querySelector('.form__review-input');
+
+if (bookReviewInputEl) {
+    const charCountEl = document.querySelector('.form__review-char-count');
+
+    charCountEl.textContent = bookReviewInputEl.value.length;
+
+    bookReviewInputEl.addEventListener('keyup', (e) => {
+        charCountEl.textContent = e.target.value.length;
+    });
+}
 
 if (bookFormEl) {
     bookFormEl.addEventListener('submit', async (e) => {
@@ -692,7 +703,19 @@ if (editBookFormEl) {
         ).value;
         submitButtonEl.setAttribute('disabled', '');
 
-        const response = await updateBook(id, { title, author, rating, genre });
+        const review =
+            document.querySelector('.edit-book-form__review-input').value
+                .length > 0
+                ? document.querySelector('.edit-book-form__review-input').value
+                : null;
+
+        const response = await updateBook(id, {
+            title,
+            author,
+            rating,
+            genre,
+            review
+        });
 
         if (!response) {
             return submitButtonEl.removeAttribute('disabled');

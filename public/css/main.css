@@ -201,6 +201,21 @@
   margin-bottom: 0.7rem;
   color: #4d5156;
 }
+.form__review-input {
+  width: 100%;
+  height: 7.5rem;
+  resize: none;
+  border-radius: 2px;
+  box-sizing: border-box;
+  border-style: none;
+  background: #eeeeee;
+  padding: 0.5rem;
+}
+.form__review-message {
+  margin: 0.5rem 0 1.5rem;
+  font-size: 0.8rem;
+  text-align: right;
+}
 
 .star-highlighted {
   color: #ffa500;
@@ -287,6 +302,9 @@
 }
 .book-card__author-line {
   margin: 0 0 0.4rem;
+}
+.book-card__rating {
+  margin-bottom: 1rem;
 }
 .book-card__date-added {
   margin-bottom: 0;
@@ -1162,18 +1180,6 @@ main {
     justify-content: center;
   }
 }
-.book-form__review-input {
-  width: 100%;
-  height: 10rem;
-  resize: vertical;
-  border-radius: 2px;
-  box-sizing: border-box;
-  margin-bottom: 1.5rem;
-  border-style: none;
-  background: #eeeeee;
-  padding: 0.5rem;
-}
-
 .settings-details-form {
   border-top: 1px solid #e0e0e0;
 }

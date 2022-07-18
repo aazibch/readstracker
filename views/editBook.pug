@@ -4,37 +4,42 @@ block content
     .page-container
         .form-container
             form.edit-book-form.form(data-id = book._id)
-                    h1.heading-1.form__heading Edit book
-                    label.form__label Title
-                    input.edit-book-form__title-field.form__input-field(type='text' value=book.title)
-                    label.form__label Author
-                    input.edit-book-form__author-field.form__input-field(type='text' value=book.author)
-                    
-                    label.form__label Rating
-                    .form__stars
-                        each star in [1, 2, 3, 4, 5]
-                            -
-                                const starClasses = ['fas', 'fa-star'];
+                h1.heading-1.form__heading Edit book
+                label.form__label Title
+                input.edit-book-form__title-field.form__input-field(type='text' value=book.title)
+                label.form__label Author
+                input.edit-book-form__author-field.form__input-field(type='text' value=book.author)
+                
+                label.form__label Rating
+                .form__stars
+                    each star in [1, 2, 3, 4, 5]
+                        -
+                            const starClasses = ['fas', 'fa-star'];
 
-                                if (star <= book.rating) {
-                                    starClasses.push('star-highlighted');
-                                }
+                            if (star <= book.rating) {
+                                starClasses.push('star-highlighted');
+                            }
 
-                                if (star === book.rating) {
-                                    starClasses.push('form__star--selected')
-                                }
-                                
-                            i(class= starClasses.join(' ') data-index= star - 1)
-                    label.form__label Genre
-                        - const genres = ['Action and Adventure', 'Biography or Autobiography', 'Coming-of-age', 'Crime', 'Drama', 'Dystopian Fuction', 'Fantasy', 'History', 'Mystery', 'Pop-sci', 'Poetry', 'Romance', 'Self help', 'Sci-fi', 'Satire', 'Spirituality', 'Thriller', 'Philosophical Fiction'];
-                    
-                    select.edit-book-form__genre-field.form__input-field
-                        option Select a Genre
-                        each genre in genres
-                            if genre === book.genre
-                                option(selected)= genre
-                            else
-                                option= genre
-                    
-                    input.button-primary(type='submit' value='Submit')
-                    .edit-book-form__loading-spinner.loading-spinner
+                            if (star === book.rating) {
+                                starClasses.push('form__star--selected')
+                            }
+                            
+                        i(class= starClasses.join(' ') data-index= star - 1)
+                label.form__label Genre
+                    - const genres = ['Action and Adventure', 'Biography or Autobiography', 'Coming-of-age', 'Crime', 'Drama', 'Dystopian Fuction', 'Fantasy', 'History', 'Mystery', 'Pop-sci', 'Poetry', 'Romance', 'Self help', 'Sci-fi', 'Satire', 'Spirituality', 'Thriller', 'Philosophical Fiction'];
+                
+                select.edit-book-form__genre-field.form__input-field
+                    option Select a Genre
+                    each genre in genres
+                        if genre === book.genre
+                            option(selected)= genre
+                        else
+                            option= genre
+
+                label.form__label Review (optional)
+                textarea(maxlength='280').form__review-input.edit-book-form__review-input= book.review
+                p.form__review-message
+                    span.form__review-char-count 0
+                    |  / 280
+                
+                input.button-primary(type='submit' value='Submit')
