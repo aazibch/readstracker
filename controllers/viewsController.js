@@ -150,7 +150,29 @@ exports.getEditBookPage = catchAsync(async (req, res, next) => {
 
 exports.getSettingsPage = catchAsync(async (req, res) => {
     res.status(200).render('settings', {
-        title: 'Settings | ReadsTracker'
+        title: 'Settings | ReadsTracker',
+        pageType: 'settings'
+    });
+});
+
+exports.getEditProfilePage = catchAsync(async (req, res) => {
+    res.status(200).render('settings', {
+        title: 'Edit Profile | ReadsTracker',
+        pageType: 'subpage'
+    });
+});
+
+exports.getChangePasswordPage = catchAsync(async (req, res) => {
+    res.status(200).render('settings', {
+        title: 'Change Password | ReadsTracker',
+        pageType: 'subpage'
+    });
+});
+
+exports.getDeleteAccountPage = catchAsync(async (req, res) => {
+    res.status(200).render('settings', {
+        title: 'Delete Account | ReadsTracker',
+        pageType: 'subpage'
     });
 });
 

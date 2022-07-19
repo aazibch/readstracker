@@ -1,34 +1,66 @@
 extends base
 
 block content
-    .page-container
-        .form-container
-            h1.heading-1.form__heading Settings
-            form.form.settings-details-form
-                h2.heading-3.form__heading Update details
-                label.form__label Name
-                input.settings-details-form__name-field.form__input-field(type='text' value=user.username)
-                label.form__label Email
-                input.settings-details-form__email-field.form__input-field(type='email' value=user.email)
-                label.form__label Profile Photo
-                input.settings-details-form__photo-upload.form__file-upload(type='file' accept='image/*')
-                
-                input.button-primary(type='submit' value='Submit')
-                .settings-details-form__loading-spinner.loading-spinner.settings-loading-spinner
+    -
+        const pageClasses = ['page-container', 'settings-page'];
 
-            form.form.settings-password-form
-                h2.heading-3.form__heading Update password
-                label.form__label Current Password
-                input.settings-password-form__current-password-field.form__input-field(type='password')
-                label.form__label New Password
-                input.settings-password-form__password-field.form__input-field(type='password')
-                label.form__label Confirm New Password
-                input.settings-password-form__confirm-password-field.form__input-field(type='password')
-                
-                input.button-primary(type='submit' value='Submit')
-                .settings-password-form__loading-spinner.loading-spinner.settings-loading-spinner
+        if (pageType === 'settings') {
+            pageClasses.push('page-type-settings');
+        } else if (pageType === 'subpage') {
+            pageClasses.push('page-type-subpage');
+        }
 
-            .settings-delete-button-container
-                h2.heading-3.form__heading Delete account
-                button.settings-delete-button.button-danger Delete
-                .settings-delete__loading-spinner.loading-spinner.settings-loading-spinner
+        const pageTitle = title.split(' | ')[0];
+
+    .page-container(class= pageClasses.join(' '))
+        .settings__sidebar
+            .settings__header
+                h2.settings__heading Settings
+            ul.settings__nav
+                -
+                    const navItems = [
+                        {name: 'Edit Profile', url: '/settings/profile'},
+                        {name: 'Change Password', url: '/settings/password'},
+                        {name: 'Delete Account', url: '/settings/delete'}
+                    ];
+                each navItem in navItems
+                    -
+                        const navItemClasses = ['settings__nav-item'];
+                        if (navItem.name === pageTitle)
+                            navItemClasses.push('settings__nav-item--selected');
+
+                    li(class= navItemClasses.join(' '))
+                        a(href= navItem.url)= navItem.name
+        .settings__main
+            if (pageTitle === 'Settings')
+                p.app-message.app-message__large Please select an option from the sidebar.
+            if (pageTitle === 'Edit Profile')
+                .settings__subpage-header
+                    h2 Edit Profile
+                form.form.settings-form.settings-details-form
+                    label.form__label Name
+                    input.settings-details-form__name-field.form__input-field(type='text' value=user.username)
+                    label.form__label Email
+                    input.settings-details-form__email-field.form__input-field(type='email' value=user.email)
+                    label.form__label Profile Photo
+                    input.settings-details-form__photo-upload.form__file-upload(type='file' accept='image/*')
+                    
+                    input.button-primary(type='submit' value='Submit')
+            if (pageTitle === 'Change Password')
+                .settings__subpage-header
+                    h2 Change Password
+                form.form.settings-form.settings-password-form
+                    label.form__label Current Password
+                    input.settings-password-form__current-password-field.form__input-field(type='password')
+                    label.form__label New Password
+                    input.settings-password-form__password-field.form__input-field(type='password')
+                    label.form__label Confirm New Password
+                    input.settings-password-form__confirm-password-field.form__input-field(type='password')
+                    
+                    input.button-primary(type='submit' value='Submit')
+            if (title.split(' | ')[0] === 'Delete Account')
+                .settings__subpage-header
+                    h2 Delete Account
+                .settings-form
+                    p We're sorry to see you go.
+                    button.settings-delete-button.button-danger Delete

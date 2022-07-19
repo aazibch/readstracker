@@ -1180,20 +1180,94 @@ main {
     justify-content: center;
   }
 }
-.settings-details-form {
-  border-top: 1px solid #e0e0e0;
+.settings-page {
+  display: flex;
+  max-width: 55rem;
+  margin-left: auto;
+  margin-right: auto;
+  height: 100vh;
 }
 
-.settings-password-form {
-  border-top: 1px solid #e0e0e0;
-  margin-top: 2rem;
+.settings__header {
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  flex: 0 0 4rem;
+}
+.settings__sidebar {
+  height: 100%;
+  flex: 0 0 20rem;
+  border: 1px solid #e0e0e0;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+.settings__nav {
+  list-style-type: none;
+}
+.settings__nav-item {
+  border-bottom: 1px solid #e0e0e0;
+}
+.settings__nav-item:hover {
+  background-color: #f2f2f2;
+}
+.settings__nav-item a {
+  padding: 1rem;
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+.settings__nav-item a:link {
+  color: #212529;
+  text-decoration: none;
+}
+.settings__nav-item a:visited {
+  color: #212529;
+}
+.settings__nav-item--selected {
+  background-color: #f2f2f2;
+}
+.settings__main {
+  flex: 1 1 auto;
+  border: 1px solid #e0e0e0;
+  border-left-style: none;
+  background-color: #fff;
+}
+.settings__subpage-header {
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 2rem;
 }
 
-.settings-delete-button-container {
-  border-top: 1px solid #e0e0e0;
-  margin-top: 2rem;
+.settings-form {
+  max-width: 25rem;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
+.settings-delete-button {
+  margin-top: 1rem;
+}
+
+@media (max-width: 767.98px) {
+  .page-type-settings .settings__main {
+    display: none;
+  }
+  .page-type-settings .settings__sidebar {
+    flex-grow: 1;
+  }
+  .page-type-subpage .settings__sidebar {
+    display: none;
+  }
+  .page-type-subpage .settings__main {
+    flex-grow: 1;
+    border-left: 1px solid #e0e0e0;
+  }
+}
 .error-message {
   margin: 12rem 0 5rem;
   font-size: 1.5rem;
@@ -1256,7 +1330,7 @@ main {
 }
 .messages__sidebar {
   height: 100%;
-  flex: 0 1 20rem;
+  flex: 0 0 20rem;
   border: 1px solid #e0e0e0;
   background-color: #fff;
   display: flex;

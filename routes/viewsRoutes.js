@@ -25,6 +25,24 @@ router.get(
 );
 
 router.get(
+    '/settings/profile',
+    authController.protect,
+    viewsController.getEditProfilePage
+);
+
+router.get(
+    '/settings/password',
+    authController.protect,
+    viewsController.getChangePasswordPage
+);
+
+router.get(
+    '/settings/delete',
+    authController.protect,
+    viewsController.getDeleteAccountPage
+);
+
+router.get(
     '/messages',
     authController.protect,
     viewsController.getConversations
