@@ -113,15 +113,10 @@ exports.getProfile = catchAsync(async (req, res, next) => {
 });
 
 exports.getBook = catchAsync(async (req, res, next) => {
-    const book = await Book.findById(req.params.id)
-        .populate({
-            path: 'user',
-            select: 'username profilePhoto'
-        })
-        .populate({
-            path: 'likedBy',
-            select: 'profilePhoto username'
-        });
+    const book = await Book.findById(req.params.id).populate({
+        path: 'user',
+        select: 'username profilePhoto'
+    });
 
     if (!book || book.user.username !== req.params.username)
         return next(new AppError('Route not found.', 404));
