@@ -16,8 +16,6 @@ exports.getAllMyBooks = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllBooks = catchAsync(async (req, res, next) => {
-    console.log('[getAllBooks] req.params.userId', req.params.userId);
-
     const books = await Book.find({ user: req.params.userId })
         .populate({
             path: 'user',
