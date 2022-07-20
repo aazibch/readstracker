@@ -33,6 +33,8 @@ const sendLogoutCookie = (res) => {
     });
 };
 
+exports.sendLogoutCookie = sendLogoutCookie;
+
 exports.signup = catchAsync(async (req, res, next) => {
     const filteredBody = filterObject(
         req.body,
@@ -131,7 +133,7 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
     try {
         let token = req.cookies.jwt;
 
-        decodedToken = await promisify(jwt.verify)(
+        let decodedToken = await promisify(jwt.verify)(
             token,
             process.env.JWT_SECRET
         );

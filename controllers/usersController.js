@@ -5,6 +5,7 @@ const AppError = require('../utils/appError');
 const filterObject = require('../utils/filterObject');
 const User = require('../models/userModel');
 const Notification = require('../models/notificationModel');
+const authController = require('./authController');
 
 exports.getLoggedInUserDoc = async (userId) => {
     const user = await User.findById(userId)
@@ -86,6 +87,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 exports.deleteMe = catchAsync(async (req, res, next) => {
     const user = await User.findByIdAndUpdate(req.user._id, { active: false });
 
+    authController.sendLogoutCookie(res);
     res.status(204).json({
         status: 'success',
         data: user

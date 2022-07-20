@@ -599,6 +599,7 @@ if (loginFormEl) {
         const res = await auth('login', { email, password });
 
         if (!res) {
+            document.querySelector('.login-form__password-field').value = '';
             return authFormButtonEl.removeAttribute('disabled');
         }
 
@@ -738,13 +739,17 @@ if (ratingInput) {
 // end of books
 
 // settings
-const settingsDetailsForm = document.querySelector('.settings-details-form');
-const settingsPasswordForm = document.querySelector('.settings-password-form');
-const settingsDeleteButton = document.querySelector('.settings-delete-button');
+const settingsDetailsFormEl = document.querySelector('.settings-details-form');
+const settingsPasswordFormEl = document.querySelector(
+    '.settings-password-form'
+);
+const settingsDeleteButtonEl = document.querySelector(
+    '.settings-delete-button'
+);
 const searchUsersFieldEl = document.querySelector('.search-users__input-field');
 
-if (settingsDetailsForm) {
-    settingsDetailsForm.addEventListener('submit', async (e) => {
+if (settingsDetailsFormEl) {
+    settingsDetailsFormEl.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const submitButtonEl = document.querySelector(
@@ -778,8 +783,10 @@ if (settingsDetailsForm) {
             location.reload();
         }, 1500);
     });
+}
 
-    settingsPasswordForm.addEventListener('submit', async (e) => {
+if (settingsPasswordFormEl) {
+    settingsPasswordFormEl.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const submitButtonEl = document.querySelector(
@@ -807,12 +814,13 @@ if (settingsDetailsForm) {
         clearPasswordInputFields();
         submitButtonEl.removeAttribute('disabled');
     });
-
-    settingsDeleteButton.addEventListener('click', (e) => {
+}
+if (settingsDeleteButtonEl) {
+    settingsDeleteButtonEl.addEventListener('click', (e) => {
         displayConfirmationModal(
             'Are you sure you want to delete your account?',
             async () => {
-                settingsDeleteButton.setAttribute('disabled', '');
+                settingsDeleteButtonEl.setAttribute('disabled', '');
                 const response = await deleteUser();
 
                 if (!response) {

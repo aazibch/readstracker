@@ -31,7 +31,7 @@ header.header
                             a(href='/').main-buttons__home <i class="fa-solid fa-house"></i>
                         div(class= messagesButtonClasses.join(' '))
                             if user.unreadConversationsCount > 0
-                                a(href='/messages').main-buttons__count.main-buttons__count--active.main-buttons__conversations-count= user.unreadConversationsCount
+                                .main-buttons__count.main-buttons__count--active.main-buttons__conversations-count= user.unreadConversationsCount
                             else
                                 .main-buttons__count.main-buttons__conversations-count 0
                             a(href='/messages').main-buttons__messages <i class="fa-solid fa-message"></i>

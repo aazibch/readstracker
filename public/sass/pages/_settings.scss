@@ -1,13 +1,116 @@
-.settings-details-form {
-    border-top: 1px solid $generic-border-color;
+.settings-page {
+    display: flex;
+    max-width: 55rem;
+    margin-left: auto;
+    margin-right: auto;
+    height: 100vh;
 }
 
-.settings-password-form {
-    border-top: 1px solid $generic-border-color;
-    margin-top: 2rem;
+.settings {
+    &__header {
+        border-bottom: 1px solid $generic-border-color;
+        display: flex;
+        align-items: center;
+        padding: 0 1rem;
+        flex: 0 0 4rem;
+    }
+
+    &__sidebar {
+        height: 100%;
+        flex: 0 0 20rem;
+        border: 1px solid $generic-border-color;
+        background-color: #fff;
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__nav {
+        list-style-type: none;
+    }
+
+    &__nav-item {
+        border-bottom: 1px solid $generic-border-color;
+
+        &:hover {
+            background-color: darken(#fff, 5%);
+        }
+
+        a {
+            padding: 1rem;
+            display: block;
+            height: 100%;
+            width: 100%;
+
+            &:link {
+                color: $body-text-color;
+                text-decoration: none;
+            }
+        
+            &:visited {
+                color: $body-text-color;
+            }
+        }
+
+        &--selected {
+            background-color: darken(#fff, 5%);
+        }
+    }
+
+    &__main {
+        flex: 1 1 auto;
+        border: 1px solid $generic-border-color;
+        border-left-style: none;
+        background-color: #fff;
+    }
+
+    &__subpage-header {
+        height: 4rem;
+        display: flex;
+        align-items: center;
+        padding: 0 1rem;
+        border-bottom: 1px solid $generic-border-color;
+        margin-bottom: 2rem;
+    }
 }
 
-.settings-delete-button-container {
-    border-top: 1px solid $generic-border-color;
-    margin-top: 2rem;
+.settings-form {
+    max-width: 25rem;
+    margin: 0 auto;
+    padding: 0 1rem;
 }
+
+.settings-delete-button {
+    margin-top: 1rem;
+}
+
+// Media queries
+
+// Small devices (landscape phones, less than 768px)
+@media (max-width: 767.98px) {
+    .page-type-settings {
+        .settings {
+            &__main {
+                display: none;
+            }
+    
+            &__sidebar {
+                flex-grow: 1;
+            }
+        }
+    }
+
+    .page-type-subpage {
+        .settings {
+            &__sidebar {
+                display: none;
+            }
+
+            &__main {
+                flex-grow: 1;
+                border-left: 1px solid $generic-border-color;
+            }
+        }
+    }
+}
+
+// End of media queries

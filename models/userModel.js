@@ -65,16 +65,7 @@ const userSchema = new mongoose.Schema(
             }
         },
         passwordChangeDate: {
-            type: Date,
-            select: false
-        },
-        passwordResetToken: {
-            type: String,
-            select: false
-        },
-        passwordResetTokenExpirationDate: {
-            type: Date,
-            select: false
+            type: Date
         },
         active: {
             type: Boolean,
@@ -147,7 +138,7 @@ userSchema.methods.changedPasswordAfterToken = function (
         const passwordChangeTimestamp =
             this.passwordChangeDate.getTime() / 1000;
 
-        return passwordChangeTimestamp > tokenIssuanceTimestamp;
+        return tokenIssuanceTimestamp < passwordChangeTimestamp;
     }
 
     return false;
