@@ -27,7 +27,7 @@ export const updateUser = catchAsync(async (data) => {
 
 export const deleteUser = catchAsync(async () => {
     const response = await axios({
-        url: 'api/v1/users/me',
+        url: '/api/v1/users/me',
         method: 'Delete'
     });
 
@@ -39,7 +39,7 @@ export const deleteUser = catchAsync(async () => {
 
 export const updatePassword = catchAsync(async (data) => {
     const response = await axios({
-        url: 'api/v1/users/updateMyPassword',
+        url: '/api/v1/users/updateMyPassword',
         method: 'PATCH',
         data
     });
