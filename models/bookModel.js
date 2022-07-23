@@ -1,5 +1,25 @@
 const mongoose = require('mongoose');
 
+const commentSchema = new mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: [true, 'Please provide a user.']
+    },
+    dateCreated: {
+        type: Date,
+        default: Date.now
+    },
+    content: {
+        type: String,
+        maxlength: [
+            150,
+            'Message content should have fewer than one hundred and fifty one characters.'
+        ],
+        required: true
+    }
+});
+
 const bookSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -76,7 +96,10 @@ const bookSchema = new mongoose.Schema({
             ref: 'User',
             default: []
         }
-    ]
+    ],
+    comments: {
+        type: [commentSchema]
+    }
 });
 
 const Book = mongoose.model('Book', bookSchema);
