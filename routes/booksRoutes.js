@@ -4,6 +4,10 @@ const router = express.Router();
 const booksController = require('../controllers/booksController');
 const authController = require('../controllers/authController');
 
+const commentsRouter = require('./commentsRoutes');
+
+router.use('/:bookId/comments', commentsRouter);
+
 router.use(authController.protect);
 
 router
