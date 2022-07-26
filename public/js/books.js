@@ -154,14 +154,14 @@ export const bookDeleteButtonClickHandler = (e) => {
 
 export const likeButtonClickHandler = async (e) => {
     const id = e.currentTarget.id.split(':')[1];
-    const buttonEl = document.querySelector(`#like-button\\:${id}`);
+    const buttonEl = document.querySelector(`#book-card__like-button\\:${id}`);
 
     buttonEl.setAttribute('disabled', '');
 
     const res = await likeBook(id);
 
     if (res) {
-        changeLikeButtonState(`#like-button\\:${id}`, 'liked');
+        changeLikeButtonState(`#book-card__like-button\\:${id}`, 'liked');
         updateLikesQuantityButton(
             `#book-card__likes-quantity\\:${id}`,
             'increment'
@@ -173,14 +173,14 @@ export const likeButtonClickHandler = async (e) => {
 
 export const unlikeButtonClickHandler = async (e) => {
     const id = e.currentTarget.id.split(':')[1];
-    const buttonEl = document.querySelector(`#like-button\\:${id}`);
+    const buttonEl = document.querySelector(`#book-card__like-button\\:${id}`);
 
     buttonEl.setAttribute('disabled', '');
 
     const res = await unlikeBook(id);
 
     if (res) {
-        changeLikeButtonState(`#like-button\\:${id}`, 'like');
+        changeLikeButtonState(`#book-card__like-button\\:${id}`, 'like');
         updateLikesQuantityButton(
             `#book-card__likes-quantity\\:${id}`,
             'decrement'
@@ -240,7 +240,7 @@ const changeLikeButtonState = (buttonSelector, newState) => {
 
     if (newState === 'liked') {
         buttonEl.innerHTML = '<i class="fa-solid fa-thumbs-up"></i> Liked';
-        buttonEl.classList.add('like-button--selected');
+        buttonEl.classList.add('book-card__like-button--selected');
         buttonEl.dataset.action = 'unlike';
         buttonEl.removeEventListener('click', likeButtonClickHandler);
         buttonEl.addEventListener('click', unlikeButtonClickHandler);
@@ -248,7 +248,7 @@ const changeLikeButtonState = (buttonSelector, newState) => {
 
     if (newState === 'like') {
         buttonEl.innerHTML = '<i class="fa-solid fa-thumbs-up"></i> Like';
-        buttonEl.classList.remove('like-button--selected');
+        buttonEl.classList.remove('book-card__like-button--selected');
         buttonEl.dataset.action = 'like';
         buttonEl.removeEventListener('click', unlikeButtonClickHandler);
         buttonEl.addEventListener('click', likeButtonClickHandler);
@@ -269,13 +269,13 @@ export const attachBooksEventListeners = () => {
         });
 
     document
-        .querySelectorAll('.like-button[data-action="like"]')
+        .querySelectorAll('.book-card__like-button[data-action="like"]')
         .forEach((el) => {
             el.addEventListener('click', likeButtonClickHandler);
         });
 
     document
-        .querySelectorAll('.like-button[data-action="unlike"]')
+        .querySelectorAll('.book-card__like-button[data-action="unlike"]')
         .forEach((el) => {
             el.addEventListener('click', unlikeButtonClickHandler);
         });
@@ -318,21 +318,32 @@ export const renderFeedBooks = (feedEl, books) => {
             return u.toString() === loggedInUserId;
         });
 
-        const likeButton = `<button id="like-button:${
+        const likeButton = `<button id="book-card__like-button:${
             book._id
-        }" class="button-light button-small like-button ${
-            likedBook ? 'like-button--selected' : ''
+        }" class="button-light button-small book-card__like-button ${
+            likedBook ? 'book-card__like-button--selected' : ''
         }" data-action="${
             likedBook ? 'unlike' : 'like'
         }"><i class="fa-solid fa-thumbs-up"></i> ${
             likedBook ? 'Liked' : 'Like'
         }</button>`;
 
+        const commentButton = `<a class="button-light button-small book-card__comment-button book-card__footer-button" href="/${book.user.username}/books/${book._id}?comment=true">
+            <i class="fa-solid fa-comments"></i>
+            Comment
+        <a/>`;
+
         const likesQuantity = `<p id="book-card__likes-quantity:${
             book._id
-        }" class="book-card__likes-quantity">${book.likedBy.length} Like${
+        }" class="book-card__footer-indicator">${book.likedBy.length} Like${
             book.likedBy.length > 1 || book.likedBy.length === 0 ? 's' : ''
         }</p>`;
+
+        const commentsQuantity = `<a href='/aazibch/books/${
+            book._id
+        }' class="book-card__footer-indicator">${book.comments.length} Comment${
+            book.comments.length > 1 || book.comments.length === 0 ? 's' : ''
+        }</a>`;
 
         let review = '';
 
@@ -372,13 +383,18 @@ export const renderFeedBooks = (feedEl, books) => {
                         </div>
                     </div>
                 </section>
-                <section class="book-card__likes">` +
+                <section class="book-card__footer">
+                    <div class="book-card__footer-buttons">` +
             likeButton +
+            commentButton +
+            `</div>
+                    <div class="book-card__footer-indicators">` +
+            commentsQuantity +
             likesQuantity +
-            `
+            ` </div>
                 </section>
-            </div>
-        `;
+        </div>
+                `;
     });
 
     const parentEl = document.querySelector(feedEl);

@@ -34,15 +34,21 @@ mixin bookCard(book, type)
                 .book-card__secondary-data-content-1
                     p.book-card__genre= book.genre
                     a(href=`/${book.user.username}/books/${book._id}`).book-card__date-added= book.dateCreated.toLocaleString('en-us', {day: '2-digit', weekday: 'short', month: 'long', year: 'numeric'})
-        section.book-card__likes
+        section.book-card__footer
             -
                 const likedBook = book.likedBy.some((u) => {
                     return u.toString() === user._id.toString();
                 });
 
-            button(id=`like-button:${book._id}`
-                class=`button-light button-small like-button ${likedBook ? 'like-button--selected' : ''}`
-                data-action=`${likedBook ? 'unlike' : 'like'}`)
-                    i.fa-solid.fa-thumbs-up
-                    |  #{likedBook ? 'Liked' : 'Like'}
-            p.book-card__likes-quantity(id=`book-card__likes-quantity:${book._id}`)= `${book.likedBy.length} Like${book.likedBy.length > 1 || book.likedBy.length === 0 ? 's' : ''}`
+            .book-card__footer-buttons
+                button(id=`book-card__like-button:${book._id}`
+                    class=`button-light button-small book-card__like-button book-card__footer-button ${likedBook ? 'book-card__like-button--selected' : ''}`
+                    data-action=`${likedBook ? 'unlike' : 'like'}`)
+                        i.fa-solid.fa-thumbs-up
+                        |  #{likedBook ? 'Liked' : 'Like'}
+                button(type='button' class='button-light button-small book-card__comment-button book-card__footer-button')
+                    i.fa-solid.fa-comments
+                    |  Comment
+            .book-card__footer-indicators
+                p.book-card__footer-indicator.book-card__footer-indicator--disabled= `${book.comments.length} Comment${book.comments.length > 1 || book.comments.length === 0 ? 's' : ''}`
+                p.book-card__footer-indicator(id=`book-card__likes-quantity:${book._id}`)= `${book.likedBy.length} Like${book.likedBy.length > 1 || book.likedBy.length === 0 ? 's' : ''}`

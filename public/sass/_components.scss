@@ -276,12 +276,6 @@
     color: #ffa500;
 }
 
-.like-button {
-    &--selected {
-        color: $primary-color;
-    }
-}
-
 .book-card {
     box-shadow: $shadow-light;
     background: #fff;
@@ -423,23 +417,51 @@
         color: $secondary-color;
     }
 
-    &__likes-quantity {
+    &__footer-indicators {
+        display: flex;
+    }
+
+    &__footer-indicator {
         cursor: pointer;
         color: $secondary-color;
         font-size: .875rem;
-        margin-left: auto;
+        text-decoration: none;
+        margin-right: 0.5rem;
 
         &:hover {
             text-decoration: underline;
         }
+
+        &:last-child {
+            margin-right: 0;
+        }
+
+        &--disabled {
+            cursor: auto;
+
+            &:hover {
+                text-decoration: none;
+            }
+        }
     }
 
-    &__likes {
+    &__footer {
         border-top: 1px solid $generic-border-color;
         padding: 1rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
+    }
+
+    &__footer-button {
+        display: inline-block;
+    }
+
+    &__like-button {
+        margin-right: 0.5rem;
+        &--selected {
+            color: $primary-color;
+        }
     }
 }
 
