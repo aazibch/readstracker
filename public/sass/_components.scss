@@ -463,6 +463,60 @@
             color: $primary-color;
         }
     }
+
+    &__comments-section {
+        border-top: 1px solid $generic-border-color;
+        background-color: #eceff4;
+    }
+
+    &__comment-form {
+        display: flex;
+        padding: 0.75rem;
+
+        input[type="submit"] {
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+    }
+
+    &__comment-input {
+        flex: 1 1 auto;
+        box-sizing: border-box;
+        padding: 0 0.5rem;
+        margin-right: 0.5rem;
+    }
+
+    &__comment {
+        padding: 0.75rem;
+        border-bottom: 1px solid $generic-border-color;
+        display: flex;
+        font-size: 0.9rem;
+    }
+
+    &__comment-user-photo {
+        width: 2.5rem;
+        height: 2.5rem;
+        margin-right: 0.5rem;
+    }
+
+    &__comment-username {
+        &:link, &:visited, &:active {
+            color: $body-text-color;
+        }
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    &__comment-content {
+        margin-bottom: 0.25rem;
+    }
+
+    &__comment-date {
+        color: $secondary-color;
+        font-size: 0.8rem;
+    }
 }
 
 .add-book-button-container {

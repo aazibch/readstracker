@@ -370,6 +370,48 @@
 .book-card__like-button--selected {
   color: #4a4a4a;
 }
+.book-card__comments-section {
+  border-top: 1px solid #e0e0e0;
+  background-color: #eceff4;
+}
+.book-card__comment-form {
+  display: flex;
+  padding: 0.75rem;
+}
+.book-card__comment-form input[type=submit] {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+.book-card__comment-input {
+  flex: 1 1 auto;
+  box-sizing: border-box;
+  padding: 0 0.5rem;
+  margin-right: 0.5rem;
+}
+.book-card__comment {
+  padding: 0.75rem;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  font-size: 0.9rem;
+}
+.book-card__comment-user-photo {
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-right: 0.5rem;
+}
+.book-card__comment-username:link, .book-card__comment-username:visited, .book-card__comment-username:active {
+  color: #212529;
+}
+.book-card__comment-username:hover {
+  text-decoration: underline;
+}
+.book-card__comment-content {
+  margin-bottom: 0.25rem;
+}
+.book-card__comment-date {
+  color: #4d5156;
+  font-size: 0.8rem;
+}
 
 .add-book-button-container {
   display: flex;

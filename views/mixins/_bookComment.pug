@@ -1,0 +1,7 @@
+mixin bookComment(comment)
+    .book-card__comment
+        img.user-photo.book-card__comment-user-photo(src=`/images/users/${comment.user.profilePhoto}`)
+        .book-card__comment-text
+            a.book-card__comment-username(href=`/${comment.user.username}`)= comment.user.username
+            p.book-card__comment-content= comment.content
+            p.book-card__comment-date= comment.dateCreated
