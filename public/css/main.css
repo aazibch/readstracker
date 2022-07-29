@@ -387,6 +387,7 @@
   box-sizing: border-box;
   padding: 0 0.5rem;
   margin-right: 0.5rem;
+  border: 1px solid #808080;
 }
 .book-card__comment {
   padding: 0.75rem;
@@ -398,6 +399,10 @@
   width: 2.5rem;
   height: 2.5rem;
   margin-right: 0.5rem;
+}
+.book-card__comment-username {
+  display: inline-block;
+  margin-bottom: 0.25rem;
 }
 .book-card__comment-username:link, .book-card__comment-username:visited, .book-card__comment-username:active {
   color: #212529;
@@ -411,6 +416,16 @@
 .book-card__comment-date {
   color: #4d5156;
   font-size: 0.8rem;
+}
+.book-card__comment-delete-button-container {
+  margin-left: auto;
+}
+.book-card__comment-delete-button {
+  border-style: none;
+  background: #eceff4;
+  padding: 0.3rem 0.5rem;
+  color: #dc3545;
+  margin-left: auto;
 }
 
 .add-book-button-container {
@@ -1540,6 +1555,7 @@ main {
   height: 1rem;
   size: 1rem;
   padding: 0.5rem;
+  border: 1px solid #808080;
 }
 
 @media (max-width: 767.98px) {

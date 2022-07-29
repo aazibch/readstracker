@@ -484,6 +484,7 @@
         box-sizing: border-box;
         padding: 0 0.5rem;
         margin-right: 0.5rem;
+        border: 1px solid #808080;
     }
 
     &__comment {
@@ -500,6 +501,9 @@
     }
 
     &__comment-username {
+        display: inline-block;
+        margin-bottom: 0.25rem;
+
         &:link, &:visited, &:active {
             color: $body-text-color;
         }
@@ -516,6 +520,18 @@
     &__comment-date {
         color: $secondary-color;
         font-size: 0.8rem;
+    }
+
+    &__comment-delete-button-container {
+        margin-left: auto;
+    }
+
+    &__comment-delete-button {
+        border-style: none;
+        background: #eceff4;
+        padding: 0.3rem 0.5rem;
+        color: #dc3545;
+        margin-left: auto;
     }
 }
 
