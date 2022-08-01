@@ -13,7 +13,8 @@ import {
     getHomeFeedBooks,
     getProfileFeedBooks,
     renderFeedBooks,
-    attachBooksEventListeners
+    attachBooksEventListeners,
+    commentDeleteButtonClickHandler
 } from './books';
 import {
     updateUser,
@@ -623,6 +624,7 @@ const bookFormEl = document.querySelector('.book-form');
 const editBookFormEl = document.querySelector('.edit-book-form');
 const ratingInput = document.querySelector('.form__stars');
 const bookReviewInputEl = document.querySelector('.form__review-input');
+const bookCardFullEl = document.querySelector('.book-card__full');
 
 if (bookReviewInputEl) {
     const charCountEl = document.querySelector('.form__review-char-count');
@@ -734,6 +736,16 @@ if (ratingInput) {
     ratingInput.addEventListener('mouseover', ratingMouseOverHandler);
     ratingInput.addEventListener('mouseleave', ratingMouseLeaveHandler);
     ratingInput.addEventListener('click', ratingClickHandler);
+}
+
+if (bookCardFullEl) {
+    const bookCommentDelButtonEls = document.querySelectorAll(
+        '.book-card__comment-delete-button'
+    );
+
+    for (let el of bookCommentDelButtonEls) {
+        el.addEventListener('click', commentDeleteButtonClickHandler);
+    }
 }
 
 // end of books

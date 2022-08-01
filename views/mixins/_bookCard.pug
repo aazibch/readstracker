@@ -56,9 +56,12 @@ mixin bookCard(book, type)
                 p.book-card__footer-indicator(id=`book-card__likes-quantity:${book._id}`)= `${book.likedBy.length} Like${book.likedBy.length > 1 || book.likedBy.length === 0 ? 's' : ''}`
         section.book-card__comments-section
             if (book.comments.length > 0)
+                -
+                    const ownBook = user._id.toString() === book.user._id.toString();
+                    console.log('ownBook', ownBook);
                 .book-card__comments
                     each comment in book.comments
-                        +bookComment(comment)
+                        +bookComment(comment, ownBook)
             form.book-card__comment-form
                 input.book-card__comment-input(type="text")
                 input.button-light(type="submit" value="Post")

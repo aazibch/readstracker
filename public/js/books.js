@@ -46,6 +46,18 @@ export const deleteBook = catchAsync(async (bookId) => {
     return response;
 });
 
+const deleteComment = catchAsync(async (bookId, commentId) => {
+    const response = await axios({
+        url: `/api/v1/books/${bookId}/comments/${commentId}`,
+        method: 'DELETE'
+    });
+
+    // Response with status code 204 don't return a response, therefore I'm hardcoding it.
+    displayAlert('success', 'Comment was deleted successfully.');
+
+    return response;
+});
+
 export const likeBook = catchAsync(async (bookId) => {
     const response = await axios({
         url: `/api/v1/books/${bookId}/likes`,
@@ -147,6 +159,25 @@ export const bookDeleteButtonClickHandler = (e) => {
                         );
                     }
                 }
+            }
+        }
+    );
+};
+
+export const commentDeleteButtonClickHandler = (e) => {
+    const bookId = document.querySelector('.book-card__full').id.split(':')[1];
+    const commentId = e.currentTarget.id.split(':')[1];
+    const commentEl = document.querySelector(
+        `#book-card__comment\\:${commentId}`
+    );
+
+    displayConfirmationModal(
+        'Are you sure you want to delete the comment?',
+        async () => {
+            const res = await deleteComment(bookId, commentId);
+
+            if (res) {
+                commentEl.remove();
             }
         }
     );

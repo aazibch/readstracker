@@ -45,23 +45,27 @@ exports.createComment = catchAsync(async (req, res, next) => {
     });
 });
 
-// exports.deleteNote = catchAsync(async (req, res, next) => {
-//     const book = await Book.findOne({
-//         _id: req.params.bookId,
-//         user: req.user._id
-//     });
+exports.deleteComment = catchAsync(async (req, res, next) => {
+    const book = await Book.findOne({
+        _id: req.params.bookId
+    });
 
-//     if (!book) return next(new AppError('Book not found.', 404));
+    if (!book) return next(new AppError('Comment not found.', 404));
 
-//     const note = book.notes.id(req.params.id);
+    const comment = book.comments.id(req.params.id);
 
-//     if (!note) return next(new AppError('No note found.', 404));
+    if (
+        !comment ||
+        (comment.user.toString() !== req.user._id.toString() &&
+            req.user._id.toString() !== book.user.toString())
+    )
+        return next(new AppError('Comment not found.', 404));
 
-//     note.remove();
-//     await book.save();
+    comment.remove();
+    await book.save();
 
-//     res.status(204).json({
-//         status: 'success',
-//         data: note
-//     });
-// });
+    res.status(204).json({
+        status: 'success',
+        data: comment
+    });
+});

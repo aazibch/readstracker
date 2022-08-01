@@ -1,10 +1,11 @@
-mixin bookComment(comment)
-    .book-card__comment
+mixin bookComment(comment, ownBook)
+    .book-card__comment(id=`book-card__comment:${comment._id}`)
         a(href=`/${comment.user.username}`)
             img.user-photo.book-card__comment-user-photo(src=`/images/users/${comment.user.profilePhoto}`)
         .book-card__comment-text
             a.book-card__comment-username(href=`/${comment.user.username}`)= comment.user.username
             p.book-card__comment-content= comment.content
             p.book-card__comment-date= comment.dateCreated.toLocaleString('en-us', {day: '2-digit', weekday: 'short', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric'})
-        .book-card__comment-delete-button-container
-            button.book-card__comment-delete-button ✕
+        if (user._id.toString() === comment.user._id.toString() || ownBook) 
+            .book-card__comment-delete-button-container
+                button(id=`book-card__comment-delete-button:${comment._id}`).book-card__comment-delete-button ✕
