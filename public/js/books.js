@@ -22,6 +22,18 @@ export const createBook = catchAsync(async (data) => {
     return response;
 });
 
+export const createComment = catchAsync(async (bookId, data) => {
+    const response = await axios({
+        url: `/api/v1/books/${bookId}/comments`,
+        method: 'POST',
+        data
+    });
+
+    displayAlert(response.data.status, response.data.message);
+
+    return response;
+});
+
 export const updateBook = catchAsync(async (bookId, data) => {
     const response = await axios({
         url: `/api/v1/books/${bookId}`,

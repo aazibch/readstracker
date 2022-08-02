@@ -14,7 +14,8 @@ import {
     getProfileFeedBooks,
     renderFeedBooks,
     attachBooksEventListeners,
-    commentDeleteButtonClickHandler
+    commentDeleteButtonClickHandler,
+    createComment
 } from './books';
 import {
     updateUser,
@@ -739,6 +740,8 @@ if (ratingInput) {
 }
 
 if (bookCardFullEl) {
+    const bookCommentForm = document.querySelector('.book-card__comment-form');
+
     const bookCommentDelButtonEls = document.querySelectorAll(
         '.book-card__comment-delete-button'
     );
@@ -746,6 +749,31 @@ if (bookCardFullEl) {
     for (let el of bookCommentDelButtonEls) {
         el.addEventListener('click', commentDeleteButtonClickHandler);
     }
+
+    bookCommentForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const commentInputEl = document.querySelector(
+            '.book-card__comment-input'
+        );
+        const formSubmitButtonEl = document.querySelector(
+            '.book-card__comment-form input[type="submit"]'
+        );
+        const bookId = bookCardFullEl.id.split(':')[1];
+        const input = commentInputEl.value;
+
+        formSubmitButtonEl.setAttribute('disabled', '');
+
+        await createComment(bookId, { content: input });
+        commentInputEl.value = '';
+
+        // console.log(
+        //     'bookCommentForm Submit Handler',
+        //     input,
+        //     bookId,
+        //     formSubmitButton
+        // );
+    });
 }
 
 // end of books
