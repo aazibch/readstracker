@@ -8,7 +8,7 @@ mixin bookCard(book, type)
             bookCardClasses.push('book-card__full');
         }
 
-    div(id=`book-card:${book._id}` class=bookCardClasses.join(' '))
+    div(id=`book-card:${book._id}` class=bookCardClasses.join(' ') data-owner=book.user._id)
         section.book-card__header
             a.book-card__user(href=`/${book.user.username}`)
                 img.user-photo.book-card__user-photo(src=`/images/users/${book.user.profilePhoto}`)

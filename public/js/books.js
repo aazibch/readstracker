@@ -446,3 +446,46 @@ export const renderFeedBooks = (feedEl, books) => {
         parentEl.insertAdjacentHTML('beforeend', html);
     }
 };
+
+export const renderComment = (data, bookOwnerId) => {
+    const commentsEl = document.querySelector('.book-card__comments');
+
+    let deleteButtonHtml = `
+        <div class="book-card__comment-delete-button-container">
+            <button id="book-card__comment-delete-button:${data._id}" class="book-card__comment-delete-button"> ✕ </button>
+        </div>
+    `;
+
+    commentsEl.insertAdjacentHTML(
+        'beforeend',
+        `
+        <div id="book-card__comment:${data._id}" class="book-card__comment">
+            <a href="/${data.user.username}">
+                <img class="user-photo book-card__comment-user-photo" src="/images/users/${
+                    data.user.profilePhoto
+                }">
+            </a>
+            <div class="book-card__comment-text">
+                <a class="book-card__comment-username" href="/${
+                    data.user.username
+                }">
+                    ${data.user.username}
+                </a>
+                <p class="book-card__comment-content">${data.content}</p>
+                <p class="book-card__comment-date">${new Date(
+                    data.dateCreated
+                ).toLocaleString('en-us', {
+                    day: '2-digit',
+                    weekday: 'short',
+                    month: 'long',
+                    year: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric'
+                })}</p>
+            </div>` +
+            deleteButtonHtml +
+            `</div>
+
+    `
+    );
+};
