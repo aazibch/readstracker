@@ -22,6 +22,18 @@ export const createBook = catchAsync(async (data) => {
     return response;
 });
 
+export const createComment = catchAsync(async (bookId, data) => {
+    const response = await axios({
+        url: `/api/v1/books/${bookId}/comments`,
+        method: 'POST',
+        data
+    });
+
+    displayAlert(response.data.status, response.data.message);
+
+    return response;
+});
+
 export const updateBook = catchAsync(async (bookId, data) => {
     const response = await axios({
         url: `/api/v1/books/${bookId}`,
@@ -42,6 +54,18 @@ export const deleteBook = catchAsync(async (bookId) => {
 
     // Response with status code 204 don't return a response, therefore I'm hardcoding it.
     displayAlert('success', 'Book was deleted successfully.');
+
+    return response;
+});
+
+const deleteComment = catchAsync(async (bookId, commentId) => {
+    const response = await axios({
+        url: `/api/v1/books/${bookId}/comments/${commentId}`,
+        method: 'DELETE'
+    });
+
+    // Response with status code 204 don't return a response, therefore I'm hardcoding it.
+    displayAlert('success', 'Comment was deleted successfully.');
 
     return response;
 });
@@ -152,16 +176,35 @@ export const bookDeleteButtonClickHandler = (e) => {
     );
 };
 
+export const commentDeleteButtonClickHandler = (e) => {
+    const bookId = document.querySelector('.book-card__full').id.split(':')[1];
+    const commentId = e.currentTarget.id.split(':')[1];
+    const commentEl = document.querySelector(
+        `#book-card__comment\\:${commentId}`
+    );
+
+    displayConfirmationModal(
+        'Are you sure you want to delete the comment?',
+        async () => {
+            const res = await deleteComment(bookId, commentId);
+
+            if (res) {
+                commentEl.remove();
+            }
+        }
+    );
+};
+
 export const likeButtonClickHandler = async (e) => {
     const id = e.currentTarget.id.split(':')[1];
-    const buttonEl = document.querySelector(`#like-button\\:${id}`);
+    const buttonEl = document.querySelector(`#book-card__like-button\\:${id}`);
 
     buttonEl.setAttribute('disabled', '');
 
     const res = await likeBook(id);
 
     if (res) {
-        changeLikeButtonState(`#like-button\\:${id}`, 'liked');
+        changeLikeButtonState(`#book-card__like-button\\:${id}`, 'liked');
         updateLikesQuantityButton(
             `#book-card__likes-quantity\\:${id}`,
             'increment'
@@ -173,14 +216,14 @@ export const likeButtonClickHandler = async (e) => {
 
 export const unlikeButtonClickHandler = async (e) => {
     const id = e.currentTarget.id.split(':')[1];
-    const buttonEl = document.querySelector(`#like-button\\:${id}`);
+    const buttonEl = document.querySelector(`#book-card__like-button\\:${id}`);
 
     buttonEl.setAttribute('disabled', '');
 
     const res = await unlikeBook(id);
 
     if (res) {
-        changeLikeButtonState(`#like-button\\:${id}`, 'like');
+        changeLikeButtonState(`#book-card__like-button\\:${id}`, 'like');
         updateLikesQuantityButton(
             `#book-card__likes-quantity\\:${id}`,
             'decrement'
@@ -240,7 +283,7 @@ const changeLikeButtonState = (buttonSelector, newState) => {
 
     if (newState === 'liked') {
         buttonEl.innerHTML = '<i class="fa-solid fa-thumbs-up"></i> Liked';
-        buttonEl.classList.add('like-button--selected');
+        buttonEl.classList.add('book-card__like-button--selected');
         buttonEl.dataset.action = 'unlike';
         buttonEl.removeEventListener('click', likeButtonClickHandler);
         buttonEl.addEventListener('click', unlikeButtonClickHandler);
@@ -248,7 +291,7 @@ const changeLikeButtonState = (buttonSelector, newState) => {
 
     if (newState === 'like') {
         buttonEl.innerHTML = '<i class="fa-solid fa-thumbs-up"></i> Like';
-        buttonEl.classList.remove('like-button--selected');
+        buttonEl.classList.remove('book-card__like-button--selected');
         buttonEl.dataset.action = 'like';
         buttonEl.removeEventListener('click', unlikeButtonClickHandler);
         buttonEl.addEventListener('click', likeButtonClickHandler);
@@ -269,13 +312,13 @@ export const attachBooksEventListeners = () => {
         });
 
     document
-        .querySelectorAll('.like-button[data-action="like"]')
+        .querySelectorAll('.book-card__like-button[data-action="like"]')
         .forEach((el) => {
             el.addEventListener('click', likeButtonClickHandler);
         });
 
     document
-        .querySelectorAll('.like-button[data-action="unlike"]')
+        .querySelectorAll('.book-card__like-button[data-action="unlike"]')
         .forEach((el) => {
             el.addEventListener('click', unlikeButtonClickHandler);
         });
@@ -318,21 +361,32 @@ export const renderFeedBooks = (feedEl, books) => {
             return u.toString() === loggedInUserId;
         });
 
-        const likeButton = `<button id="like-button:${
+        const likeButton = `<button id="book-card__like-button:${
             book._id
-        }" class="button-light button-small like-button ${
-            likedBook ? 'like-button--selected' : ''
+        }" class="button-light button-small book-card__like-button ${
+            likedBook ? 'book-card__like-button--selected' : ''
         }" data-action="${
             likedBook ? 'unlike' : 'like'
         }"><i class="fa-solid fa-thumbs-up"></i> ${
             likedBook ? 'Liked' : 'Like'
         }</button>`;
 
+        const commentButton = `<a class="button-light button-small book-card__comment-button book-card__footer-button" href="/${book.user.username}/books/${book._id}?comment=true">
+            <i class="fa-solid fa-comments"></i>
+            Comment
+        <a/>`;
+
         const likesQuantity = `<p id="book-card__likes-quantity:${
             book._id
-        }" class="book-card__likes-quantity">${book.likedBy.length} Like${
+        }" class="book-card__footer-indicator">${book.likedBy.length} Like${
             book.likedBy.length > 1 || book.likedBy.length === 0 ? 's' : ''
         }</p>`;
+
+        const commentsQuantity = `<a href='/aazibch/books/${
+            book._id
+        }' class="book-card__footer-indicator">${book.comments.length} Comment${
+            book.comments.length > 1 || book.comments.length === 0 ? 's' : ''
+        }</a>`;
 
         let review = '';
 
@@ -372,13 +426,18 @@ export const renderFeedBooks = (feedEl, books) => {
                         </div>
                     </div>
                 </section>
-                <section class="book-card__likes">` +
+                <section class="book-card__footer">
+                    <div class="book-card__footer-buttons">` +
             likeButton +
+            commentButton +
+            `</div>
+                    <div class="book-card__footer-indicators">` +
+            commentsQuantity +
             likesQuantity +
-            `
+            ` </div>
                 </section>
-            </div>
-        `;
+        </div>
+                `;
     });
 
     const parentEl = document.querySelector(feedEl);
@@ -386,4 +445,47 @@ export const renderFeedBooks = (feedEl, books) => {
     if (parentEl) {
         parentEl.insertAdjacentHTML('beforeend', html);
     }
+};
+
+export const renderComment = (data, bookOwnerId) => {
+    const commentsEl = document.querySelector('.book-card__comments');
+
+    let deleteButtonHtml = `
+        <div class="book-card__comment-delete-button-container">
+            <button id="book-card__comment-delete-button:${data._id}" class="book-card__comment-delete-button"> ✕ </button>
+        </div>
+    `;
+
+    commentsEl.insertAdjacentHTML(
+        'beforeend',
+        `
+        <div id="book-card__comment:${data._id}" class="book-card__comment">
+            <a href="/${data.user.username}">
+                <img class="user-photo book-card__comment-user-photo" src="/images/users/${
+                    data.user.profilePhoto
+                }">
+            </a>
+            <div class="book-card__comment-text">
+                <a class="book-card__comment-username" href="/${
+                    data.user.username
+                }">
+                    ${data.user.username}
+                </a>
+                <p class="book-card__comment-content">${data.content}</p>
+                <p class="book-card__comment-date">${new Date(
+                    data.dateCreated
+                ).toLocaleString('en-us', {
+                    day: '2-digit',
+                    weekday: 'short',
+                    month: 'long',
+                    year: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric'
+                })}</p>
+            </div>` +
+            deleteButtonHtml +
+            `</div>
+
+    `
+    );
 };

@@ -13,7 +13,10 @@ import {
     getHomeFeedBooks,
     getProfileFeedBooks,
     renderFeedBooks,
-    attachBooksEventListeners
+    attachBooksEventListeners,
+    commentDeleteButtonClickHandler,
+    createComment,
+    renderComment
 } from './books';
 import {
     updateUser,
@@ -623,6 +626,7 @@ const bookFormEl = document.querySelector('.book-form');
 const editBookFormEl = document.querySelector('.edit-book-form');
 const ratingInput = document.querySelector('.form__stars');
 const bookReviewInputEl = document.querySelector('.form__review-input');
+const bookCardFullEl = document.querySelector('.book-card__full');
 
 if (bookReviewInputEl) {
     const charCountEl = document.querySelector('.form__review-char-count');
@@ -734,6 +738,54 @@ if (ratingInput) {
     ratingInput.addEventListener('mouseover', ratingMouseOverHandler);
     ratingInput.addEventListener('mouseleave', ratingMouseLeaveHandler);
     ratingInput.addEventListener('click', ratingClickHandler);
+}
+
+if (bookCardFullEl) {
+    const bookCommentForm = document.querySelector('.book-card__comment-form');
+
+    const bookCommentDelButtonEls = document.querySelectorAll(
+        '.book-card__comment-delete-button'
+    );
+
+    for (let el of bookCommentDelButtonEls) {
+        el.addEventListener('click', commentDeleteButtonClickHandler);
+    }
+
+    bookCommentForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const commentInputEl = document.querySelector(
+            '.book-card__comment-input'
+        );
+        const formSubmitButtonEl = document.querySelector(
+            '.book-card__comment-form input[type="submit"]'
+        );
+        const bookId = bookCardFullEl.id.split(':')[1];
+        const bookOwnerId = bookCardFullEl.dataset.owner;
+        const input = commentInputEl.value;
+
+        formSubmitButtonEl.setAttribute('disabled', '');
+
+        const response = await createComment(bookId, { content: input });
+        commentInputEl.value = '';
+
+        if (response) {
+            renderComment(response.data.data, bookOwnerId);
+
+            const commentDeleteButton = document.querySelector(
+                `#book-card__comment-delete-button\\:${response.data.data._id}`
+            );
+
+            if (commentDeleteButton) {
+                commentDeleteButton.addEventListener(
+                    'click',
+                    commentDeleteButtonClickHandler
+                );
+            }
+        }
+
+        formSubmitButtonEl.removeAttribute('disabled');
+    });
 }
 
 // end of books
