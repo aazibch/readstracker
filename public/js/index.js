@@ -742,10 +742,10 @@ if (ratingInput) {
 
 if (bookCardFullEl) {
     const bookCommentForm = document.querySelector('.book-card__comment-form');
-
     const bookCommentDelButtonEls = document.querySelectorAll(
         '.book-card__comment-delete-button'
     );
+    const commentInputEl = document.querySelector('.book-card__comment-input');
 
     for (let el of bookCommentDelButtonEls) {
         el.addEventListener('click', commentDeleteButtonClickHandler);
@@ -754,9 +754,6 @@ if (bookCardFullEl) {
     bookCommentForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const commentInputEl = document.querySelector(
-            '.book-card__comment-input'
-        );
         const formSubmitButtonEl = document.querySelector(
             '.book-card__comment-form input[type="submit"]'
         );
@@ -785,6 +782,14 @@ if (bookCardFullEl) {
         }
 
         formSubmitButtonEl.removeAttribute('disabled');
+    });
+
+    const bookCommentButtonEl = document.querySelector(
+        '.book-card__comment-button'
+    );
+
+    bookCommentButtonEl.addEventListener('click', (e) => {
+        commentInputEl.focus();
     });
 }
 

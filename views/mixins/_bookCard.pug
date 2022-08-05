@@ -61,5 +61,5 @@ mixin bookCard(book, type)
                     each comment in book.comments
                         +bookComment(comment, ownBook)
             form.book-card__comment-form
-                input.book-card__comment-input(type="text")
+                input.book-card__comment-input(type="text" autofocus=newComment ? true : false)
                 input.button-light(type="submit" value="Post")

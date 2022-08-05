@@ -125,7 +125,8 @@ exports.getBook = catchAsync(async (req, res, next) => {
 
     res.status(200).render('book', {
         title: `${book.title} | ReadsTracker`,
-        book
+        book,
+        newComment: req.query.comment === 'true'
     });
 });
 
