@@ -1,6 +1,7 @@
 const catchAsync = require('../middleware/catchAsync');
 const Book = require('../models/bookModel');
 const User = require('../models/userModel');
+const Notification = require('../models/notificationModel');
 const AppError = require('../utils/appError');
 const filterObject = require('../utils/filterObject');
 
@@ -21,7 +22,7 @@ exports.getAllComments = catchAsync(async (req, res, next) => {
 exports.createComment = catchAsync(async (req, res, next) => {
     let book = await Book.findOne({
         _id: req.params.bookId
-    });
+    }).populate({ path: 'user', select: 'username' });
 
     if (!book) return next(new AppError('Book not found.', 404));
 
@@ -31,6 +32,23 @@ exports.createComment = catchAsync(async (req, res, next) => {
 
     book.comments.push(filteredBody);
     await book.save();
+
+    console.log(
+        '[createBook]',
+        'book.user._id',
+        book.user._id,
+        'req.user._id',
+        req.user._id
+    );
+
+    if (book.user._id.toString() !== req.user._id.toString()) {
+        await Notification.create({
+            sender: req.user._id,
+            recipient: book.user._id,
+            content: `[username] commented on the book ${book.title}.`,
+            link: `/${book.user.username}/books/${book._id}`
+        });
+    }
 
     const comment = book.comments[book.comments.length - 1].toObject();
 

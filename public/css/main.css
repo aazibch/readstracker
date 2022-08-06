@@ -626,6 +626,11 @@
     transform: rotate(360deg);
   }
 }
+@media (max-width: 767.98px) {
+  .book-card__comment-button {
+    display: none;
+  }
+}
 *,
 *::before,
 *::after {
@@ -1356,12 +1361,12 @@ main {
 }
 
 .search-results-container {
-  max-width: 53rem;
-  border-left: 1px solid #e0e0e0;
-  border-right: 1px solid #e0e0e0;
-  margin: 0 auto;
-  overflow: auto;
-  height: 100%;
+  border: 1px solid #e0e0e0;
+  max-width: 55rem;
+  margin-left: auto;
+  margin-right: auto;
+  height: 100vh;
+  background: #fff;
 }
 
 .search-result {

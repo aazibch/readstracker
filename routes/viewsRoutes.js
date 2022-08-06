@@ -67,6 +67,12 @@ router.get(
 );
 
 router.get(
+    '/search-results',
+    authController.protect,
+    viewsController.getSearchResults
+);
+
+router.get(
     '/:username',
     authController.protect,
     userController.updateNotifications,
@@ -79,7 +85,5 @@ router.get(
     userController.updateNotifications,
     viewsController.getBook
 );
-
-router.get('/search-results', viewsController.getSearchResults);
 
 module.exports = router;

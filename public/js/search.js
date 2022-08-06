@@ -4,10 +4,12 @@ let signal;
 let inputLength = 0;
 
 export const searchUsersKeydownHandler = (e) => {
+    console.log('[searchUsersKeydownHandler]');
     inputLength = e.target.value.length;
 };
 
 export const searchUsersKeyupHandler = async (e) => {
+    console.log('[searchUsersKeyupHandler]');
     if (e.target.value.length !== inputLength) {
         if (e.target.value.length === 0) return hideSearchDropdown();
 

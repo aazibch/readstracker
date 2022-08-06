@@ -2,10 +2,11 @@ extends base
 include mixins/_searchResult
 
 block content
-    .search-results-container
-        if (results.length === 0)
-            .message
-                p No results found.
-        else
-            each result in results
-                +searchResult(result)
+    .page-container
+        .search-results-container
+            if (results.length === 0)
+                .app-message.app-message__large
+                    p No results found.
+            else
+                each result in results
+                    +searchResult(result)

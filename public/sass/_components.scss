@@ -758,3 +758,10 @@
         transform: rotate(360deg);
     }
 }
+
+// Small devices (landscape phones, less than 768px)
+@media (max-width: 767.98px) {
+    .book-card__comment-button {
+        display: none;
+    }
+}

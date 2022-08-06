@@ -177,6 +177,8 @@ window.addEventListener('click', function (e) {
     }
 });
 
+const searchUsersFieldEl = document.querySelector('.search-users__input-field');
+
 if (searchUsersFieldEl) {
     searchUsersFieldEl.addEventListener('keydown', searchUsersKeydownHandler);
     searchUsersFieldEl.addEventListener('keyup', searchUsersKeyupHandler);
@@ -236,8 +238,6 @@ const profileFeedEl = document.querySelector(
 if (profileFeedEl) {
     getProfileFeedBooks(connectionsEl.dataset.userId).then((response) => {
         feedLoadingSpinnerEl.classList.remove('loading-spinner--active');
-
-        console.log('getProfileFeedBooks response', response);
 
         if (!response) {
             return profileFeedEl.insertAdjacentHTML(
@@ -333,7 +333,6 @@ if (unfollowButtonEl) {
         unfollowButtonEl.setAttribute('disabled', '');
         const res = await unfollowUser(followingId);
 
-        console.log('res[click handler]', res);
         if (res.status !== 204) {
             return unfollowButtonEl.removeAttribute('disabled');
         }
@@ -394,7 +393,6 @@ if (userId) {
         socket.on('onlineUsers', (users) => {
             onlineUsers = [...users];
 
-            console.log('onlineUsers', onlineUsers);
             displayOnlineIndicators(onlineUsers);
         });
 
@@ -803,7 +801,6 @@ const settingsPasswordFormEl = document.querySelector(
 const settingsDeleteButtonEl = document.querySelector(
     '.settings-delete-button'
 );
-const searchUsersFieldEl = document.querySelector('.search-users__input-field');
 
 if (settingsDetailsFormEl) {
     settingsDetailsFormEl.addEventListener('submit', async (e) => {

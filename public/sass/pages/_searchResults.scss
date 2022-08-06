@@ -1,10 +1,11 @@
 .search-results-container {
-    max-width: 53rem;
-    border-left: 1px solid $generic-border-color;
-    border-right: 1px solid $generic-border-color;
-    margin: 0 auto;
-    overflow: auto;
-    height: 100%;
+    border: 1px solid $generic-border-color;
+    max-width: 55rem;
+    margin-left: auto;
+    margin-right: auto;
+    height: 100vh;
+    background: #fff;
+
 }
 
 .search-result {

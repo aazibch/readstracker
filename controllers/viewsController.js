@@ -22,22 +22,6 @@ exports.getSignupForm = (req, res) => {
     });
 };
 
-const getFollowers = async (userId) => {
-    const followers = await Connection.find({ following: userId })
-        .select('follower')
-        .populate({ path: 'follower', select: 'username profilePhoto' });
-
-    return followers;
-};
-
-const getFollowing = async (userId) => {
-    const following = await Connection.find({ follower: userId })
-        .select('following')
-        .populate({ path: 'following', select: 'username profilePhoto' });
-
-    return following;
-};
-
 exports.redirectToProfile = catchAsync(async (req, res, next) => {
     res.redirect(302, `/${req.user.username}`);
 });
@@ -180,9 +164,15 @@ exports.getDeleteAccountPage = catchAsync(async (req, res) => {
 });
 
 exports.getSearchResults = catchAsync(async (req, res, next) => {
+    if (!req.query['search_query'])
+        return res.status(200).render('searchResults', {
+            title: 'Search | ReadsTracker',
+            results: []
+        });
+
     const results = await User.find({
         username: {
-            $regex: req.query['searchQuery'],
+            $regex: req.query['search_query'],
             $options: 'i'
         }
     });
