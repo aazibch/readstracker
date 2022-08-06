@@ -839,6 +839,8 @@ main {
 }
 .notification__data {
   flex: 1 0 14rem;
+  margin-right: 0.5rem;
+  font-size: 0.9rem;
 }
 .notification__profile-photo {
   width: 55px;
@@ -911,8 +913,8 @@ main {
 }
 
 .notification-indicator {
-  height: 0.7rem;
-  width: 0.7rem;
+  height: 0.6rem;
+  width: 0.6rem;
   border-radius: 50%;
   background: #0793f8;
 }

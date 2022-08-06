@@ -57,7 +57,7 @@ exports.signup = catchAsync(async (req, res, next) => {
         message: 'Your account was created successfully.',
         token,
         data: {
-            userId: user._id
+            userId: newUser._id
         }
     });
 });

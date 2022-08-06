@@ -37,15 +37,11 @@ exports.createConnection = catchAsync(async (req, res, next) => {
         following: req.body.following
     });
 
-    const userFollowing = await User.findById(conn.following).select(
-        'username'
-    );
-
     await Notification.create({
         sender: req.user._id,
         recipient: req.body.following,
         content: '[username] started following you.',
-        link: `/${userFollowing.username}`
+        link: `/${req.user.username}`
     });
 
     res.status(201).json({

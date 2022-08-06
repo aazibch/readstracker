@@ -248,6 +248,8 @@ main {
 
     &__data {
         flex: 1 0 14rem;
+        margin-right: 0.5rem;
+        font-size: 0.9rem;
     }
 
     &__profile-photo {
@@ -336,8 +338,8 @@ main {
 }
 
 .notification-indicator {
-    height: 0.7rem;
-    width: 0.7rem;
+    height: 0.6rem;
+    width: 0.6rem;
     border-radius: 50%;
     background: $notifier-color;
 }
