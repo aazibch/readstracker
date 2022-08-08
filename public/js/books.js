@@ -393,7 +393,7 @@ export const renderFeedBooks = (feedEl, books) => {
             book.likedBy.length > 1 || book.likedBy.length === 0 ? 's' : ''
         }</p>`;
 
-        const commentsQuantity = `<a href='/aazibch/books/${
+        const commentsQuantity = `<a href='/${book.user.username}/books/${
             book._id
         }' class="book-card__footer-indicator">${book.comments.length} Comment${
             book.comments.length > 1 || book.comments.length === 0 ? 's' : ''
