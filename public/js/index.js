@@ -522,10 +522,18 @@ const messageSubmitHandler = async (event, socket) => {
                 selectedConversationButton.dataset.conversationId
     };
 
+    const messageSubmitButton = document.querySelector(
+        '.new-message__form input[type="submit"]'
+    );
+
+    messageSubmitButton.setAttribute('disabled', 'true');
+
     const message = await storeMessage(
         messagesMainEl.dataset.conversationId,
         data
     );
+
+    messageSubmitButton.removeAttribute('disabled');
 
     renderMessage(message, true);
 
