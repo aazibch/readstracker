@@ -33,14 +33,6 @@ exports.createComment = catchAsync(async (req, res, next) => {
     book.comments.push(filteredBody);
     await book.save();
 
-    console.log(
-        '[createBook]',
-        'book.user._id',
-        book.user._id,
-        'req.user._id',
-        req.user._id
-    );
-
     if (book.user._id.toString() !== req.user._id.toString()) {
         await Notification.create({
             sender: req.user._id,
