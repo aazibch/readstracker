@@ -2,7 +2,15 @@
 
 ## The Application
 
-ReadsTracker allows you to keep track of the books you've read. You can even comment or rate these volumes.
+ReadsTracker is a social networking application for book-men and -women. It allows you to:
+
+* View what your friends are reading and how they rate the books they've read.
+
+* Comment on book reviews.
+
+* Chat about books (or anything really!) in real-time.
+
+* Discover and befriend like-minded readers.
 
 ## Running the Application
 
