@@ -189,6 +189,17 @@ export const commentDeleteButtonClickHandler = (e) => {
             const res = await deleteComment(bookId, commentId);
 
             if (res) {
+                const commentsCountEl = document.querySelector(
+                    '.book-card__comments-count'
+                );
+
+                const newCommentCount =
+                    +commentsCountEl.innerText.split(' ')[0] - 1;
+
+                commentsCountEl.innerText = `${newCommentCount} Comment${
+                    newCommentCount === 1 ? '' : 's'
+                }`;
+
                 commentEl.remove();
             }
         }

@@ -771,6 +771,17 @@ if (bookCardFullEl) {
                 `#book-card__comment-delete-button\\:${response.data.data._id}`
             );
 
+            const commentsCountEl = document.querySelector(
+                '.book-card__comments-count'
+            );
+
+            const newCommentCount =
+                +commentsCountEl.innerText.split(' ')[0] + 1;
+
+            commentsCountEl.innerText = `${newCommentCount} Comment${
+                newCommentCount === 1 ? '' : 's'
+            }`;
+
             if (commentDeleteButton) {
                 commentDeleteButton.addEventListener(
                     'click',

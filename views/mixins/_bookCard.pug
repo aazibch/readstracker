@@ -52,7 +52,7 @@ mixin bookCard(book, type)
                     i.fa-solid.fa-comments
                     |  Comment
             .book-card__footer-indicators
-                p.book-card__footer-indicator.book-card__footer-indicator--disabled= `${book.comments.length} Comment${book.comments.length > 1 || book.comments.length === 0 ? 's' : ''}`
+                p.book-card__footer-indicator.book-card__footer-indicator--disabled.book-card__comments-count= `${book.comments.length} Comment${book.comments.length > 1 || book.comments.length === 0 ? 's' : ''}`
                 p.book-card__footer-indicator(id=`book-card__likes-quantity:${book._id}`)= `${book.likedBy.length} Like${book.likedBy.length > 1 || book.likedBy.length === 0 ? 's' : ''}`
         section.book-card__comments-section
             .book-card__comments
