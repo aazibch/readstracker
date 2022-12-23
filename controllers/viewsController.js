@@ -15,6 +15,12 @@ exports.getLoginForm = (req, res) => {
     res.status(200).render('login', { title: 'Login | ReadsTracker' });
 };
 
+exports.getForgotPasswordPage = (req, res) => {
+    res.status(200).render('forgotPassword', {
+        title: 'Password Recovery | ReadsTracker'
+    });
+};
+
 exports.getSignupForm = (req, res) => {
     res.status(200).render('home', {
         title: 'Home | ReadsTracker',

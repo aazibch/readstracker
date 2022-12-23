@@ -12,6 +12,8 @@ router.get('/signup', authController.isLoggedIn, viewsController.getSignupForm);
 
 // router.use(authController.protect);
 
+router.get('/login/forgot-password', viewsController.getForgotPasswordPage);
+
 router.get(
     '/profile',
     authController.protect,

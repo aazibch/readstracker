@@ -23,3 +23,19 @@ export const logout = catchAsync(async () => {
 
     localStorage.removeItem('userId');
 });
+
+export const recoverPassword = catchAsync(async (route, data) => {
+    let url = '/api/v1/users/forgotPassword';
+
+    if (route === 'resetPassword')
+        url = `/api/v1/users/resetPassword/${data.token}`;
+
+    const response = await axios({
+        method: 'POST',
+        url,
+        data
+    });
+
+    displayAlert(response.data.status, response.data.message);
+    return response;
+});

@@ -33,6 +33,7 @@ mongoose
     })
     .then(() => console.log('Connected to database...'))
     .catch((err) => {
+        console.log(err);
         console.log('Unable to connect to the database.');
         exitProcess();
     });

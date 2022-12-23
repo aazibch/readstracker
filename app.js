@@ -61,6 +61,27 @@ app.use('/api/v1/books', booksRoutes);
 app.use('/api/v1/users', usersRoutes);
 app.use('/api/v1/conversations', conversationsRoutes);
 app.use('/api/v1/connections', connectionsRoutes);
+
+const Email = require('./utils/Email');
+app.post('/api/v1/send-mail', async (req, res) => {
+    if (req.body.type === 'welcome') {
+        const url = `${req.protocol}://${req.get('host')}/JohnDoe/books/add`;
+
+        await new Email(
+            {
+                username: 'JohnDoe',
+                email: 'john@domain.com'
+            },
+            url
+        ).sendWelcome();
+    }
+
+    res.status(200).json({
+        status: 'success',
+        message: 'email has been sent!'
+    });
+});
+
 app.all('*', (req, res, next) => {
     next(new AppError('Route not found.', 404));
 });

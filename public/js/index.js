@@ -6,7 +6,7 @@ import {
     ratingClickHandler
 } from './ratingInput';
 
-import { auth, logout } from './auth';
+import { auth, recoverPassword, logout } from './auth';
 import {
     createBook,
     updateBook,
@@ -54,6 +54,33 @@ import {
 import { displayAlert } from './alerts';
 
 import { removeActiveClasses } from './utils';
+
+const forgotPasswordFormEl = document.querySelector('.forgot-password-form');
+
+if (forgotPasswordFormEl) {
+    console.log('Forgot password form present');
+    forgotPasswordFormEl.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const submitButtonEl = document.querySelector(
+            '.forgot-password-form__submit-button'
+        );
+        submitButtonEl.setAttribute('disabled', '');
+
+        const emailInput = document.querySelector(
+            '.forgot-password-form__email-field'
+        );
+        const email = emailInput.value;
+
+        const res = await recoverPassword('forgotPassword', { email });
+
+        if (res) {
+            emailInput.value = '';
+        }
+
+        submitButtonEl.removeAttribute('disabled');
+    });
+}
 
 const confirmationModalNoButtonEl = document.querySelector(
     '.confirmation-modal__no-button'

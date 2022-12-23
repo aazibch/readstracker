@@ -64,9 +64,7 @@ const userSchema = new mongoose.Schema(
                 message: 'Passwords do not match.'
             }
         },
-        passwordChangeDate: {
-            type: Date
-        },
+        passwordChangeDate: Date,
         active: {
             type: Boolean,
             default: true
@@ -83,7 +81,9 @@ const userSchema = new mongoose.Schema(
             type: Number,
             default: 0,
             select: false
-        }
+        },
+        passwordResetToken: String,
+        passwordResetTokenExpirationDate: Date
     },
     {
         toJSON: { virtuals: true },
@@ -142,6 +142,25 @@ userSchema.methods.changedPasswordAfterToken = function (
     }
 
     return false;
+};
+
+userSchema.methods.createPasswordResetToken = function () {
+    const resetToken = crypto.randomBytes(32).toString('hex');
+
+    this.passwordResetToken = crypto
+        .createHash('sha256')
+        .update(resetToken)
+        .digest('hex');
+
+    console.log(
+        { resetToken },
+        'this.passwordResetToken',
+        this.passwordResetToken
+    );
+
+    // Reset token expires in five minutes.
+    this.passwordResetTokenExpirationDate = Date.now() + 5 * 60 * 1000;
+    return resetToken;
 };
 
 const User = mongoose.model('User', userSchema);

@@ -16,6 +16,9 @@ router.get('/logout', authController.logout);
 
 router.get('/search/:query', usersController.getSearchResults);
 
+router.post('/forgotPassword', authController.forgotPassword);
+router.post('/resetPassword/:token', authController.resetPassword);
+
 router.use(authController.protect);
 
 router.patch('/updateMyPassword', authController.updateMyPassword);
