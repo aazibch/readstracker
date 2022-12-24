@@ -11,13 +11,13 @@ router.use('/:userId/connections/', connectionsRoutes);
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
 
+router.post('/forgotPassword', authController.forgotPassword);
+router.post('/resetPassword/:token', authController.resetPassword);
+
 // Returns a cookie, so GET HTTP verb makes sense
 router.get('/logout', authController.logout);
 
 router.get('/search/:query', usersController.getSearchResults);
-
-router.post('/forgotPassword', authController.forgotPassword);
-router.post('/resetPassword/:token', authController.resetPassword);
 
 router.use(authController.protect);
 

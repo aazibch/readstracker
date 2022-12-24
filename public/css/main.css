@@ -1,5 +1,5 @@
 .link:link, .button-link:link {
-  color: #F012BE;
+  color: #f012be;
   text-decoration: none;
 }
 .link:visited, .button-link:visited {
@@ -121,7 +121,7 @@
   border: none;
   background: #fff;
   font-size: 1rem;
-  color: #F012BE;
+  color: #f012be;
 }
 
 .button-plain {
@@ -169,7 +169,8 @@
 }
 
 .form__message {
-  margin-bottom: 1rem;
+  margin-top: 1rem;
+  font-size: 1rem;
   color: #4d5156;
 }
 .form__stars {

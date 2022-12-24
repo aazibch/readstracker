@@ -1,11 +1,11 @@
 .link {
     &:link {
-        color:#F012BE;
+        color: #f012be;
         text-decoration: none;
     }
 
     &:visited {
-        color: darken(#F012BE, 10%);
+        color: darken(#f012be, 10%);
     }
 
     &:hover {
@@ -30,7 +30,7 @@
         &--success {
             background: $success-color;
         }
-    
+
         &--error {
             background: $danger-color;
         }
@@ -42,31 +42,33 @@
     font-weight: 400;
     border-style: none;
     border-radius: 0.25rem;
-    padding: .450rem .75rem;
+    padding: 0.45rem 0.75rem;
     box-sizing: border-box;
 
-    &:link, &:visited, &:active {
+    &:link,
+    &:visited,
+    &:active {
         text-decoration: none;
         color: $light-color;
         text-align: center;
     }
 
     &:disabled {
-        opacity: .65;
+        opacity: 0.65;
         cursor: default;
     }
 }
 
 .button-large {
-    padding: .5rem 1rem;
+    padding: 0.5rem 1rem;
     font-size: 1.25rem;
-    border-radius: .3rem;
+    border-radius: 0.3rem;
 }
 
 .button-small {
-    padding: .25rem .5rem;
-    font-size: .875rem;
-    border-radius: .2rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    border-radius: 0.2rem;
 }
 
 .button-primary {
@@ -109,7 +111,9 @@
     border-radius: 5px;
     transition: background-color 0.2s, color 0.2s;
 
-    &:link, &:visited, &:active {
+    &:link,
+    &:visited,
+    &:active {
         color: $primary-color;
     }
 
@@ -145,7 +149,9 @@
     border: 1px solid $generic-border-color;
     color: $body-text-color;
 
-    &:link, &:visited, &:active {
+    &:link,
+    &:visited,
+    &:active {
         color: $body-text-color;
     }
 
@@ -163,7 +169,7 @@
     border: none;
     background: #fff;
     font-size: 1rem;
-    color:#F012BE;
+    color: #f012be;
 }
 
 .button-plain {
@@ -215,7 +221,8 @@
 
 .form {
     &__message {
-        margin-bottom: 1rem;
+        margin-top: 1rem;
+        font-size: 1rem;
         color: $secondary-color;
     }
 
@@ -299,7 +306,7 @@
         &-button {
             margin-left: auto;
         }
-    
+
         &-menu {
             display: none;
             position: absolute;
@@ -323,14 +330,16 @@
         display: flex;
         align-items: center;
 
-        &:link, &:visited, &:hover {
+        &:link,
+        &:visited,
+        &:hover {
             color: $body-text-color;
         }
 
         &:link {
             text-decoration: none;
         }
-    
+
         &:hover {
             text-decoration: underline;
         }
@@ -348,7 +357,7 @@
         padding: 0.3rem 0.5rem;
         background: #fff;
         color: $secondary-color;
-    
+
         &:hover {
             background: darken(#fff, 5%);
         }
@@ -359,7 +368,8 @@
         overflow: hidden;
     }
 
-    &__title, &__author {
+    &__title,
+    &__author {
         font-weight: 700;
     }
 
@@ -378,7 +388,9 @@
     }
 
     &__date-added {
-        &:link, &:visited, &:active {
+        &:link,
+        &:visited,
+        &:active {
             color: $secondary-color;
             text-decoration: none;
         }
@@ -408,10 +420,9 @@
     }
 
     &__secondary-data-content-2 {
-        margin-left: auto
-
+        margin-left: auto;
     }
-    
+
     &__secondary-data,
     &__note-date {
         color: $secondary-color;
@@ -424,7 +435,7 @@
     &__footer-indicator {
         cursor: pointer;
         color: $secondary-color;
-        font-size: .875rem;
+        font-size: 0.875rem;
         text-decoration: none;
         margin-right: 0.5rem;
 
@@ -480,7 +491,7 @@
     z-index: 100;
     height: 100%;
     width: 100%;
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgba(0, 0, 0, 0.4);
     box-sizing: border-box;
     padding: 1rem;
     top: 0;
@@ -596,7 +607,9 @@
         border-bottom: 1px solid $generic-border-color;
         background-color: #fff;
 
-        &:link, &:visited, &:active {
+        &:link,
+        &:visited,
+        &:active {
             color: $body-text-color;
             text-decoration: none;
         }
@@ -681,7 +694,9 @@
             height: 100%;
             padding: 0.5rem 0.7rem;
 
-            &:link, &:visited, &:active {
+            &:link,
+            &:visited,
+            &:active {
                 color: $secondary-color;
             }
         }

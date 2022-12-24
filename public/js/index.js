@@ -58,7 +58,6 @@ import { removeActiveClasses } from './utils';
 const forgotPasswordFormEl = document.querySelector('.forgot-password-form');
 
 if (forgotPasswordFormEl) {
-    console.log('Forgot password form present');
     forgotPasswordFormEl.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -79,6 +78,48 @@ if (forgotPasswordFormEl) {
         }
 
         submitButtonEl.removeAttribute('disabled');
+    });
+}
+
+const resetPasswordFormEl = document.querySelector('.reset-password-form');
+
+if (resetPasswordFormEl) {
+    resetPasswordFormEl.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const submitButtonEl = document.querySelector(
+            '.reset-password-form__submit-button'
+        );
+        submitButtonEl.setAttribute('disabled', '');
+
+        const passwordInput = document.querySelector(
+            '.reset-password-form__password-field'
+        );
+        const confirmPasswordInput = document.querySelector(
+            '.reset-password-form__confirm-password-field'
+        );
+
+        const password = passwordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+
+        const searchParams = new URLSearchParams(window.location.search);
+
+        const res = await recoverPassword('resetPassword', {
+            password,
+            confirmPassword,
+            token: searchParams.get('token')
+        });
+
+        passwordInput.value = '';
+        confirmPasswordInput.value = '';
+
+        if (!res) {
+            submitButtonEl.removeAttribute('disabled');
+        }
+
+        setTimeout(() => {
+            location.assign('/');
+        }, 2000);
     });
 }
 
@@ -349,7 +390,7 @@ if (followButtonEl) {
 
         setTimeout(() => {
             location.reload();
-        }, 1500);
+        }, 2000);
     });
 }
 
@@ -378,7 +419,7 @@ if (unfollowButtonEl) {
 
         setTimeout(() => {
             location.reload();
-        }, 1500);
+        }, 2000);
     });
 }
 
@@ -614,7 +655,7 @@ if (signupFormEl) {
 
         setTimeout(() => {
             location.assign('/');
-        }, 1500);
+        }, 2000);
     });
 }
 
@@ -641,7 +682,7 @@ if (loginFormEl) {
 
         setTimeout(() => {
             location.assign('/');
-        }, 1500);
+        }, 2000);
     });
 }
 
@@ -711,7 +752,7 @@ if (bookFormEl) {
 
         setTimeout(() => {
             location.assign('/profile');
-        }, 1500);
+        }, 2000);
     });
 }
 
@@ -763,7 +804,7 @@ if (editBookFormEl) {
             location.assign(
                 `/${response.data.data.user.username}/books/${response.data.data._id}`
             );
-        }, 1500);
+        }, 2000);
     });
 }
 
@@ -881,7 +922,7 @@ if (settingsDetailsFormEl) {
 
         setTimeout(() => {
             location.reload();
-        }, 1500);
+        }, 2000);
     });
 }
 
@@ -929,7 +970,7 @@ if (settingsDeleteButtonEl) {
 
                 setTimeout(() => {
                     location.assign('/');
-                }, 1500);
+                }, 2000);
             }
         );
     });

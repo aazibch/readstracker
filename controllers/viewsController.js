@@ -21,6 +21,12 @@ exports.getForgotPasswordPage = (req, res) => {
     });
 };
 
+exports.getResetPasswordPage = (req, res) => {
+    res.status(200).render('resetPassword', {
+        title: 'Reset Password | ReadsTracker'
+    });
+};
+
 exports.getSignupForm = (req, res) => {
     res.status(200).render('home', {
         title: 'Home | ReadsTracker',

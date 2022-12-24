@@ -25,7 +25,11 @@ export const logout = catchAsync(async () => {
 });
 
 export const recoverPassword = catchAsync(async (route, data) => {
-    let url = '/api/v1/users/forgotPassword';
+    let url;
+
+    if (route === 'forgotPassword') {
+        url = '/api/v1/users/forgotPassword';
+    }
 
     if (route === 'resetPassword')
         url = `/api/v1/users/resetPassword/${data.token}`;
@@ -36,6 +40,15 @@ export const recoverPassword = catchAsync(async (route, data) => {
         data
     });
 
-    displayAlert(response.data.status, response.data.message);
+    if (route === 'forgotPassword' && response.data.status === 'success') {
+        const formEl = document.querySelector('.forgot-password-form');
+
+        formEl.insertAdjacentHTML(
+            'beforeend',
+            `<p class="form__message">${response.data.message}</p>`
+        );
+    } else {
+        displayAlert(response.data.status, response.data.message);
+    }
     return response;
 });
