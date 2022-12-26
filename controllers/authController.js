@@ -23,7 +23,7 @@ const createSendToken = (userId, req, res) => {
         ),
         httpOnly: true,
         secure: req.secure,
-        sameSite: 'Strict'
+        sameSite: 'Lax'
     });
 
     return token;
