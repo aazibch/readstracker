@@ -8,10 +8,6 @@ const userController = require('../controllers/usersController');
 router.get('/', authController.isLoggedIn, viewsController.getHome);
 router.get('/signup', authController.isLoggedIn, viewsController.getSignupForm);
 
-// Routes for the logged in user.
-
-// router.use(authController.protect);
-
 router.get('/login/forgot-password', viewsController.getForgotPasswordPage);
 router.get('/login/reset-password', viewsController.getResetPasswordPage);
 

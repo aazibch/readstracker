@@ -22,7 +22,8 @@ const createSendToken = (userId, req, res) => {
             Date.now() + process.env.JWT_COOKIE_EXPIRATION * 24 * 60 * 60 * 1000
         ),
         httpOnly: true,
-        secure: req.secure
+        secure: req.secure,
+        sameSite: 'Strict'
     });
 
     return token;
@@ -31,7 +32,8 @@ const createSendToken = (userId, req, res) => {
 const sendLogoutCookie = (res) => {
     res.cookie('jwt', '', {
         expires: new Date(Date.now() + 1000),
-        httpOnly: true
+        httpOnly: true,
+        sameSite: 'Strict'
     });
 };
 
