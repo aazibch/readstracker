@@ -246,6 +246,7 @@ const getConversations = async (user) => {
 };
 
 exports.getConversations = catchAsync(async (req, res, next) => {
+    res.set('Cache-Control', 'no-store');
     const conversations = await getConversations(req.user);
     const newConversation = { status: false };
     let user;
@@ -278,8 +279,8 @@ exports.getConversations = catchAsync(async (req, res, next) => {
 });
 
 exports.getMessages = catchAsync(async (req, res, next) => {
+    res.set('Cache-Control', 'no-store');
     let selectedConversation = await Conversation.findById(req.params.convoId);
-
     if (!selectedConversation)
         return next(new AppError('Route not found.', 404));
 

@@ -6,10 +6,16 @@ const catchAsync = (fn, optionalCallback) => {
             if (err.response?.data.message) {
                 displayAlert('error', err.response.data.message);
             } else {
-                displayAlert('error', 'Something went wrong.');
+                if (err.message !== 'Request aborted')
+                    displayAlert('error', 'Something went wrong.');
             }
 
             if (optionalCallback) optionalCallback();
+            if (err.message === 'Request aborted') {
+                return {
+                    message: err.message
+                };
+            }
         });
     };
 };

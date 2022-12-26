@@ -269,6 +269,8 @@ if (homeFeedEl) {
             );
         }
 
+        if (response.message === 'Request aborted') return;
+
         if (response.data.data.length === 0) {
             return homeFeedEl.insertAdjacentHTML(
                 'afterbegin',
@@ -315,6 +317,8 @@ if (profileFeedEl) {
             `
             );
         }
+
+        if (response.message === 'Request aborted') return;
 
         if (response.data.data.length === 0) {
             return profileFeedEl.insertAdjacentHTML(
