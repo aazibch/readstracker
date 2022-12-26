@@ -49,7 +49,8 @@
     "devDependencies": {
         "@prettier/plugin-pug": "^2.3.0",
         "parcel-bundler": "^1.12.4",
-        "prettier": "^2.8.1"
+        "prettier": "^2.8.1",
+        "sass": "^1.57.1"
     },
     "engines": {
         "node": "16.x"
