@@ -4,13 +4,17 @@
 
 ReadsTracker is a social networking application for book-men and -women. It allows you to:
 
-* View what your friends are reading and how they rate the books they've read.
+-   View what your friends are reading and how they rate the books they've read.
 
-* Comment on book reviews.
+-   Comment on book reviews.
 
-* Chat about books (or anything really!) in real-time.
+-   Chat about books (or anything really!) in real-time.
 
-* Discover and befriend like-minded readers.
+-   Discover and befriend like-minded readers.
+
+## Demo
+
+Demo can be accessed at https://readstracker.up.railway.app/
 
 ## Running the Application
 
