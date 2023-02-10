@@ -129,7 +129,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     const user = await getLoggedInUserDoc(decodedToken.id);
 
     if (!user || user.changedPasswordAfterToken(decodedToken.iat)) {
-        sendLogoutCookie(res);
+        // sendLogoutCookie(res);
         return next(new AppError("You're not logged in.", 401));
     }
 
@@ -158,7 +158,7 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
         req.user = user;
         res.locals.user = user;
     } catch (err) {
-        next();
+        return next();
     }
 
     next();
