@@ -32,9 +32,9 @@ app.options('*', cors());
 app.use(helmet());
 
 const limiter = rateLimit({
-    windowMs: 30 * 60 * 1000,
-    max: 100,
-    message: 'Too many requests. Please try again in an hour.'
+  windowMs: 30 * 60 * 1000,
+  max: 100,
+  message: 'Too many requests. Please try again in an hour.'
 });
 
 app.use('/api', limiter);
@@ -46,14 +46,14 @@ app.use(cookieParser());
 app.use(mongoSanitize());
 app.use(xss());
 app.use(
-    hpp({
-        whitelist: ['title', 'author', 'rating', 'genre', 'dateCreated']
-    })
+  hpp({
+    whitelist: ['title', 'author', 'rating', 'genre', 'dateCreated']
+  })
 );
 app.use(compression());
 
 if (process.env.NODE_ENV === 'development') {
-    app.use(morgan('dev'));
+  app.use(morgan('dev'));
 }
 
 app.use('/', viewsRoutes);
@@ -62,28 +62,8 @@ app.use('/api/v1/users', usersRoutes);
 app.use('/api/v1/conversations', conversationsRoutes);
 app.use('/api/v1/connections', connectionsRoutes);
 
-const Email = require('./utils/Email');
-app.post('/api/v1/send-mail', async (req, res) => {
-    if (req.body.type === 'welcome') {
-        const url = `${req.protocol}://${req.get('host')}/JohnDoe/books/add`;
-
-        await new Email(
-            {
-                username: 'JohnDoe',
-                email: 'john@domain.com'
-            },
-            url
-        ).sendWelcome();
-    }
-
-    res.status(200).json({
-        status: 'success',
-        message: 'email has been sent!'
-    });
-});
-
 app.all('*', (req, res, next) => {
-    next(new AppError('Route not found.', 404));
+  next(new AppError('Route not found.', 404));
 });
 app.use(error);
 
