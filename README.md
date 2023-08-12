@@ -16,6 +16,11 @@ ReadsTracker is a social networking application for book-men and -women. It allo
 
 Demo can be accessed at https://readstracker.onrender.com/.
 
+You can log into the application using the following credentials:
+
+**Email**: jackson@domain.com  
+**Password**: demopassword123
+
 ## Running the Application
 
 Install the required dependencies by running the following command:
