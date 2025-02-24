@@ -33,13 +33,12 @@ mongoose
     })
     .then(() => console.log('Connected to database...'))
     .catch((err) => {
-        console.log(err);
         console.log('Unable to connect to the database.');
         exitProcess();
     });
 
 process.on('unhandledRejection', (err) => {
-    console.log('UNHANDLED REJECTION', err);
+    console.log('UNHANDLED REJECTION!');
     exitProcess();
 });
 

@@ -226,8 +226,6 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     .update(req.params.token)
     .digest('hex');
 
-  console.log({ hashedToken }, { date: new Date() });
-
   const user = await User.findOne({
     passwordResetToken: hashedToken,
     passwordResetTokenExpirationDate: { $gt: Date.now() }

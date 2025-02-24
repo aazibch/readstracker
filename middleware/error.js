@@ -32,7 +32,6 @@ const getValidationError = (err) => {
 
 const sendError = (err, req, res) => {
     if (req.originalUrl.startsWith('/api')) {
-        console.log('err', err);
         if (err.isOperational) {
             return res.status(err.statusCode).json({
                 status: err.status,
